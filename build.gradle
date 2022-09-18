@@ -26,6 +26,16 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    //Swagger setting
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
+
+    // 설정파일 암호화
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
+
+    // 암호화 알고리즘
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.69'
 }
 
 tasks.named('test') {
