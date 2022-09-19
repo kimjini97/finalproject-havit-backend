@@ -1,6 +1,6 @@
-package com.ahnhaetdaeyo.finalbe.dto.response;
+package com.havit.finalbe.dto.response;
 
-import com.ahnhaetdaeyo.finalbe.exception.ErrorMsg;
+import com.havit.finalbe.exception.ErrorMsg;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

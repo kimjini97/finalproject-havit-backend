@@ -1,4 +1,4 @@
-package com.ahnhaetdaeyo.finalbe.exception;
+package com.havit.finalbe.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

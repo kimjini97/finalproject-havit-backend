@@ -1,4 +1,4 @@
-package com.ahnhaetdaeyo.finalbe.entity;
+package com.havit.finalbe.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

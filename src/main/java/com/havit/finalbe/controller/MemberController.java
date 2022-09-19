@@ -1,8 +1,8 @@
-package com.ahnhaetdaeyo.finalbe.controller;
+package com.havit.finalbe.controller;
 
-import com.ahnhaetdaeyo.finalbe.dto.request.LoginRequestDto;
-import com.ahnhaetdaeyo.finalbe.dto.request.SignupRequestDto;
-import com.ahnhaetdaeyo.finalbe.dto.response.ResponseDto;
+import com.havit.finalbe.dto.request.LoginRequestDto;
+import com.havit.finalbe.dto.request.SignupRequestDto;
+import com.havit.finalbe.dto.response.ResponseDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

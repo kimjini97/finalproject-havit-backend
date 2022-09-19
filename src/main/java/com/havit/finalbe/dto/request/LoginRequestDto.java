@@ -1,4 +1,4 @@
-package com.ahnhaetdaeyo.finalbe.dto.request;
+package com.havit.finalbe.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

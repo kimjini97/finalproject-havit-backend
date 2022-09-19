@@ -1,4 +1,4 @@
-package com.ahnhaetdaeyo.finalbe.security.configuration;
+package com.havit.finalbe.security.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
