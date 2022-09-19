@@ -1,4 +1,4 @@
-package com.ahnhaetdaeyo.finalbe.dto.request;
+package com.havit.finalbe.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
