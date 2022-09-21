@@ -28,7 +28,7 @@ public class Member{
     private String nickname;
 
     @Column
-    private String imgUrl;
+    private String profileUrl;
 
 
 }

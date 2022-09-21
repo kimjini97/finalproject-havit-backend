@@ -12,11 +12,11 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Challenge extends Timestamped{
+public class Group extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long challengeId;
+    private Long groupId;
 
     @Column(nullable = false)
     private String title;
@@ -35,5 +35,8 @@ public class Challenge extends Timestamped{
 
     @Column(nullable = false)
     private String imgUrl;
+
+    @Column
+    private String content;
 
 }
