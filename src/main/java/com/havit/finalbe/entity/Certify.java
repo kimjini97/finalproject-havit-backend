@@ -12,31 +12,29 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Group extends Timestamped{
+public class Certify extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long groupId;
+    private Long certifyId;
 
     @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
-    private String nickname;
-
-    @Column(nullable = false)
-    private String leaderName;
-
-    @Column(nullable = false)
-    private String crewName;
-
-    @Column(nullable = false)
-    private String startDate;
-
-    @Column(nullable = false)
     private String imgUrl;
 
     @Column
-    private String content;
+    private double latitude;
 
+    @Column
+    private double longitude;
+
+    @JoinColumn(name = "member_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+
+    @JoinColumn(name = "group_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Group group;
 }
