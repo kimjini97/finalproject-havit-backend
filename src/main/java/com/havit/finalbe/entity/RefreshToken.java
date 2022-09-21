@@ -8,27 +8,24 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
-public class Member{
+public class RefreshToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
+    private Long id;
+
+    @JoinColumn(name = "member_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    private Member member;
 
     @Column(nullable = false)
-    private String username;
+    private String tokenValue;
 
-    @Column(nullable = false)
-    private String password;
-
-    @Column(nullable = false)
-    private String nickname;
-
-    @Column
-    private String imgUrl;
-
-
+    public void updateValue(String tokenValue){
+        this.tokenValue = tokenValue;
+    }
 }
