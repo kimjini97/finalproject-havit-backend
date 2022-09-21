@@ -15,7 +15,6 @@ public class CommentResponseDto {
     private String nickname;
     private String profileUrl;
     private String content;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+    private String dateTime;
     private List<SubCommentResponseDto> subCommentList;
 }

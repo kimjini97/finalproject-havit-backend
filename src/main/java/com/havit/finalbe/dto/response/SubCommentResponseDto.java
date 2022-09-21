@@ -15,6 +15,5 @@ public class SubCommentResponseDto {
     private String nickname;
     private String profileUrl;
     private String content;
-    private LocalDateTime createdAt;
-    private LocalDateTime modifiedAt;
+    private String dateTime;
 }
