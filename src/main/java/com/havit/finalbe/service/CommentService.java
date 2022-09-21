@@ -59,8 +59,7 @@ public class CommentService {
                         .nickname(comment.getMember().getNickname())
                         .profileUrl(comment.getMember().getProfileUrl())
                         .content(comment.getContent())
-                        .createdAt(comment.getCreatedAt())
-                        .modifiedAt(comment.getModifiedAt())
+                        .dateTime(serviceUtil.getDateFormatOfComment(comment))
                         .build()
         );
     }
@@ -98,8 +97,7 @@ public class CommentService {
                         .nickname(comment.getMember().getNickname())
                         .profileUrl(comment.getMember().getProfileUrl())
                         .content(comment.getContent())
-                        .createdAt(comment.getCreatedAt())
-                        .modifiedAt(comment.getModifiedAt())
+                        .dateTime(serviceUtil.getDateFormatOfComment(comment))
                         .build()
         );
     }

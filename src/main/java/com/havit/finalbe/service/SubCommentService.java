@@ -61,8 +61,7 @@ public class SubCommentService {
                         .nickname(subComment.getMember().getNickname())
                         .profileUrl(subComment.getMember().getProfileUrl())
                         .content(subComment.getContent())
-                        .createdAt(subComment.getCreatedAt())
-                        .modifiedAt(subComment.getModifiedAt())
+                        .dateTime(serviceUtil.getDateFormatOfSubComment(subComment))
                         .build()
         );
     }
@@ -101,8 +100,7 @@ public class SubCommentService {
                         .nickname(subComment.getMember().getNickname())
                         .profileUrl(subComment.getMember().getProfileUrl())
                         .content(subComment.getContent())
-                        .createdAt(subComment.getCreatedAt())
-                        .modifiedAt(subComment.getModifiedAt())
+                        .dateTime(serviceUtil.getDateFormatOfSubComment(subComment))
                         .build()
         );
     }
