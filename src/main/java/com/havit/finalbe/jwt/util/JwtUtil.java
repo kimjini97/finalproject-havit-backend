@@ -6,6 +6,7 @@ import com.havit.finalbe.entity.Member;
 import com.havit.finalbe.entity.RefreshToken;
 import com.havit.finalbe.exception.ErrorMsg;
 import com.havit.finalbe.repository.RefreshTokenRepository;
+import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -13,6 +14,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -84,6 +88,16 @@ public class JwtUtil {
     // token에서 payload 권한 값 중 username 가져오기
     public String getUsernameFromToken(String token){
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
+    }
+
+    // 인증된 member 가져오기
+    public Member getMemberFromAuthentication() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || AnonymousAuthenticationToken.class.
+                isAssignableFrom(authentication.getClass())) {
+            return null;
+        }
+        return ((UserDetailsImpl) authentication.getPrincipal()).getMember();
     }
 
 }

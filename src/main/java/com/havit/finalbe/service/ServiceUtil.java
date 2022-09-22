@@ -9,6 +9,7 @@ import com.havit.finalbe.entity.Comment;
 import com.havit.finalbe.entity.Member;
 import com.havit.finalbe.entity.SubComment;
 import com.havit.finalbe.jwt.util.JwtUtil;
+import com.havit.finalbe.jwt.util.TokenProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -29,14 +30,14 @@ public class ServiceUtil {
     @Value("${cloud.aws.s3.bucket}")
     private String havitbucket;
     private final AmazonS3Client amazonS3Client;
-    // 토큰 선언 ex.TokenProvider
+    private final JwtUtil jwtUtil;
 
     // 멤버 인증
     public Member validateMember(HttpServletRequest request) {
-        if (!jwtUtil.validateToken(request.getHeader("Refresh-Token"))) {
+        if (TokenProperties.INVALID.equals(jwtUtil.validateToken(request.getHeader("Refresh-Token")))) {
             return null;
         }
-        return tokenProvider.getMemberFromAuthentication();
+        return jwtUtil.getMemberFromAuthentication();
     }
 
     // 댓글 작성 날짜 포맷
