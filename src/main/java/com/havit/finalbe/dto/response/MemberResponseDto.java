@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Schema(description = "멤버 ResponseDto")
 @Getter
 @Builder
@@ -17,8 +19,12 @@ public class MemberResponseDto {
     private Long id;
     
     @Schema(description = "이메일", example = "test@gmail.com")
-    private String email;
+    private String username;
     
     @Schema(description = "닉네임", example = "루피짱")
     private String nickname;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime modifiedAt;
 }
