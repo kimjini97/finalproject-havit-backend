@@ -36,7 +36,7 @@ public class SubComment extends Timestamped {
     }
 
     // 작성자 확인
-    public boolean validateMember(Member member) {
+    public boolean isValidateMember(Member member) {
         return !this.member.equals(member);
     }
 }
