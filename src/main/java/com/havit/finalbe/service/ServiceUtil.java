@@ -5,11 +5,10 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.havit.finalbe.entity.Comment;
-import com.havit.finalbe.entity.Member;
-import com.havit.finalbe.entity.SubComment;
+import com.havit.finalbe.entity.*;
 import com.havit.finalbe.jwt.util.JwtUtil;
 import com.havit.finalbe.jwt.util.TokenProperties;
+import com.havit.finalbe.repository.GroupTagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,6 +20,8 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -31,6 +32,7 @@ public class ServiceUtil {
     private String havitbucket;
     private final AmazonS3Client amazonS3Client;
     private final JwtUtil jwtUtil;
+    private final GroupTagRepository groupTagRepository;
 
     // 멤버 인증
     public Member validateMember(HttpServletRequest request) {
@@ -135,5 +137,18 @@ public class ServiceUtil {
     public void deleteImage(String key) {
         DeleteObjectRequest request = new DeleteObjectRequest(havitbucket, key);
         amazonS3Client.deleteObject(request);
+    }
+
+    // Group 에 해당하는 TagName 불러오기
+    public List<String> getTagNameListFromGroupTag(Group group) {
+        List<GroupTag> groupTagList = groupTagRepository.findAllByGroup(group);
+        List<String> tagNameList = new ArrayList<>();
+
+        for (GroupTag groupTag : groupTagList) {
+            String tagName = groupTag.getTags().getTagName();
+            tagNameList.add(tagName);
+        }
+
+        return tagNameList;
     }
 }
