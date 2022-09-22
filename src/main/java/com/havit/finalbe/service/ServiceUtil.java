@@ -3,6 +3,7 @@ package com.havit.finalbe.service;
 import com.havit.finalbe.entity.Comment;
 import com.havit.finalbe.entity.Member;
 import com.havit.finalbe.entity.SubComment;
+import com.havit.finalbe.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,11 +17,13 @@ import java.time.Period;
 @Component
 public class ServiceUtil {
 
+    private final JwtUtil jwtUtil;
+
     // 토큰 선언 ex.TokenProvider
 
     // 멤버 인증
     public Member validateMember(HttpServletRequest request) {
-        if (!tokenProvider.tokenValidation(request.getHeader("Refresh-Token"))) {
+        if (!jwtUtil.validateToken(request.getHeader("Refresh-Token"))) {
             return null;
         }
         return tokenProvider.getMemberFromAuthentication();

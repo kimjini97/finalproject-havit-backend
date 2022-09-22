@@ -36,7 +36,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
 
             if(!jwtHeader.startsWith(TokenProperties.TOKEN_TYPE)){
-                jwtUtil.exceptionResponse(response, ErrorMsg.INVALID_ACCESS_TOKEN);
+                jwtUtil.exceptionResponse(response, ErrorMsg.INVALID_TOKEN);
                 return;
             }
 
@@ -49,14 +49,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     jwtUtil.exceptionResponse(response, ErrorMsg.EXPIRED_ACCESS_TOKEN);
                     return;
                 case TokenProperties.INVALID:
-                    jwtUtil.exceptionResponse(response, ErrorMsg.INVALID_ACCESS_TOKEN);
+                    jwtUtil.exceptionResponse(response, ErrorMsg.INVALID_TOKEN);
                     return;
                 case TokenProperties.VALID:
                     // JWT 로부터 권한 값 가져오기
                     String username = jwtUtil.getUsernameFromToken(accessToken);
 
                     if (username == null) {
-                        jwtUtil.exceptionResponse(response, ErrorMsg.INVALID_ACCESS_TOKEN);
+                        jwtUtil.exceptionResponse(response, ErrorMsg.INVALID_TOKEN);
                         return;
                     }
 
