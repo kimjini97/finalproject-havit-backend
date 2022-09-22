@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Builder
@@ -22,15 +23,12 @@ public class Group extends Timestamped{
     private String title;
 
     @Column(nullable = false)
-    private String nickname;
-
-    @Column(nullable = false)
     private String leaderName;
 
     @Column(nullable = false)
     private String crewName;
 
-    @Column(nullable = false)
+    @Column
     private String startDate;
 
     @Column(nullable = false)
@@ -39,4 +37,10 @@ public class Group extends Timestamped{
     @Column
     private String content;
 
+    @JoinColumn(name = "member_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+
+    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<GroupTag> groupTagList;
 }
