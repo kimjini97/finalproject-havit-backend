@@ -1,7 +1,7 @@
 package com.havit.finalbe.repository;
 
-import com.havit.finalbe.entity.Group;
+import com.havit.finalbe.entity.Groups;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface GroupRepository extends JpaRepository<Group, Long> {
+public interface GroupRepository extends JpaRepository<Groups, Long> {
 }

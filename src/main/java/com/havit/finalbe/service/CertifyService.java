@@ -47,8 +47,8 @@ public class CertifyService {
             return ResponseDto.fail(INVALID_TOKEN);
         }
 
-        Group group = groupService.isPresentGroup(certifyRequestDto.getGroupId());
-        if (null == group) {
+        Groups groups = groupService.isPresentGroup(certifyRequestDto.getGroupId());
+        if (null == groups) {
             return ResponseDto.fail(GROUP_NOT_FOUND);
         }
 
@@ -62,7 +62,7 @@ public class CertifyService {
 
         Certify certify = Certify.builder()
                 .member(member)
-                .group(group)
+                .groups(groups)
                 .title(certifyRequestDto.getTitle())
                 .imgUrl(imgUrl)
                 .latitude(certifyRequestDto.getLatitude())
@@ -74,7 +74,7 @@ public class CertifyService {
         return ResponseDto.success(
                 CertifyResponseDto.builder()
                         .certifyId(certify.getCertifyId())
-                        .groupId(certify.getGroup().getGroupId())
+                        .groupId(certify.getGroups().getGroupId())
                         .title(certify.getTitle())
                         .imgUrl(certify.getImgUrl())
                         .longitude(certify.getLongitude())
@@ -133,7 +133,7 @@ public class CertifyService {
         return ResponseDto.success(
                 CertifyResponseDto.builder()
                         .certifyId(certify.getCertifyId())
-                        .groupId(certify.getGroup().getGroupId())
+                        .groupId(certify.getGroups().getGroupId())
                         .title(certify.getTitle())
                         .imgUrl(certify.getImgUrl())
                         .longitude(certify.getLongitude())
@@ -190,7 +190,7 @@ public class CertifyService {
         return ResponseDto.success(
                 CertifyResponseDto.builder()
                         .certifyId(certify.getCertifyId())
-                        .groupId(certify.getGroup().getGroupId())
+                        .groupId(certify.getGroups().getGroupId())
                         .title(certify.getTitle())
                         .imgUrl(certify.getImgUrl())
                         .longitude(certify.getLongitude())

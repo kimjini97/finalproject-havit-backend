@@ -140,8 +140,8 @@ public class ServiceUtil {
     }
 
     // Group 에 해당하는 TagName 불러오기
-    public List<String> getTagNameListFromGroupTag(Group group) {
-        List<GroupTag> groupTagList = groupTagRepository.findAllByGroup(group);
+    public List<String> getTagNameListFromGroupTag(Groups groups) {
+        List<GroupTag> groupTagList = groupTagRepository.findAllByGroups(groups);
         List<String> tagNameList = new ArrayList<>();
 
         for (GroupTag groupTag : groupTagList) {
