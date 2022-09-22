@@ -1,24 +1,34 @@
 package com.havit.finalbe.service;
 
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.havit.finalbe.entity.Comment;
 import com.havit.finalbe.entity.Member;
 import com.havit.finalbe.entity.SubComment;
 import com.havit.finalbe.jwt.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Component
 public class ServiceUtil {
 
-    private final JwtUtil jwtUtil;
-
+    @Value("${cloud.aws.s3.bucket}")
+    private String havitbucket;
+    private final AmazonS3Client amazonS3Client;
     // 토큰 선언 ex.TokenProvider
 
     // 멤버 인증
@@ -30,7 +40,7 @@ public class ServiceUtil {
     }
 
     // 댓글 작성 날짜 포맷
-    public String getDateFormatOfComment(Comment comment){
+    public String getDateFormatOfComment(Comment comment) {
         LocalDate curDateTime = LocalDate.from(LocalDateTime.now());
         LocalDate commentCreatedAt = LocalDate.from(comment.getCreatedAt());
         Period period = Period.between(commentCreatedAt,curDateTime);
@@ -66,7 +76,7 @@ public class ServiceUtil {
     }
 
     // 대댓글 작성 날짜 포맷
-    public String getDateFormatOfSubComment(SubComment subComment){
+    public String getDateFormatOfSubComment(SubComment subComment) {
         LocalDate curDateTime = LocalDate.from(LocalDateTime.now());
         LocalDate subCommentCreatedAt = LocalDate.from(subComment.getCreatedAt());
         Period period = Period.between(subCommentCreatedAt,curDateTime);
@@ -99,5 +109,30 @@ public class ServiceUtil {
         }
 
         return dateFormat;
+    }
+
+    // 이미지 업로드 및 URL 변환
+    public String uploadImage(MultipartFile multipartFile, String dirName) throws IOException {
+
+        String fileName = dirName + "/" + UUID.randomUUID() + multipartFile.getName();
+
+        ObjectMetadata objectMetaData = new ObjectMetadata();
+        objectMetaData.setContentType(multipartFile.getContentType());
+        objectMetaData.setContentLength(multipartFile.getSize());
+
+        // S3 에 업로드
+        amazonS3Client.putObject(
+                new PutObjectRequest(havitbucket, fileName, multipartFile.getInputStream(), objectMetaData)
+                        .withCannedAcl(CannedAccessControlList.PublicRead)
+        );
+
+        // URL 변환
+        return amazonS3Client.getUrl(havitbucket, fileName).toString();
+    }
+
+    // S3 이미지 객체 삭제
+    public void deleteImage(String key) {
+        DeleteObjectRequest request = new DeleteObjectRequest(havitbucket, key);
+        amazonS3Client.deleteObject(request);
     }
 }
