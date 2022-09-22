@@ -41,7 +41,7 @@ public class Certify extends Timestamped {
     private Group group;
 
     @OneToMany(mappedBy = "certify", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Comment> CommentList;
+    private List<Comment> commentList;
 
     public boolean isValidateMember(Member member) {
         return !this.member.equals(member);
