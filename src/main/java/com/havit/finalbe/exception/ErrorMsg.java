@@ -28,16 +28,17 @@ public enum ErrorMsg {
     NEED_REFRESH_TOKEN("NEED_REFRESH_TOKEN","Refresh Token이 필요합니다."),
 
     // 유효하지 않은 토큰
-    INVALID_ACCESS_TOKEN("INVALID_ACCESS_TOKEN", "유효하지 않은 Access Token 입니다."),
-    INVALID_REFRESH_TOKEN("INVALID_REFRESH_TOKEN", "유효하지 않은 Refresh Token 입니다."),
+    INVALID_TOKEN("INVALID_TOKEN", "유효하지 않은 Token 입니다."),
 
     // 만료된 토큰
     EXPIRED_ACCESS_TOKEN("EXPIRED_ACCESS_TOKEN", "만료된 Access Token 입니다."),
     EXPIRED_REFRESH_TOKEN("EXPIRED_REFRESH_TOKEN", "만료된 Refresh Token 입니다."),
 
-    // 상품 id 관련 에러
-    ID_NOT_FOUND("ID_NOT_FOUND", "존재하지 않는 ID입니다."),
-    CATEGORY_NOT_FOUND("CATEGORY_NOT_FOUND", "존재하지 않는 카테고리입니다.");
+    // 그룹, 댓글
+    GROUP_NOT_FOUND("GROUP_NOT_FOUND", "해당 그룹을 찾을 수 없습니다."),
+    COMMENT_NOT_FOUND("COMMENT_NOT_FOUND", "해당 댓글을 찾을 수 없습니다."),
+    CERTIFY_NOT_FOUND("CERTIFY_NOT_FOUND", "해당 인증샷을 찾을 수 없습니다."),
+    MEMBER_NOT_MATCHED("MEMBER_NOT_MATCHED", "작성자가 아닙니다.");
 
     private final String code;
     private final String message;
