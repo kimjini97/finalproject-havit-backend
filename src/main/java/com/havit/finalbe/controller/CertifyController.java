@@ -23,7 +23,7 @@ public class CertifyController {
 
     @GetMapping("/api/auth/certify/{certifyId}")
     public ResponseDto<?> getCertifyDetail(@PathVariable Long certifyId) {
-        return null;
+        return certifyService.getCertifyDetail(certifyId);
     }
 
     @PutMapping("/api/auth/certify/{certifyId}")
