@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CommentResponseDto {
     private Long commentId;
+    private Long certifyId;
     private String nickname;
     private String profileUrl;
     private String content;
