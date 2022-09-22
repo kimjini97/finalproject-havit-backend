@@ -2,10 +2,10 @@ package com.havit.finalbe.service;
 
 import com.havit.finalbe.dto.request.CertifyRequestDto;
 import com.havit.finalbe.dto.response.CertifyResponseDto;
+import com.havit.finalbe.dto.response.CommentResponseDto;
 import com.havit.finalbe.dto.response.ResponseDto;
-import com.havit.finalbe.entity.Certify;
-import com.havit.finalbe.entity.Group;
-import com.havit.finalbe.entity.Member;
+import com.havit.finalbe.dto.response.SubCommentResponseDto;
+import com.havit.finalbe.entity.*;
 import com.havit.finalbe.repository.CertifyRepository;
 import com.havit.finalbe.repository.CommentRepository;
 import com.havit.finalbe.repository.SubCommentRepository;
@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import static com.havit.finalbe.exception.ErrorMsg.*;
 
@@ -50,7 +52,7 @@ public class CertifyService {
             return ResponseDto.fail(GROUP_NOT_FOUND);
         }
 
-        // 멤버가 참여자인지 확인하고, 참여자면 leaderName 또는 crewName 추출하는 코드 추가 작성칸
+        // 멤버가 참여자인지 확인하고, (참여자 아닐 경우 fail) 참여자면 leaderName 또는 crewName 추출하는 코드 추가 작성칸
 
         String imgUrl = "";
         MultipartFile imgFile = certifyRequestDto.getImgFile();
@@ -89,7 +91,62 @@ public class CertifyService {
 
     @Transactional(readOnly = true)
     public ResponseDto<?> getCertifyDetail(Long certifyId) {
-        return null;
+
+        Certify certify = isPresentCertify(certifyId);
+        if (null == certify) {
+            return ResponseDto.fail(CERTIFY_NOT_FOUND);
+        }
+
+        List<Comment> commentList = commentRepository.findAllByCertify(certify);
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+
+        for (Comment comment : commentList) {
+
+            List<SubComment> subCommentList = subCommentRepository.findAllByComment(comment);
+            List<SubCommentResponseDto> subCommentResponseDtoList = new ArrayList<>();
+
+            for (SubComment subComment : subCommentList) {
+
+                subCommentResponseDtoList.add(
+                        SubCommentResponseDto.builder()
+                                .subCommentId(subComment.getSubCommentId())
+                                .commentId(subComment.getComment().getCommentId())
+                                .nickname(subComment.getMember().getNickname())
+                                .profileUrl(subComment.getMember().getProfileUrl())
+                                .content(subComment.getContent())
+                                .dateTime(serviceUtil.getDateFormatOfSubComment(subComment))
+                                .build()
+                );
+            }
+            commentResponseDtoList.add(
+                    CommentResponseDto.builder()
+                            .commentId(comment.getCommentId())
+                            .certifyId(comment.getCertify().getCertifyId())
+                            .nickname(comment.getMember().getNickname())
+                            .profileUrl(comment.getMember().getProfileUrl())
+                            .content(comment.getContent())
+                            .dateTime(serviceUtil.getDateFormatOfComment(comment))
+                            .subCommentList(subCommentResponseDtoList)
+                            .build()
+            );
+        }
+        return ResponseDto.success(
+                CertifyResponseDto.builder()
+                        .certifyId(certify.getCertifyId())
+                        .groupId(certify.getGroup().getGroupId())
+                        .title(certify.getTitle())
+                        .imgUrl(certify.getImgUrl())
+                        .longitude(certify.getLongitude())
+                        .latitude(certify.getLatitude())
+                        .nickname(certify.getMember().getNickname())
+                        // leaderName
+                        // crewName
+                        .profileUrl(certify.getMember().getProfileUrl())
+                        .createdAt(certify.getCreatedAt())
+                        .modifiedAt(certify.getModifiedAt())
+                        .commentList(commentResponseDtoList)
+                        .build()
+        );
     }
 
     @Transactional
