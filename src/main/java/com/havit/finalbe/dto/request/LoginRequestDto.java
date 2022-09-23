@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-@Schema(description = "로그인 RequestDto")
+@Schema(description = "로그인 요청Dto")
 @Getter
 @Builder
 @AllArgsConstructor
