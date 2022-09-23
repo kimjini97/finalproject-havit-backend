@@ -36,5 +36,5 @@ public class Certify extends Timestamped {
 
     @JoinColumn(name = "group_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    private Group group;
+    private Groups group;
 }

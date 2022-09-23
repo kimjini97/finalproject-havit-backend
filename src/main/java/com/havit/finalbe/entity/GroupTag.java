@@ -2,6 +2,7 @@ package com.havit.finalbe.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springdoc.core.SpringDocConfigProperties;
 
 import javax.persistence.*;
 
@@ -20,6 +21,6 @@ public class GroupTag {
 
     @JoinColumn(name = "group_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    private Group group;
+    private Groups groups;
 
 }

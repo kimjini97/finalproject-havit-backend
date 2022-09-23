@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Group extends Timestamped{
+public class Groups extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

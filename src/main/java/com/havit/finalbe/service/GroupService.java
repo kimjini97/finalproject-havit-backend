@@ -1,6 +1,6 @@
 package com.havit.finalbe.service;
 
-import com.havit.finalbe.entity.Group;
+import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,8 +16,8 @@ public class GroupService {
 
 
     @Transactional(readOnly = true)
-    public Group isPresentGroup(Long groupId) {
-        Optional<Group> groupOptional = groupRepository.findById(groupId);
+    public Groups isPresentGroup(Long groupId) {
+        Optional<Groups> groupOptional = groupRepository.findById(groupId);
         return groupOptional.orElse(null);
     }
 }
