@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
         info = @Info(
-                title = "Let's Do It 안했대요 API명세서",
-                description = "회원가입, 로그인 API 명세서",
+                title = "Havit API명세서",
+                description = "그룹, 댓글, 인증, 회원, API 명세서",
                 version = "v1",
                 contact = @Contact(
                         name = "이노베이션 캠프 8조",
