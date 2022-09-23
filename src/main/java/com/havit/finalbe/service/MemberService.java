@@ -55,7 +55,7 @@ public class MemberService {
             memberRepository.save(member);
 
             MemberResponseDto signupInfo = MemberResponseDto.builder()
-                    .id(member.getMemberId())
+                    .memberId(member.getMemberId())
                     .username(member.getUsername())
                     .nickname(member.getNickname())
                     .createdAt(member.getCreatedAt())
@@ -100,7 +100,7 @@ public class MemberService {
         TokenToHeaders(response, accessToken, refreshToken);
 
         MemberResponseDto memberResponseDto = MemberResponseDto.builder()
-                .id(member.getMemberId())
+                .memberId(member.getMemberId())
                 .username(member.getUsername())
                 .nickname(member.getNickname())
                 .build();
