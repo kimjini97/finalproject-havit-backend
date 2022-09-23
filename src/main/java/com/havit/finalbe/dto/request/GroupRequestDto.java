@@ -36,7 +36,4 @@ public class GroupRequestDto {
 
     @Schema(description = "그룹 이미지", example = "기상.jpg")
     private MultipartFile imgFile;
-
-//    @Schema(description = "인증 id", example = "1")
-//    private String deadline;
 }
