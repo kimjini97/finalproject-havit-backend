@@ -20,7 +20,7 @@ public class GroupTag {
 
     @JoinColumn(name = "group_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    private Group group;
+    private Groups groups;
 
     @JoinColumn(name = "tags_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
