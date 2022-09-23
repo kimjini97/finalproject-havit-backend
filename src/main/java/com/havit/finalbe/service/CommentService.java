@@ -56,6 +56,7 @@ public class CommentService {
         return ResponseDto.success(
                 CommentResponseDto.builder()
                         .commentId(comment.getCommentId())
+                        .certifyId(comment.getCertify().getCertifyId())
                         .nickname(comment.getMember().getNickname())
                         .profileUrl(comment.getMember().getProfileUrl())
                         .content(comment.getContent())
@@ -94,6 +95,7 @@ public class CommentService {
         return ResponseDto.success(
                 CommentResponseDto.builder()
                         .commentId(comment.getCommentId())
+                        .certifyId(comment.getCertify().getCertifyId())
                         .nickname(comment.getMember().getNickname())
                         .profileUrl(comment.getMember().getProfileUrl())
                         .content(comment.getContent())
