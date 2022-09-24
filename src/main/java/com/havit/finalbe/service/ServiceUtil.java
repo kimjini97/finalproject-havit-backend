@@ -36,7 +36,7 @@ public class ServiceUtil {
 
     // 멤버 인증
     public Member validateMember(HttpServletRequest request) {
-        if (TokenProperties.INVALID.equals(jwtUtil.validateToken(request.getHeader("Refresh-Token")))) {
+        if (jwtUtil.validateToken(request.getHeader("Refresh-Token")).equals(TokenProperties.INVALID)) {
             return null;
         }
         return jwtUtil.getMemberFromAuthentication();
