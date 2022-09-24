@@ -31,6 +31,10 @@ public class Member extends Timestamped{
     @Column
     private String profileUrl;
 
+    public boolean isValidateMember(Long memberId) {
+        return this.memberId == memberId;
+    }
+
     public boolean validatePassword(PasswordEncoder passwordEncoder, String password) {
         return passwordEncoder.matches(password, this.password);
     }

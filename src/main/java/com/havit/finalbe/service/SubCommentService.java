@@ -87,7 +87,7 @@ public class SubCommentService {
             return ResponseDto.fail(COMMENT_NOT_FOUND);
         }
 
-        if (subComment.isValidateMember(member)) {
+        if (!subComment.getMember().isValidateMember(member.getMemberId())) {
             return ResponseDto.fail(MEMBER_NOT_MATCHED);
         }
 
@@ -126,7 +126,7 @@ public class SubCommentService {
             return ResponseDto.fail(COMMENT_NOT_FOUND);
         }
 
-        if (subComment.isValidateMember(member)) {
+        if (!subComment.getMember().isValidateMember(member.getMemberId())) {
             return ResponseDto.fail(MEMBER_NOT_MATCHED);
         }
 

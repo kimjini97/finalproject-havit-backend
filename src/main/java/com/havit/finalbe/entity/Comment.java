@@ -38,7 +38,4 @@ public class Comment extends Timestamped {
         this.content = commentRequestDto.getContent();
     }
 
-    public boolean isValidateMember(Member member) {
-        return !this.member.equals(member);
-    }
 }

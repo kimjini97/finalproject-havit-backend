@@ -135,8 +135,7 @@ public class ServiceUtil {
 
     // S3 이미지 객체 삭제
     public void deleteImage(String key) {
-        DeleteObjectRequest request = new DeleteObjectRequest(havitbucket, key);
-        amazonS3Client.deleteObject(request);
+        amazonS3Client.deleteObject(havitbucket, key);
     }
 
     // Group 에 해당하는 TagName 불러오기

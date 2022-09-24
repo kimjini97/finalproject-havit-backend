@@ -34,9 +34,4 @@ public class SubComment extends Timestamped {
     public void update(SubCommentRequestDto subCommentRequestDto) {
         this.content = subCommentRequestDto.getContent();
     }
-
-    // 작성자 확인
-    public boolean isValidateMember(Member member) {
-        return !this.member.equals(member);
-    }
 }

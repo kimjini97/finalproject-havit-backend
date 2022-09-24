@@ -56,10 +56,6 @@ public class Groups extends Timestamped{
 
     // 참여자 리스트 추가
 
-    public boolean isValidateMember(Member member) {
-        return !this.member.equals(member);
-    }
-
     public void update(GroupRequestDto groupRequestDto, String imgUrl) {
         this.title = groupRequestDto.getTitle();
         this.startDate = groupRequestDto.getStartDate();
