@@ -170,7 +170,8 @@ public class CertifyService {
             return ResponseDto.fail(CERTIFY_NOT_FOUND);
         }
 
-        if (certify.isValidateMember(member)) {
+
+        if (!certify.isValidateMember(member)) {
             return ResponseDto.fail(MEMBER_NOT_MATCHED);
         }
 
