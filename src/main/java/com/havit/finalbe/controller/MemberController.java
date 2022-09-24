@@ -8,6 +8,7 @@ import com.havit.finalbe.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,5 +38,11 @@ public class MemberController {
     @RequestMapping(value = "/api/auth/logout", method = RequestMethod.POST)
     public ResponseDto<?> logout(HttpServletRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return memberService.logout(request, userDetails);
+    }
+
+    @Operation(summary = "토큰 재발급", description = "토큰 재발급합니다")
+    @PostMapping("/api/auth/reissue")
+    public ResponseDto<?> reissue(HttpServletRequest request, HttpServletResponse response) {
+        return memberService.reissue(request,response);
     }
 }
