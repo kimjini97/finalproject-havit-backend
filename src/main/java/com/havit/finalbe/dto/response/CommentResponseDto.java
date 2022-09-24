@@ -11,6 +11,7 @@ import java.util.List;
 
 @Schema(description = "댓글 응답DTO")
 @Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

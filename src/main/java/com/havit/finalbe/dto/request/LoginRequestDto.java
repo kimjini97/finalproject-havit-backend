@@ -4,11 +4,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Schema(description = "로그인 요청Dto")
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class LoginRequestDto {
     @Schema(description = "이메일", example = "test@gmail.com")
     private String email;
