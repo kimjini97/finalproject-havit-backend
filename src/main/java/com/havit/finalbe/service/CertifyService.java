@@ -170,8 +170,7 @@ public class CertifyService {
             return ResponseDto.fail(CERTIFY_NOT_FOUND);
         }
 
-
-        if (!certify.isValidateMember(member)) {
+        if (!certify.getMember().isValidateMember(member.getMemberId())) {
             return ResponseDto.fail(MEMBER_NOT_MATCHED);
         }
 
@@ -227,12 +226,12 @@ public class CertifyService {
             return ResponseDto.fail(CERTIFY_NOT_FOUND);
         }
 
-        if (certify.isValidateMember(member)) {
+        if (!certify.getMember().isValidateMember(member.getMemberId())) {
             return ResponseDto.fail(MEMBER_NOT_MATCHED);
         }
 
         String originFile = certify.getImgUrl();
-        String key = originFile.substring(60);
+        String key = originFile.substring(52);
 
         serviceUtil.deleteImage(key);
         certifyRepository.delete(certify);

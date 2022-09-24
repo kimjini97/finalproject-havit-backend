@@ -186,12 +186,12 @@ public class GroupService {
             return ResponseDto.fail(GROUP_NOT_FOUND);
         }
 
-        if (groups.isValidateMember(member)) {
+        if (!groups.getMember().isValidateMember(member.getMemberId())) {
             return ResponseDto.fail(MEMBER_NOT_MATCHED);
         }
 
         String originFile = groups.getImgUrl();
-        String key = originFile.substring(58);
+        String key = originFile.substring(52);
         String imgUrl = "";
         MultipartFile imgFile = groupRequestDto.getImgFile();
         if (!imgFile.isEmpty()) {
@@ -284,7 +284,7 @@ public class GroupService {
             return ResponseDto.fail(GROUP_NOT_FOUND);
         }
 
-        if (groups.isValidateMember(member)) {
+        if (!groups.getMember().isValidateMember(member.getMemberId())) {
             return ResponseDto.fail(MEMBER_NOT_MATCHED);
         }
 

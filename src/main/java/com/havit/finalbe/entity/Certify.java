@@ -44,7 +44,7 @@ public class Certify extends Timestamped {
     private List<Comment> commentList;
 
     public boolean isValidateMember(Member member) {
-        return this.member.equals(member);
+        return !this.member.equals(member);
     }
 
     public void update(CertifyRequestDto certifyRequestDto, String imgUrl) {
