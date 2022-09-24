@@ -15,7 +15,6 @@ public enum ErrorMsg {
     EMPTY_VALUE("EMPTY_VALUE", "정보를 입력하세요."),
     INVALID_EMAIL("INVALID_EMAIL", "필드는 100자 이하여야 하며, @ 기호 전까지 64자 이하여야 합니다."),
     INVALID_PASSWORD("INVALID_PASSWORD", "비밀번호 최소 8자 이상 , 소문자 , 숫자 (0-9) 또는 특수문자 (!@#$%^&*)"),
-    INVALID_PHONE_NUMBER("INVALID_PHONE_NUMBER", "유효한 휴대폰번호가 아닙니다."),
     DUPLICATE_EMAIL("DUPLICATE_EMAIL", "중복된 이메일 주소가 있습니다."),
 
     // 회원 관련 에러
@@ -29,6 +28,9 @@ public enum ErrorMsg {
 
     // 유효하지 않은 토큰
     INVALID_TOKEN("INVALID_TOKEN", "유효하지 않은 Token 입니다."),
+
+    // 일치하지 않은 토큰
+    REFRESH_TOKEN_NOT_MATCHED("REFRESH_TOKEN_NOT_MATCHED", "토큰이 일치하지 않습니다."),
 
     // 만료된 토큰
     EXPIRED_ACCESS_TOKEN("EXPIRED_ACCESS_TOKEN", "만료된 Access Token 입니다."),

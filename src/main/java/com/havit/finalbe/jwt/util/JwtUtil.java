@@ -100,4 +100,5 @@ public class JwtUtil {
         return ((UserDetailsImpl) authentication.getPrincipal()).getMember();
     }
 
+
 }
