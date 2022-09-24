@@ -13,7 +13,6 @@ import java.util.List;
 @Schema(description = "그룹 응답DTO")
 @Getter
 @Builder
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class GroupResponseDto {

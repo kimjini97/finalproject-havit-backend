@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 
 @Schema(description = "대댓글 응답Dto")
 @Builder
-@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
