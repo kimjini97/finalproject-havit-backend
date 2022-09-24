@@ -8,6 +8,7 @@ import com.havit.finalbe.dto.response.SubCommentResponseDto;
 import com.havit.finalbe.entity.*;
 import com.havit.finalbe.repository.CertifyRepository;
 import com.havit.finalbe.repository.CommentRepository;
+import com.havit.finalbe.repository.ParticipateRepository;
 import com.havit.finalbe.repository.SubCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class CertifyService {
     private final CertifyRepository certifyRepository;
     private final CommentRepository commentRepository;
     private final SubCommentRepository subCommentRepository;
+    private final ParticipateRepository participateRepository;
     private final GroupService groupService;
     private final ServiceUtil serviceUtil;
 
@@ -52,7 +54,11 @@ public class CertifyService {
             return ResponseDto.fail(GROUP_NOT_FOUND);
         }
 
-        // 멤버가 참여자인지 확인하고, (참여자 아닐 경우 fail) 참여자면 leaderName 또는 crewName 추출하는 코드 추가 작성칸
+        if (participateRepository.findByGroups_GroupIdAndMember_MemberId(groups.getGroupId(), member.getMemberId()).isEmpty()) {
+            return ResponseDto.fail(PARTICIPATION_NOT_FOUND);
+        }
+
+        // 참여자면 leaderName 또는 crewName 추출하는 코드 추가 작성칸
 
         String imgUrl = "";
         MultipartFile imgFile = certifyRequestDto.getImgFile();
@@ -177,7 +183,7 @@ public class CertifyService {
         // leaderName 또는 crewName 추출하는 코드 추가 작성칸
 
         String originFile = certify.getImgUrl();
-        String key = originFile.substring(60);
+        String key = originFile.substring(52);
         String imgUrl = "";
         MultipartFile imgFile = certifyRequestDto.getImgFile();
         if (!imgFile.isEmpty()) {
