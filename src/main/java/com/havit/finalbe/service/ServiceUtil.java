@@ -10,6 +10,7 @@ import com.havit.finalbe.jwt.util.JwtUtil;
 import com.havit.finalbe.jwt.util.TokenProperties;
 import com.havit.finalbe.repository.GroupTagRepository;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,7 +36,7 @@ public class ServiceUtil {
     private final GroupTagRepository groupTagRepository;
 
     // 멤버 인증
-    public Member validateMember(HttpServletRequest request) {
+    public Member validateMember(@NotNull HttpServletRequest request) {
         if (TokenProperties.INVALID.equals(jwtUtil.validateToken(request.getHeader("Refresh-Token")))) {
             return null;
         }
