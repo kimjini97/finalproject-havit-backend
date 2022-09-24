@@ -1,5 +1,6 @@
 package com.havit.finalbe.service;
 
+import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.dto.request.GroupRequestDto;
 import com.havit.finalbe.dto.response.GroupResponseDto;
 import com.havit.finalbe.dto.response.ResponseDto;

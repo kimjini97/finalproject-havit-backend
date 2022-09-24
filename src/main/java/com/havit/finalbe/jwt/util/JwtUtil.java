@@ -58,7 +58,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String validateToken( String token) {
+    public String validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return TokenProperties.VALID;
@@ -99,5 +99,6 @@ public class JwtUtil {
         }
         return ((UserDetailsImpl) authentication.getPrincipal()).getMember();
     }
+
 
 }
