@@ -4,12 +4,14 @@ import com.havit.finalbe.entity.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Schema(description = "그룹 응답DTO")
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
