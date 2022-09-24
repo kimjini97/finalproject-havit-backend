@@ -4,14 +4,8 @@ import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.dto.request.GroupRequestDto;
 import com.havit.finalbe.dto.response.GroupResponseDto;
 import com.havit.finalbe.dto.response.ResponseDto;
-import com.havit.finalbe.entity.Groups;
-import com.havit.finalbe.entity.GroupTag;
-import com.havit.finalbe.entity.Member;
-import com.havit.finalbe.entity.Tags;
-import com.havit.finalbe.repository.CertifyRepository;
-import com.havit.finalbe.repository.GroupRepository;
-import com.havit.finalbe.repository.GroupTagRepository;
-import com.havit.finalbe.repository.TagsRepository;
+import com.havit.finalbe.entity.*;
+import com.havit.finalbe.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +26,7 @@ public class GroupService {
     private final CertifyRepository certifyRepository;
     private final TagsRepository tagsRepository;
     private final GroupTagRepository groupTagRepository;
+    private final ParticipateRepository participateRepository;
     private final ServiceUtil serviceUtil;
 
     @Transactional
@@ -109,13 +104,65 @@ public class GroupService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseDto<?> getAllGroup() {
+    public ResponseDto<?> getAllGroup(HttpServletRequest request) {
         return null;
     }
 
     @Transactional(readOnly = true)
-    public ResponseDto<?> getGroupDetail(Long groupId) {
-        return null;
+    public ResponseDto<?> getGroupDetail(Long groupId, HttpServletRequest request) {
+
+        Member member = serviceUtil.validateMember(request);
+        if (null == member) {
+            return ResponseDto.fail(INVALID_TOKEN);
+        }
+
+        // 만약 참여자면 어떤 계급인지 추출
+
+        Groups groups = isPresentGroup(groupId);
+        if (null == groups) {
+            return ResponseDto.fail(GROUP_NOT_FOUND);
+        }
+
+        // 태그 가져오기
+        List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
+
+        // 참여한 멤버 카운팅
+        int memberCount = participateRepository.countByGroups_GroupId(groupId);
+
+        // 참여 멤버 목록
+        List<Participate> participateList = participateRepository.findAllByGroups(groups);
+        List<Member> memberList = new ArrayList<>();
+        for (Participate participateMember : participateList) {
+            memberList.add(participateMember.getMember());
+        }
+
+        // 인증샷 이미지 URL 목록 가져오기
+        List<Certify> certifyList = certifyRepository.findByGroups_GroupId(groupId);
+        List<String> certifyImgUrlList = new ArrayList<>();
+        for (Certify imgUrl : certifyList) {
+            certifyImgUrlList.add(imgUrl.getImgUrl());
+        }
+
+        return ResponseDto.success(
+                GroupResponseDto.builder()
+                        .groupId(groupId)
+                        .title(groups.getTitle())
+                        .nickname(groups.getMember().getNickname())
+                        .leaderName(groups.getLeaderName())
+                        .crewName(groups.getCrewName())
+                        .startDate(groups.getStartDate())
+                        .content(groups.getContent())
+                        .imgUrl(groups.getImgUrl())
+                        .createdAt(groups.getCreatedAt())
+                        .modifiedAt(groups.getModifiedAt())
+                        .groupTag(tagListByGroup)
+                        .memberCount(memberCount)
+                        .memberList(memberList)
+                        .certifyImgUrlList(certifyImgUrlList)
+                        .build()
+        );
+
+
     }
 
     @Transactional
@@ -153,6 +200,26 @@ public class GroupService {
         }
 
         groups.update(groupRequestDto, imgUrl);
+
+        if (null == groupRequestDto.getGroupTag()) {
+            List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
+            return ResponseDto.success(
+                    GroupResponseDto.builder()
+                            .groupId(groups.getGroupId())
+                            .title(groups.getTitle())
+                            .imgUrl(groups.getImgUrl())
+                            .nickname(groups.getMember().getNickname())
+                            .leaderName(groups.getLeaderName())
+                            .crewName(groups.getCrewName())
+                            .startDate(groups.getStartDate())
+                            .content(groups.getContent())
+                            .groupTag(tagListByGroup)
+                            .createdAt(groups.getCreatedAt())
+                            .modifiedAt(groups.getModifiedAt())
+                            .build()
+            );
+        }
+
         groupTagRepository.deleteByGroups(groups);
 
         List<String> tagList = groupRequestDto.getGroupTag();
