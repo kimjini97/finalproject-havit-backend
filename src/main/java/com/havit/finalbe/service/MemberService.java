@@ -13,7 +13,9 @@ import com.havit.finalbe.jwt.util.TokenProperties;
 import com.havit.finalbe.repository.MemberRepository;
 import com.havit.finalbe.repository.RefreshTokenRepository;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
+import io.jsonwebtoken.Jwts;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,8 @@ public class MemberService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+
+    private final ServiceUtil serviceUtil;
 
     @Transactional
     public ResponseDto<?> sigunup(SignupRequestDto signupRequestDto) {
@@ -144,12 +148,53 @@ public class MemberService {
         }
     }
 
+    @Transactional
+    public ResponseDto<?> reissue(HttpServletRequest request, HttpServletResponse response) {
+        String refreshHeader = request.getHeader(TokenProperties.REFRESH_HEADER);
+
+        if(refreshHeader == null){
+            throw new NeedRefreshTokenException(ErrorMsg.NEED_REFRESH_TOKEN);
+        }
+
+        if(!refreshHeader.startsWith(TokenProperties.TOKEN_TYPE)){
+            throw new InvalidRefreshTokenException(ErrorMsg.INVALID_TOKEN);
+        }
+
+        String refreshToken = refreshHeader.replace(TokenProperties.TOKEN_TYPE, "");
+
+        // Refresh 토큰 검증
+        String refreshTokenValidate = jwtUtil.validateToken(refreshToken);
+
+        switch (refreshTokenValidate) {
+            case TokenProperties.EXPIRED:
+                throw new ExpiredRefreshTokenException(ErrorMsg.EXPIRED_REFRESH_TOKEN);
+            case TokenProperties.VALID:
+                String username = jwtUtil.getUsernameFromToken(refreshToken);
+                Member member = isPresentMemberByUsername(username);
+
+                if (member == null) {
+                    throw new MemberNotFoundException(ErrorMsg.MEMBER_NOT_FOUND);
+                } else {
+                    RefreshToken refreshTokenFromDB = jwtUtil.getRefreshTokenFromDB(member);
+                    if (refreshTokenFromDB != null && refreshToken.equals(refreshTokenFromDB.getTokenValue())) { // new access token 발급
+                        String newAccessToken = jwtUtil.createToken(member.getUsername(), TokenProperties.AUTH_HEADER);
+                        response.addHeader(TokenProperties.AUTH_HEADER, TokenProperties.TOKEN_TYPE + newAccessToken);
+                        return ResponseDto.success("토큰이 재발급 되었습니다.");
+                    } else {
+                        throw new RefreshTokenNotMatched(ErrorMsg.REFRESH_TOKEN_NOT_MATCHED);
+                    }
+                }
+            default:
+                throw new InvalidRefreshTokenException(ErrorMsg.INVALID_TOKEN);
+        }
+    }
+
     private boolean emailDuplicateCheck(String email){
         Object member = isPresentMemberByUsername(email);
         return member == null;
     }
-
     // 회원가입, 로그인 조건 검증
+
     private boolean emailStrCheck (String email){
 //        return Pattern.matches("^[a-zA-Z0-9]{1,64}+@[a-zA-Z0-9]{1,100}+$", email);
         return Pattern.matches("^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z]){1,64}@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$", email);
