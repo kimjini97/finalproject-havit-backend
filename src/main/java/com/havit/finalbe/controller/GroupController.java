@@ -27,14 +27,14 @@ public class GroupController {
 
     @Operation(summary = "전체 그룹 조회", description = "생성된 전체 그룹을 조회합니다.")
     @GetMapping("/api/auth/group")
-    public ResponseDto<?> getAllGroup() {
-        return groupService.getAllGroup();
+    public ResponseDto<?> getAllGroup(HttpServletRequest request) {
+        return groupService.getAllGroup(request);
     }
 
     @Operation(summary = "그룹 상세 조회", description = "groupId에 해당하는 그룹을 조회합니다.")
     @GetMapping("/api/auth/group/{groupId}")
-    public ResponseDto<?> getGroupDetail(@PathVariable Long groupId) {
-        return groupService.getGroupDetail(groupId);
+    public ResponseDto<?> getGroupDetail(@PathVariable Long groupId, HttpServletRequest request) {
+        return groupService.getGroupDetail(groupId, request);
     }
 
     @Operation(summary = "그룹 수정", description = "groupId에 해당하는 그룹을 수정합니다.")
