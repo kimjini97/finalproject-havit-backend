@@ -14,7 +14,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 public class CertifyResponseDto {
 
     @Schema(description = "인증 id", example = "1")

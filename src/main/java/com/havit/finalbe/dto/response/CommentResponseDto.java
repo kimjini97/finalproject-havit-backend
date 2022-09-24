@@ -14,7 +14,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 public class CommentResponseDto {
 
     @Schema(description = "댓글 id", example = "1")
