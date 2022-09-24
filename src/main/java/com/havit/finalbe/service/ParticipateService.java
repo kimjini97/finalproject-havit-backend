@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.havit.finalbe.exception.ErrorMsg.*;
 
@@ -47,7 +48,7 @@ public class ParticipateService {
             return ResponseDto.fail(GROUP_NOT_FOUND);
         }
 
-        if (participateRepository.findByGroupsAndMember(groups, member).isEmpty()) {
+        if (participateRepository.findByGroups_GroupIdAndMember_MemberId(groups.getGroupId(), member.getMemberId()).isEmpty()) {
             Participate participate = Participate.builder()
                     .groups(groups)
                     .member(member)
@@ -116,14 +117,20 @@ public class ParticipateService {
             return ResponseDto.fail(GROUP_NOT_FOUND);
         }
 
-        if (participateRepository.findByGroupsAndMember(groups, member).isPresent()) {
+        if (participateRepository.findByGroups_GroupIdAndMember_MemberId(groups.getGroupId(), member.getMemberId()).isPresent()) {
+
+            Optional<Participate> participation = participateRepository.findByGroups_GroupIdAndMember_MemberId(groups.getGroupId(), member.getMemberId());
+            Long participateId = participation.get().getParticipateId();
+
             Participate participate = Participate.builder()
+                    .participateId(participateId)
                     .groups(groups)
                     .member(member)
                     .build();
             participateRepository.delete(participate);
             return ResponseDto.success("참여 취소가 완료되었습니다.");
         }
+
         return ResponseDto.fail(PARTICIPATION_NOT_FOUND);
     }
 }
