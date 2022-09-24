@@ -212,6 +212,6 @@ public class MemberService {
 
     private void TokenToHeaders(HttpServletResponse response, String accessToken, String refreshToken) {
         response.addHeader(TokenProperties.AUTH_HEADER, TokenProperties.TOKEN_TYPE + accessToken);
-        response.addHeader(TokenProperties.REFRESH_HEADER, TokenProperties.TOKEN_TYPE + refreshToken);
+        response.addHeader(TokenProperties.REFRESH_HEADER, refreshToken);
     }
 }
