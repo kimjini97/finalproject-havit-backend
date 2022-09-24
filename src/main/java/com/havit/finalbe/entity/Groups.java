@@ -68,4 +68,5 @@ public class Groups extends Timestamped{
         this.leaderName = groupRequestDto.getLeaderName();
         this.crewName = groupRequestDto.getCrewName();
     }
+
 }
