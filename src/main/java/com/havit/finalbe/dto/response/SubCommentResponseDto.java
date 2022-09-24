@@ -3,12 +3,14 @@ package com.havit.finalbe.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Schema(description = "대댓글 응답Dto")
 @Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class SubCommentResponseDto {
