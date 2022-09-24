@@ -86,7 +86,7 @@ public class CommentService {
             return ResponseDto.fail(COMMENT_NOT_FOUND);
         }
 
-        if (comment.isValidateMember(member)) {
+        if (!comment.getMember().isValidateMember(member.getMemberId())) {
             return ResponseDto.fail(MEMBER_NOT_MATCHED);
         }
 
@@ -125,7 +125,7 @@ public class CommentService {
             return ResponseDto.fail(COMMENT_NOT_FOUND);
         }
 
-        if (comment.isValidateMember(member)) {
+        if (!comment.getMember().isValidateMember(member.getMemberId())) {
             return ResponseDto.fail(MEMBER_NOT_MATCHED);
         }
 
