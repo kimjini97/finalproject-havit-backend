@@ -1,5 +1,6 @@
 package com.havit.finalbe.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,11 +23,13 @@ public class Participate {
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "member_id", nullable = false)
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "group_id", nullable = false)
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     private Groups groups;
 }
