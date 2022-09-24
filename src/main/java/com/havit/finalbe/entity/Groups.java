@@ -25,9 +25,6 @@ public class Groups extends Timestamped{
     private String title;
 
     @Column(nullable = false)
-    private String nickname;
-
-    @Column(nullable = false)
     private String leaderName;
 
 //    @JoinColumn(name = "leader_member_id", nullable = false)
