@@ -1,5 +1,6 @@
 package com.havit.finalbe.service;
 
+import com.havit.finalbe.dto.response.AllGroupListResponseDto;
 import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.dto.request.GroupRequestDto;
 import com.havit.finalbe.dto.response.GroupResponseDto;
@@ -105,7 +106,30 @@ public class GroupService {
 
     @Transactional(readOnly = true)
     public ResponseDto<?> getAllGroup(HttpServletRequest request) {
-        return null;
+
+        List<Groups> groupList = groupRepository.findAllByOrderByCreatedAtDesc();
+        List<AllGroupListResponseDto> allGroupListResponseDtoList = new ArrayList<>();
+
+        for (Groups groups : groupList) {
+            int memberCount = participateRepository.countByGroups_GroupId(groups.getGroupId());
+            List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
+
+            // 로그인한 멤버가 즐겨찾기 했는지 확인하는 코드
+            // 로그인한 멤버의 계급 확인 코드 ( 만약 추가하면 AllGroupListResponseDto 에도 필드 추가해야 함 )
+
+            AllGroupListResponseDto allGroupListResponseDto = AllGroupListResponseDto.builder()
+                    .groupId(groups.getGroupId())
+                    .title(groups.getTitle())
+                    .imgUrl(groups.getImgUrl())
+                    .memberCount(memberCount)
+                    .groupTag(tagListByGroup)
+                    .createdAt(groups.getCreatedAt())
+                    .modifiedAt(groups.getModifiedAt())
+//                    .favorite()
+                    .build();
+            allGroupListResponseDtoList.add(allGroupListResponseDto);
+        }
+        return ResponseDto.success(allGroupListResponseDtoList);
     }
 
     @Transactional(readOnly = true)
@@ -161,8 +185,6 @@ public class GroupService {
                         .certifyImgUrlList(certifyImgUrlList)
                         .build()
         );
-
-
     }
 
     @Transactional
@@ -289,7 +311,7 @@ public class GroupService {
         }
 
         String originFile = groups.getImgUrl();
-        String key = originFile.substring(58);
+        String key = originFile.substring(52);
         serviceUtil.deleteImage(key);
 
         List<GroupTag> groupTagList = groupTagRepository.findAllByGroups(groups);
@@ -308,10 +330,8 @@ public class GroupService {
                 tagsRepository.delete(tags);
             }
         }
-
         return ResponseDto.success("삭제가 완료되었습니다.");
     }
-
 
     @Transactional(readOnly = true)
     public Groups isPresentGroup(Long groupId) {
