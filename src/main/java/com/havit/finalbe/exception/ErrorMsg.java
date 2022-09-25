@@ -42,6 +42,9 @@ public enum ErrorMsg {
     CERTIFY_NOT_FOUND("CERTIFY_NOT_FOUND", "해당 인증샷을 찾을 수 없습니다."),
     MEMBER_NOT_MATCHED("MEMBER_NOT_MATCHED", "작성자가 아닙니다."),
 
+    // 태그
+    TAG_NOT_FOUND("TAG_NOT_FOUND", "태그를 찾을 수 없습니다."),
+
     // 참여하기
     DUPLICATE_PARTICIPATION("DUPLICATE_PARTICIPATION", "이미 참여했습니다."),
     PARTICIPATION_NOT_FOUND("PARTICIPATION_NOT_FOUND", "참여 내역이 없습니다.");
