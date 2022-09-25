@@ -10,5 +10,6 @@ import java.util.List;
 public interface GroupTagRepository extends JpaRepository<GroupTag, Long> {
     List<GroupTag> findAllByGroups(Groups groups);
     List<GroupTag> findAllByTags(Tags tags);
+    List<GroupTag> findAllByTagsOrderByGroupsDesc(Tags tags);
     void deleteByGroups(Groups groups);
 }
