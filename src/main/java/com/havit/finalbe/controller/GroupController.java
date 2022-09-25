@@ -31,6 +31,12 @@ public class GroupController {
         return groupService.getAllGroup(request);
     }
 
+    @Operation(summary = "태그별 전체 그룹 조회", description = "생성된 전체 그룹을 태그별로 조회합니다.")
+    @GetMapping("/api/auth/group/tag")
+    public ResponseDto<?> getAllGroup(HttpServletRequest request, @RequestParam(value = "tag") String keyword) {
+        return groupService.getAllGroupByTag(request, keyword);
+    }
+
     @Operation(summary = "그룹 상세 조회", description = "groupId에 해당하는 그룹을 조회합니다.")
     @GetMapping("/api/auth/group/{groupId}")
     public ResponseDto<?> getGroupDetail(@PathVariable Long groupId, HttpServletRequest request) {
