@@ -1,5 +1,6 @@
 package com.havit.finalbe.service;
 
+import com.havit.finalbe.dto.response.AllGroupListResponseDto;
 import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.dto.request.GroupRequestDto;
 import com.havit.finalbe.dto.response.GroupResponseDto;
@@ -29,6 +30,7 @@ public class GroupService {
     private final ParticipateRepository participateRepository;
     private final ServiceUtil serviceUtil;
 
+    // 그룹 생성
     @Transactional
     public ResponseDto<?> createGroup(GroupRequestDto groupRequestDto, HttpServletRequest request) throws IOException {
 
@@ -103,11 +105,71 @@ public class GroupService {
         );
     }
 
+    // 그룹 전체 목록 조회
     @Transactional(readOnly = true)
     public ResponseDto<?> getAllGroup(HttpServletRequest request) {
-        return null;
+
+        List<Groups> groupList = groupRepository.findAllByOrderByCreatedAtDesc();
+        List<AllGroupListResponseDto> allGroupListResponseDtoList = new ArrayList<>();
+
+        for (Groups groups : groupList) {
+            int memberCount = participateRepository.countByGroups_GroupId(groups.getGroupId());
+            List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
+
+            // 로그인한 멤버가 즐겨찾기 했는지 확인하는 코드
+            // 로그인한 멤버의 계급 확인 코드 ( 만약 추가하면 AllGroupListResponseDto 에도 필드 추가해야 함 )
+
+            AllGroupListResponseDto allGroupListResponseDto = AllGroupListResponseDto.builder()
+                    .groupId(groups.getGroupId())
+                    .title(groups.getTitle())
+                    .imgUrl(groups.getImgUrl())
+                    .memberCount(memberCount)
+                    .groupTag(tagListByGroup)
+                    .createdAt(groups.getCreatedAt())
+                    .modifiedAt(groups.getModifiedAt())
+//                    .favorite()
+                    .build();
+            allGroupListResponseDtoList.add(allGroupListResponseDto);
+        }
+        return ResponseDto.success(allGroupListResponseDtoList);
     }
 
+    // 태그별 그룹 전체 목록 조회
+    @Transactional(readOnly = true)
+    public ResponseDto<?> getAllGroupByTag(HttpServletRequest request, String keyword) {
+
+        Tags tags = tagsRepository.findByTagName(keyword);
+        if (null == tags) {
+            return ResponseDto.fail(TAG_NOT_FOUND);
+        }
+
+        List<GroupTag> groupTagList = groupTagRepository.findAllByTagsOrderByGroupsDesc(tags);
+        List<AllGroupListResponseDto> allGroupListResponseDtoList = new ArrayList<>();
+
+        for (GroupTag groupTag : groupTagList) {
+            Groups groups = groupTag.getGroups();
+            int memberCount = participateRepository.countByGroups_GroupId(groups.getGroupId());
+            List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
+
+            // 로그인한 멤버가 즐겨찾기 했는지 확인하는 코드
+            // 로그인한 멤버의 계급 확인 코드 ( 만약 추가하면 AllGroupListResponseDto 에도 필드 추가해야 함 )
+
+            AllGroupListResponseDto allGroupListResponseDto = AllGroupListResponseDto.builder()
+                    .groupId(groups.getGroupId())
+                    .title(groups.getTitle())
+                    .imgUrl(groups.getImgUrl())
+                    .memberCount(memberCount)
+                    .groupTag(tagListByGroup)
+                    .createdAt(groups.getCreatedAt())
+                    .modifiedAt(groups.getModifiedAt())
+//                    .favorite()
+                    .build();
+            allGroupListResponseDtoList.add(allGroupListResponseDto);
+        }
+        return ResponseDto.success(allGroupListResponseDtoList);
+    }
+
+    // 그룹 상세 조회
     @Transactional(readOnly = true)
     public ResponseDto<?> getGroupDetail(Long groupId, HttpServletRequest request) {
 
@@ -161,10 +223,9 @@ public class GroupService {
                         .certifyImgUrlList(certifyImgUrlList)
                         .build()
         );
-
-
     }
 
+    // 그룹 수정
     @Transactional
     public ResponseDto<?> updateGroup(Long groupId, GroupRequestDto groupRequestDto, HttpServletRequest request) throws IOException {
 
@@ -197,9 +258,10 @@ public class GroupService {
         if (!imgFile.isEmpty()) {
             serviceUtil.deleteImage(key);
             imgUrl = serviceUtil.uploadImage(imgFile, "group");
+            groups.update(groupRequestDto, imgUrl);
         }
 
-        groups.update(groupRequestDto, imgUrl);
+        groups.update(groupRequestDto, originFile);
 
         if (null == groupRequestDto.getGroupTag()) {
             List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
@@ -263,6 +325,7 @@ public class GroupService {
         );
     }
 
+    // 그룹 삭제
     @Transactional
     public ResponseDto<?> deleteGroup(Long groupId, HttpServletRequest request) {
 
@@ -289,7 +352,7 @@ public class GroupService {
         }
 
         String originFile = groups.getImgUrl();
-        String key = originFile.substring(58);
+        String key = originFile.substring(52);
         serviceUtil.deleteImage(key);
 
         List<GroupTag> groupTagList = groupTagRepository.findAllByGroups(groups);
@@ -308,11 +371,10 @@ public class GroupService {
                 tagsRepository.delete(tags);
             }
         }
-
         return ResponseDto.success("삭제가 완료되었습니다.");
     }
 
-
+    // 그룹 존재 여부 체크
     @Transactional(readOnly = true)
     public Groups isPresentGroup(Long groupId) {
         Optional<Groups> groupOptional = groupRepository.findById(groupId);
