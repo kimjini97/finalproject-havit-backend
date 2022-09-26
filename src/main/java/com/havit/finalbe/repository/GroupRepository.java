@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface GroupRepository extends JpaRepository<Groups, Long> {
     List<Groups> findAllByOrderByCreatedAtDesc();
+    List<Groups> findAllByTitleContainingIgnoreCaseOrMember_NicknameContainingIgnoreCase(String title, String nickname);
 }
