@@ -1,6 +1,6 @@
 package com.havit.finalbe.service;
 
-import com.havit.finalbe.dto.request.FavoriteRequestDto;
+import com.havit.finalbe.dto.FavoriteDto;
 import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.entity.Favorite;
 import com.havit.finalbe.entity.Groups;
@@ -24,7 +24,7 @@ public class FavoriteService {
     private final GroupService groupService;
 
     @Transactional
-    public ResponseDto<?> favorites(FavoriteRequestDto favoriteRequestDto, HttpServletRequest request) {
+    public ResponseDto<?> favorites(FavoriteDto favoriteDto, HttpServletRequest request) {
 
         if (null == request.getHeader("Refresh-Token")) {
             return ResponseDto.fail(INVALID_LOGIN);
@@ -39,7 +39,7 @@ public class FavoriteService {
             return ResponseDto.fail(INVALID_TOKEN);
         }
 
-        Groups groups = groupService.isPresentGroup(favoriteRequestDto.getGroupId());
+        Groups groups = groupService.isPresentGroup(favoriteDto.getGroupId());
         if (null == groups) {
             return ResponseDto.fail(GROUP_NOT_FOUND);
         }

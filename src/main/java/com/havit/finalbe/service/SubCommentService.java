@@ -1,8 +1,7 @@
 package com.havit.finalbe.service;
 
-import com.havit.finalbe.dto.request.SubCommentRequestDto;
+import com.havit.finalbe.dto.SubCommentDto;
 import com.havit.finalbe.dto.response.ResponseDto;
-import com.havit.finalbe.dto.response.SubCommentResponseDto;
 import com.havit.finalbe.entity.Comment;
 import com.havit.finalbe.entity.Member;
 import com.havit.finalbe.entity.SubComment;
@@ -26,7 +25,7 @@ public class SubCommentService {
 
 
     @Transactional
-    public ResponseDto<?> createSubComment(SubCommentRequestDto subCommentRequestDto, HttpServletRequest request) {
+    public ResponseDto<?> createSubComment(SubCommentDto.Request subCommentDto, HttpServletRequest request) {
 
         if (null == request.getHeader("Refresh-Token")) {
             return ResponseDto.fail(INVALID_LOGIN);
@@ -41,7 +40,7 @@ public class SubCommentService {
             return ResponseDto.fail(INVALID_TOKEN);
         }
 
-        Comment comment = commentService.isPresentComment(subCommentRequestDto.getCommentId());
+        Comment comment = commentService.isPresentComment(subCommentDto.getCommentId());
         if (null == comment) {
             return ResponseDto.fail(COMMENT_NOT_FOUND);
         }
@@ -49,13 +48,13 @@ public class SubCommentService {
         SubComment subComment = SubComment.builder()
                 .member(member)
                 .comment(comment)
-                .content(subCommentRequestDto.getContent())
+                .content(subCommentDto.getContent())
                 .build();
 
         subCommentRepository.save(subComment);
 
         return ResponseDto.success(
-                SubCommentResponseDto.builder()
+                SubCommentDto.Response.builder()
                         .subCommentId(subComment.getSubCommentId())
                         .commentId(subComment.getComment().getCommentId())
                         .nickname(subComment.getMember().getNickname())
@@ -67,7 +66,7 @@ public class SubCommentService {
     }
 
     @Transactional
-    public ResponseDto<?> updateSubComment(Long subCommentId, SubCommentRequestDto subCommentRequestDto, HttpServletRequest request) {
+    public ResponseDto<?> updateSubComment(Long subCommentId, SubCommentDto.Request subCommentDto, HttpServletRequest request) {
 
         if (null == request.getHeader("Refresh-Token")) {
             return ResponseDto.fail(INVALID_LOGIN);
@@ -91,10 +90,10 @@ public class SubCommentService {
             return ResponseDto.fail(MEMBER_NOT_MATCHED);
         }
 
-        subComment.update(subCommentRequestDto);
+        subComment.update(subCommentDto);
 
         return ResponseDto.success(
-                SubCommentResponseDto.builder()
+                SubCommentDto.Response.builder()
                         .subCommentId(subComment.getSubCommentId())
                         .commentId(subComment.getComment().getCommentId())
                         .nickname(subComment.getMember().getNickname())
