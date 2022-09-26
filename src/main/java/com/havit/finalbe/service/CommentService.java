@@ -1,8 +1,7 @@
 package com.havit.finalbe.service;
 
 
-import com.havit.finalbe.dto.request.CommentRequestDto;
-import com.havit.finalbe.dto.response.CommentResponseDto;
+import com.havit.finalbe.dto.CommentDto;
 import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.entity.Certify;
 import com.havit.finalbe.entity.Comment;
@@ -25,7 +24,7 @@ public class CommentService {
     private final ServiceUtil serviceUtil;
 
     @Transactional
-    public ResponseDto<?> createComment(CommentRequestDto commentRequestDto, HttpServletRequest request) {
+    public ResponseDto<?> createComment(CommentDto.Request commentRequestDto, HttpServletRequest request) {
 
         if (null == request.getHeader("Refresh-Token")) {
             return ResponseDto.fail(INVALID_LOGIN);
@@ -54,7 +53,7 @@ public class CommentService {
         commentRepository.save(comment);
 
         return ResponseDto.success(
-                CommentResponseDto.builder()
+                CommentDto.Response.builder()
                         .commentId(comment.getCommentId())
                         .certifyId(comment.getCertify().getCertifyId())
                         .nickname(comment.getMember().getNickname())
@@ -66,7 +65,7 @@ public class CommentService {
     }
 
     @Transactional
-    public ResponseDto<?> updateComment(Long commentId, CommentRequestDto commentRequestDto, HttpServletRequest request) {
+    public ResponseDto<?> updateComment(Long commentId, CommentDto.Request commentRequestDto, HttpServletRequest request) {
 
         if (null == request.getHeader("Refresh-Token")) {
             return ResponseDto.fail(INVALID_LOGIN);
@@ -93,7 +92,7 @@ public class CommentService {
         comment.update(commentRequestDto);
 
         return ResponseDto.success(
-                CommentResponseDto.builder()
+                CommentDto.Response.builder()
                         .commentId(comment.getCommentId())
                         .certifyId(comment.getCertify().getCertifyId())
                         .nickname(comment.getMember().getNickname())

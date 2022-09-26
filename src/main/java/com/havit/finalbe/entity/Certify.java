@@ -1,6 +1,6 @@
 package com.havit.finalbe.entity;
 
-import com.havit.finalbe.dto.request.CertifyRequestDto;
+import com.havit.finalbe.dto.CertifyDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -47,7 +47,7 @@ public class Certify extends Timestamped {
         return !this.member.equals(member);
     }
 
-    public void update(CertifyRequestDto certifyRequestDto, String imgUrl) {
+    public void update(CertifyDto.Request certifyRequestDto, String imgUrl) {
         this.title = certifyRequestDto.getTitle();
         this.imgUrl = imgUrl;
         this.latitude = certifyRequestDto.getLatitude();
