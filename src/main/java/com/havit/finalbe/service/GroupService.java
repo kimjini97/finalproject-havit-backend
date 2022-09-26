@@ -28,6 +28,7 @@ public class GroupService {
     private final TagsRepository tagsRepository;
     private final GroupTagRepository groupTagRepository;
     private final ParticipateRepository participateRepository;
+    private final FavoriteRepository favoriteRepository;
     private final ServiceUtil serviceUtil;
 
     // 그룹 생성
@@ -109,14 +110,23 @@ public class GroupService {
     @Transactional(readOnly = true)
     public ResponseDto<?> getAllGroup(HttpServletRequest request) {
 
+        Member member = serviceUtil.validateMember(request);
+        if (null == member) {
+            return ResponseDto.fail(INVALID_TOKEN);
+        }
+
         List<Groups> groupList = groupRepository.findAllByOrderByCreatedAtDesc();
         List<AllGroupListResponseDto> allGroupListResponseDtoList = new ArrayList<>();
+        boolean isFavorites = false;
 
         for (Groups groups : groupList) {
             int memberCount = participateRepository.countByGroups_GroupId(groups.getGroupId());
             List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
+            Favorite checkFavorite = favoriteRepository.findByMember_MemberIdAndGroups_GroupId(member.getMemberId(), groups.getGroupId());
+            if (null != checkFavorite) {
+                isFavorites = true;
+            }
 
-            // 로그인한 멤버가 즐겨찾기 했는지 확인하는 코드
             // 로그인한 멤버의 계급 확인 코드 ( 만약 추가하면 AllGroupListResponseDto 에도 필드 추가해야 함 )
 
             AllGroupListResponseDto allGroupListResponseDto = AllGroupListResponseDto.builder()
@@ -127,7 +137,7 @@ public class GroupService {
                     .groupTag(tagListByGroup)
                     .createdAt(groups.getCreatedAt())
                     .modifiedAt(groups.getModifiedAt())
-//                    .favorite()
+                    .favorite(isFavorites)
                     .build();
             allGroupListResponseDtoList.add(allGroupListResponseDto);
         }
@@ -138,6 +148,11 @@ public class GroupService {
     @Transactional(readOnly = true)
     public ResponseDto<?> getAllGroupByTag(HttpServletRequest request, String keyword) {
 
+        Member member = serviceUtil.validateMember(request);
+        if (null == member) {
+            return ResponseDto.fail(INVALID_TOKEN);
+        }
+
         Tags tags = tagsRepository.findByTagName(keyword);
         if (null == tags) {
             return ResponseDto.fail(TAG_NOT_FOUND);
@@ -145,13 +160,17 @@ public class GroupService {
 
         List<GroupTag> groupTagList = groupTagRepository.findAllByTagsOrderByGroupsDesc(tags);
         List<AllGroupListResponseDto> allGroupListResponseDtoList = new ArrayList<>();
+        boolean isFavorites = false;
 
         for (GroupTag groupTag : groupTagList) {
             Groups groups = groupTag.getGroups();
             int memberCount = participateRepository.countByGroups_GroupId(groups.getGroupId());
             List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
+            Favorite checkFavorite = favoriteRepository.findByMember_MemberIdAndGroups_GroupId(member.getMemberId(), groups.getGroupId());
+            if (null != checkFavorite) {
+                isFavorites = true;
+            }
 
-            // 로그인한 멤버가 즐겨찾기 했는지 확인하는 코드
             // 로그인한 멤버의 계급 확인 코드 ( 만약 추가하면 AllGroupListResponseDto 에도 필드 추가해야 함 )
 
             AllGroupListResponseDto allGroupListResponseDto = AllGroupListResponseDto.builder()
@@ -162,7 +181,7 @@ public class GroupService {
                     .groupTag(tagListByGroup)
                     .createdAt(groups.getCreatedAt())
                     .modifiedAt(groups.getModifiedAt())
-//                    .favorite()
+                    .favorite(isFavorites)
                     .build();
             allGroupListResponseDtoList.add(allGroupListResponseDto);
         }
