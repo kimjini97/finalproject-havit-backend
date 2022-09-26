@@ -1,9 +1,7 @@
 package com.havit.finalbe.service;
 
-import com.havit.finalbe.dto.response.AllGroupListResponseDto;
+import com.havit.finalbe.dto.GroupDto;
 import com.havit.finalbe.entity.Groups;
-import com.havit.finalbe.dto.request.GroupRequestDto;
-import com.havit.finalbe.dto.response.GroupResponseDto;
 import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.entity.*;
 import com.havit.finalbe.repository.*;
@@ -33,7 +31,7 @@ public class GroupService {
 
     // 그룹 생성
     @Transactional
-    public ResponseDto<?> createGroup(GroupRequestDto groupRequestDto, HttpServletRequest request) throws IOException {
+    public ResponseDto<?> createGroup(GroupDto.Request groupRequestDto, HttpServletRequest request) throws IOException {
 
         if (null == request.getHeader("Refresh-Token")) {
             return ResponseDto.fail(INVALID_LOGIN);
@@ -90,7 +88,7 @@ public class GroupService {
         List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
 
         return ResponseDto.success(
-                GroupResponseDto.builder()
+                GroupDto.Response.builder()
                         .groupId(groups.getGroupId())
                         .title(groups.getTitle())
                         .imgUrl(groups.getImgUrl())
@@ -116,7 +114,7 @@ public class GroupService {
         }
 
         List<Groups> groupList = groupRepository.findAllByOrderByCreatedAtDesc();
-        List<AllGroupListResponseDto> allGroupListResponseDtoList = new ArrayList<>();
+        List<GroupDto.AllGroupList> allGroupListResponseDtoList = new ArrayList<>();
         boolean isFavorites = false;
 
         for (Groups groups : groupList) {
@@ -129,7 +127,7 @@ public class GroupService {
 
             // 로그인한 멤버의 계급 확인 코드 ( 만약 추가하면 AllGroupListResponseDto 에도 필드 추가해야 함 )
 
-            AllGroupListResponseDto allGroupListResponseDto = AllGroupListResponseDto.builder()
+            GroupDto.AllGroupList allGroupListResponseDto = GroupDto.AllGroupList.builder()
                     .groupId(groups.getGroupId())
                     .title(groups.getTitle())
                     .imgUrl(groups.getImgUrl())
@@ -159,7 +157,7 @@ public class GroupService {
         }
 
         List<GroupTag> groupTagList = groupTagRepository.findAllByTagsOrderByGroupsDesc(tags);
-        List<AllGroupListResponseDto> allGroupListResponseDtoList = new ArrayList<>();
+        List<GroupDto.AllGroupList> allGroupListResponseDtoList = new ArrayList<>();
         boolean isFavorites = false;
 
         for (GroupTag groupTag : groupTagList) {
@@ -173,7 +171,7 @@ public class GroupService {
 
             // 로그인한 멤버의 계급 확인 코드 ( 만약 추가하면 AllGroupListResponseDto 에도 필드 추가해야 함 )
 
-            AllGroupListResponseDto allGroupListResponseDto = AllGroupListResponseDto.builder()
+            GroupDto.AllGroupList allGroupListResponseDto = GroupDto.AllGroupList.builder()
                     .groupId(groups.getGroupId())
                     .title(groups.getTitle())
                     .imgUrl(groups.getImgUrl())
@@ -225,7 +223,7 @@ public class GroupService {
         }
 
         return ResponseDto.success(
-                GroupResponseDto.builder()
+                GroupDto.Response.builder()
                         .groupId(groupId)
                         .title(groups.getTitle())
                         .nickname(groups.getMember().getNickname())
@@ -246,7 +244,7 @@ public class GroupService {
 
     // 그룹 수정
     @Transactional
-    public ResponseDto<?> updateGroup(Long groupId, GroupRequestDto groupRequestDto, HttpServletRequest request) throws IOException {
+    public ResponseDto<?> updateGroup(Long groupId, GroupDto.Request groupRequestDto, HttpServletRequest request) throws IOException {
 
         if (null == request.getHeader("Refresh-Token")) {
             return ResponseDto.fail(INVALID_LOGIN);
@@ -285,7 +283,7 @@ public class GroupService {
         if (null == groupRequestDto.getGroupTag()) {
             List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
             return ResponseDto.success(
-                    GroupResponseDto.builder()
+                    GroupDto.Response.builder()
                             .groupId(groups.getGroupId())
                             .title(groups.getTitle())
                             .imgUrl(groups.getImgUrl())
@@ -328,7 +326,7 @@ public class GroupService {
         List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
 
         return ResponseDto.success(
-                GroupResponseDto.builder()
+                GroupDto.Response.builder()
                         .groupId(groups.getGroupId())
                         .title(groups.getTitle())
                         .imgUrl(groups.getImgUrl())
