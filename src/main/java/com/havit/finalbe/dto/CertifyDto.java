@@ -31,7 +31,6 @@ public class CertifyDto {
 
         @Schema(description = "위도", example = "92.34972")
         private double latitude;
-
     }
 
     @Builder
