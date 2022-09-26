@@ -19,7 +19,7 @@ public class GroupController {
     private final GroupService groupService;
 
     @Operation(summary = "그룹 생성", description = "그룹 관련 정보 기입후 그룹이 생성 됩니다.")
-    @PostMapping("/")
+    @PostMapping(value = "/", consumes = {"multipart/form-data"})
     public ResponseDto<?> createGroup(@ModelAttribute GroupDto.Request groupRequestDto, HttpServletRequest request) throws IOException {
         return groupService.createGroup(groupRequestDto, request);
     }
@@ -43,7 +43,7 @@ public class GroupController {
     }
 
     @Operation(summary = "그룹 수정", description = "groupId에 해당하는 그룹을 수정합니다.")
-    @PutMapping("/{groupId}")
+    @PutMapping(value = "/{groupId}", consumes = {"multipart/form-data"})
     public ResponseDto<?> updateGroup(@PathVariable Long groupId,
                                       @ModelAttribute GroupDto.Request groupRequestDto, HttpServletRequest request) throws IOException {
         return groupService.updateGroup(groupId, groupRequestDto, request);
