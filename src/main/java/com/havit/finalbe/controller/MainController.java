@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Tag(name = "[메인 API]")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth/main")
