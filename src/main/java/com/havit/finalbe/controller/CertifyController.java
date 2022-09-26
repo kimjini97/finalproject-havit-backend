@@ -4,14 +4,13 @@ import com.havit.finalbe.dto.CertifyDto;
 import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.service.CertifyService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@Tag(name = "[인증샷 API]")
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth/certify")

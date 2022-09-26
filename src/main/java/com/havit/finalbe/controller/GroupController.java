@@ -3,7 +3,6 @@ package com.havit.finalbe.controller;
 import com.havit.finalbe.dto.GroupDto;
 import com.havit.finalbe.dto.response.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +11,6 @@ import com.havit.finalbe.service.GroupService;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@Tag(name = "[그룹 API]")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth/group")
