@@ -26,9 +26,4 @@ public class GroupTag {
     @JoinColumn(name = "tags_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Tags tags;
-
-    public void updateTags(Tags tags) {
-        this.tags = tags;
-    }
-
 }

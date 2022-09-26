@@ -1,6 +1,6 @@
 package com.havit.finalbe.entity;
 
-import com.havit.finalbe.dto.request.GroupRequestDto;
+import com.havit.finalbe.dto.GroupDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -55,7 +55,7 @@ public class Groups extends Timestamped{
     private List<GroupTag> groupTagList;
 
 
-    public void update(GroupRequestDto groupRequestDto, String imgUrl) {
+    public void update(GroupDto.Request groupRequestDto, String imgUrl) {
         this.title = groupRequestDto.getTitle();
         this.startDate = groupRequestDto.getStartDate();
         this.imgUrl = imgUrl;
