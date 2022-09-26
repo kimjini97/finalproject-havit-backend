@@ -1,6 +1,6 @@
 package com.havit.finalbe.service;
 
-import com.havit.finalbe.dto.response.GroupResponseDto;
+import com.havit.finalbe.dto.GroupDto;
 import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.entity.Certify;
 import com.havit.finalbe.entity.Groups;
@@ -78,7 +78,7 @@ public class ParticipateService {
             }
 
             return ResponseDto.success(
-                    GroupResponseDto.builder()
+                    GroupDto.Response.builder()
                             .groupId(groupId)
                             .title(groups.getTitle())
                             .nickname(groups.getMember().getNickname())

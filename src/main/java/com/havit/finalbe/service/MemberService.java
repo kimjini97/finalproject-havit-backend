@@ -1,8 +1,6 @@
 package com.havit.finalbe.service;
 
-import com.havit.finalbe.dto.request.LoginRequestDto;
-import com.havit.finalbe.dto.request.SignupRequestDto;
-import com.havit.finalbe.dto.response.MemberResponseDto;
+import com.havit.finalbe.dto.MemberDto;
 import com.havit.finalbe.dto.response.MessageResponseDto;
 import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.entity.Member;
@@ -13,9 +11,7 @@ import com.havit.finalbe.jwt.util.TokenProperties;
 import com.havit.finalbe.repository.MemberRepository;
 import com.havit.finalbe.repository.RefreshTokenRepository;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
-import io.jsonwebtoken.Jwts;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +32,7 @@ public class MemberService {
     private final ServiceUtil serviceUtil;
 
     @Transactional
-    public ResponseDto<?> sigunup(SignupRequestDto signupRequestDto) {
+    public ResponseDto<?> sigunup(MemberDto.Signup signupRequestDto) {
         String username = signupRequestDto.getEmail();
         String password = signupRequestDto.getPassword();
         String nickname = signupRequestDto.getNickname();
@@ -58,7 +54,7 @@ public class MemberService {
                     .build();
             memberRepository.save(member);
 
-            MemberResponseDto signupInfo = MemberResponseDto.builder()
+            MemberDto.Response signupInfo = MemberDto.Response.builder()
                     .memberId(member.getMemberId())
                     .username(member.getUsername())
                     .nickname(member.getNickname())
@@ -72,7 +68,7 @@ public class MemberService {
     }
 
     @Transactional
-    public ResponseDto<?> login(LoginRequestDto loginRequestDto, HttpServletResponse response){
+    public ResponseDto<?> login(MemberDto.Login loginRequestDto, HttpServletResponse response){
         String username = loginRequestDto.getEmail();
         Member member = isPresentMemberByUsername(username);
 
@@ -103,7 +99,7 @@ public class MemberService {
         // 헤더에 응답으로 보내줌
         TokenToHeaders(response, accessToken, refreshToken);
 
-        MemberResponseDto memberResponseDto = MemberResponseDto.builder()
+        MemberDto.Response memberResponseDto = MemberDto.Response.builder()
                 .memberId(member.getMemberId())
                 .username(member.getUsername())
                 .nickname(member.getNickname())

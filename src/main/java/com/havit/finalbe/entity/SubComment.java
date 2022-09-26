@@ -1,6 +1,6 @@
 package com.havit.finalbe.entity;
 
-import com.havit.finalbe.dto.request.SubCommentRequestDto;
+import com.havit.finalbe.dto.SubCommentDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,7 +31,7 @@ public class SubComment extends Timestamped {
     private Comment comment;
 
     // 대댓글 수정
-    public void update(SubCommentRequestDto subCommentRequestDto) {
-        this.content = subCommentRequestDto.getContent();
+    public void update(SubCommentDto.Request subCommentDto) {
+        this.content = subCommentDto.getContent();
     }
 }
