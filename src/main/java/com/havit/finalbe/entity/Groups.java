@@ -54,7 +54,6 @@ public class Groups extends Timestamped{
     @OneToMany(mappedBy = "groups", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<GroupTag> groupTagList;
 
-    // 참여자 리스트 추가
 
     public void update(GroupRequestDto groupRequestDto, String imgUrl) {
         this.title = groupRequestDto.getTitle();

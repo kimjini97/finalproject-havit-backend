@@ -10,6 +10,7 @@ import com.havit.finalbe.repository.CertifyRepository;
 import com.havit.finalbe.repository.ParticipateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,6 +29,7 @@ public class ParticipateService {
     private final GroupService groupService;
     private final ServiceUtil serviceUtil;
 
+    @Transactional
     public ResponseDto<?> participate(Long groupId, HttpServletRequest request) {
 
         if (null == request.getHeader("Refresh-Token")) {
@@ -97,6 +99,7 @@ public class ParticipateService {
         return ResponseDto.fail(DUPLICATE_PARTICIPATION);
     }
 
+    @Transactional
     public ResponseDto<?> cancelParticipation(Long groupId, HttpServletRequest request) {
 
         if (null == request.getHeader("Refresh-Token")) {
