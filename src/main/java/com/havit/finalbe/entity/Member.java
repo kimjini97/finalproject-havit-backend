@@ -1,6 +1,7 @@
 package com.havit.finalbe.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.havit.finalbe.dto.MemberDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,5 +42,14 @@ public class Member extends Timestamped{
         return passwordEncoder.matches(password, this.password);
     }
 
+    public void edit(String profileUrl, String nickname, String password) {
+        this.profileUrl = profileUrl;
+        this.nickname = nickname;
+        this.password = password;
+    }
+
+    public void deleteImg(String profileUrl) {
+        this.profileUrl = profileUrl;
+    }
 
 }
