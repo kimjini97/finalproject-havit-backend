@@ -17,7 +17,7 @@ public class CommentDto {
     @NoArgsConstructor
     public static class Request {
 
-        @Schema(description = "인증 id", example = "1")
+        @Schema(description = "인증샷 id", example = "1")
         private Long certifyId;
 
         @Schema(description = "댓글 내용", example = "오늘도 6시에 일어나느라 수고하셨습니다!")
