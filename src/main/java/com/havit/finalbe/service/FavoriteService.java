@@ -30,10 +30,6 @@ public class FavoriteService {
     @Transactional
     public ResponseDto<?> favorites(FavoriteDto.Request favoriteRequestDto, HttpServletRequest request) {
 
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
         if (null == request.getHeader("Authorization")) {
             return ResponseDto.fail(INVALID_LOGIN);
         }
