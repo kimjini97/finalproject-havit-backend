@@ -15,6 +15,7 @@ public class CertifyDto {
     @Setter
     @AllArgsConstructor
     @NoArgsConstructor
+    @Schema(description = "인증샷 요청 DTO")
     public static class Request {
 
         @Schema(description = "그룹 id", example = "1")
