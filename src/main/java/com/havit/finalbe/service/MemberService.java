@@ -38,13 +38,8 @@ public class MemberService {
         String nickname = signupRequestDto.getNickname();
 
         if (!emailStrCheck(username)) {throw new InvalidUsernameException(ErrorMsg.INVALID_EMAIL);}
-
         if (!emailDuplicateCheck(username)) {throw new DuplicateUsernameException(ErrorMsg.DUPLICATE_EMAIL);}
-
         if (!passwordStrCheck(password)) {throw new InvalidPasswordException(ErrorMsg.INVALID_PASSWORD);}
-
-
-
         else {
 
             Member member = Member.builder()
@@ -152,7 +147,7 @@ public class MemberService {
             throw new NeedRefreshTokenException(ErrorMsg.NEED_REFRESH_TOKEN);
         }
 
-        if(!refreshHeader.startsWith(TokenProperties.TOKEN_TYPE)){
+        if(!refreshHeader.startsWith(TokenProperties.REFRESH_TOKEN_TYPE)){
             throw new InvalidRefreshTokenException(ErrorMsg.INVALID_TOKEN);
         }
 
@@ -189,6 +184,7 @@ public class MemberService {
         Object member = isPresentMemberByUsername(email);
         return member == null;
     }
+
     // 회원가입, 로그인 조건 검증
 
     private boolean emailStrCheck (String email){

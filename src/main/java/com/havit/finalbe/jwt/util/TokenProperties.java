@@ -5,6 +5,7 @@ public interface TokenProperties {
     String AUTH_HEADER = "Authorization";
     String REFRESH_HEADER = "Refresh-Token";
     String TOKEN_TYPE = "BEARER ";
+    String REFRESH_TOKEN_TYPE = "";
 
     String VALID = "VALID";
     String INVALID = "INVALID";
