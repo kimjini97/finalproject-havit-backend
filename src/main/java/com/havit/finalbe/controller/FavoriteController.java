@@ -19,7 +19,7 @@ public class FavoriteController {
 
     @Operation(summary = "그룹 즐겨찾기", description = "해당하는 그룹을 즐겨찾기/즐겨찾기 취소 합니다.")
     @PostMapping("/api/auth/favorite")
-    public ResponseDto<?> favorites(@RequestBody FavoriteDto favoriteDto, HttpServletRequest request) {
-        return favoriteService.favorites(favoriteDto, request);
+    public ResponseDto<?> favorites(@RequestBody FavoriteDto.Request favoriteRequestDto, HttpServletRequest request) {
+        return favoriteService.favorites(favoriteRequestDto, request);
     }
 }

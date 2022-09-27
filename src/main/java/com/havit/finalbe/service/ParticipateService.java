@@ -131,7 +131,45 @@ public class ParticipateService {
                     .member(member)
                     .build();
             participateRepository.delete(participate);
-            return ResponseDto.success("참여 취소가 완료되었습니다.");
+
+            // 태그 가져오기
+            List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
+
+            // 참여한 멤버 카운팅
+            int memberCount = participateRepository.countByGroups_GroupId(groupId);
+
+            // 참여 멤버 목록
+            List<Participate> participateList = participateRepository.findAllByGroups(groups);
+            List<Member> memberList = new ArrayList<>();
+            for (Participate participateMember : participateList) {
+                memberList.add(participateMember.getMember());
+            }
+
+            // 인증샷 이미지 URL 목록 가져오기
+            List<Certify> certifyList = certifyRepository.findByGroups_GroupId(groupId);
+            List<String> certifyImgUrlList = new ArrayList<>();
+            for (Certify imgUrl : certifyList) {
+                certifyImgUrlList.add(imgUrl.getImgUrl());
+            }
+
+            return ResponseDto.success(
+                    GroupDto.Response.builder()
+                            .groupId(groupId)
+                            .title(groups.getTitle())
+                            .nickname(groups.getMember().getNickname())
+                            .leaderName(groups.getLeaderName())
+                            .crewName(groups.getCrewName())
+                            .startDate(groups.getStartDate())
+                            .content(groups.getContent())
+                            .imgUrl(groups.getImgUrl())
+                            .createdAt(groups.getCreatedAt())
+                            .modifiedAt(groups.getModifiedAt())
+                            .groupTag(tagListByGroup)
+                            .memberCount(memberCount)
+                            .memberList(memberList)
+                            .certifyImgUrlList(certifyImgUrlList)
+                            .build()
+            );
         }
 
         return ResponseDto.fail(PARTICIPATION_NOT_FOUND);
