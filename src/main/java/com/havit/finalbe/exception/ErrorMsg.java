@@ -19,6 +19,7 @@ public enum ErrorMsg {
 
     // 회원 관련 에러
     MEMBER_NOT_FOUND("MEMBER_NOT_FOUND", "사용자를 찾을 수 없습니다."),
+    PASSWORD_NOT_MATCHED("PASSWORD_NOT_MATCHED", "비밀번호가 일치하지 않습니다."),
 
     // 권한 요청 시 Access 토큰을 보내지 않은 경우
     INVALID_LOGIN("INVALID_LOGIN", "로그인이 필요합니다."),
@@ -47,7 +48,10 @@ public enum ErrorMsg {
 
     // 참여하기
     DUPLICATE_PARTICIPATION("DUPLICATE_PARTICIPATION", "이미 참여했습니다."),
-    PARTICIPATION_NOT_FOUND("PARTICIPATION_NOT_FOUND", "참여 내역이 없습니다.");
+    PARTICIPATION_NOT_FOUND("PARTICIPATION_NOT_FOUND", "참여 내역이 없습니다."),
+
+    // 이미지
+    IMAGE_NOT_FOUND("IMAGE_NOT_FOUND", "삭제할 이미지가 없습니다.");
 
     private final String code;
     private final String message;

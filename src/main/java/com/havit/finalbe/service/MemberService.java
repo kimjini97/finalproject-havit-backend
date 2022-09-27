@@ -98,6 +98,7 @@ public class MemberService {
                 .memberId(member.getMemberId())
                 .username(member.getUsername())
                 .nickname(member.getNickname())
+                .profileUrl(member.getProfileUrl())
                 .build();
         return ResponseDto.success(memberResponseDto);
     }
