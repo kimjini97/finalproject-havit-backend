@@ -62,6 +62,9 @@ public class MemberDto {
         @Schema(description = "닉네임", example = "지니짱")
         private String nickname;
 
+        @Schema(description = "소개", example = "지니는 짱짱맨")
+        private String introduce;
+
         @Schema(description = "비빌번호", example = "test123")
         private String password;
 
@@ -86,6 +89,9 @@ public class MemberDto {
 
         @Schema(description = "프로필 이미지 url")
         private String profileUrl;
+
+        @Schema(description = "소개", example = "지니는 짱짱맨")
+        private String introduce;
 
         @Schema(description = "가입 일시", example = "2022-07-25T12:43:01.226062")
         private LocalDateTime createdAt;
