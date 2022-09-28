@@ -33,7 +33,7 @@ public class JwtUtil {
     private final RefreshTokenRepository refreshTokenRepository;
     private final ObjectMapper objectMapper;
 
-    @Value("4oCYc3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LWhhbmdoYWUtYXNzaWdubWVudC1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3Qtc2VjcmV0LWtleeKAmQo=")
+    @Value("${jwt.secret}")
     private String secretKey;
     Key key;
     SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
