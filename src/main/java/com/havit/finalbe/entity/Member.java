@@ -1,7 +1,6 @@
 package com.havit.finalbe.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.havit.finalbe.dto.MemberDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

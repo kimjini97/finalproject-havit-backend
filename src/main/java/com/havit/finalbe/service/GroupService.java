@@ -5,12 +5,12 @@ import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.entity.*;
 import com.havit.finalbe.repository.*;
+import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,20 +31,9 @@ public class GroupService {
 
     // 그룹 생성
     @Transactional
-    public ResponseDto<?> createGroup(GroupDto.Request groupRequestDto, HttpServletRequest request) throws IOException {
+    public ResponseDto<?> createGroup(GroupDto.Request groupRequestDto, UserDetailsImpl userDetails) throws IOException {
 
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         String imgUrl = "";
         MultipartFile imgFile = groupRequestDto.getImgFile();
@@ -106,12 +95,9 @@ public class GroupService {
 
     // 그룹 전체 목록 조회
     @Transactional(readOnly = true)
-    public ResponseDto<?> getAllGroup(HttpServletRequest request) {
+    public ResponseDto<?> getAllGroup(UserDetailsImpl userDetails) {
 
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         List<Groups> groupList = groupRepository.findAllByOrderByCreatedAtDesc();
         List<GroupDto.AllGroupList> allGroupListResponseDtoList = new ArrayList<>();
@@ -120,7 +106,8 @@ public class GroupService {
         for (Groups groups : groupList) {
             int memberCount = participateRepository.countByGroups_GroupId(groups.getGroupId());
             List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
-            Favorite checkFavorite = favoriteRepository.findByMember_MemberIdAndGroups_GroupId(member.getMemberId(), groups.getGroupId());
+            Favorite checkFavorite = favoriteRepository
+                    .findByMember_MemberIdAndGroups_GroupId(member.getMemberId(), groups.getGroupId());
             if (null != checkFavorite) {
                 isFavorites = true;
             }
@@ -144,12 +131,9 @@ public class GroupService {
 
     // 태그별 그룹 전체 목록 조회
     @Transactional(readOnly = true)
-    public ResponseDto<?> getAllGroupByTag(HttpServletRequest request, String keyword) {
+    public ResponseDto<?> getAllGroupByTag(UserDetailsImpl userDetails, String keyword) {
 
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         Tags tags = tagsRepository.findByTagName(keyword);
         if (null == tags) {
@@ -188,12 +172,9 @@ public class GroupService {
 
     // 그룹 상세 조회
     @Transactional(readOnly = true)
-    public ResponseDto<?> getGroupDetail(Long groupId, HttpServletRequest request) {
+    public ResponseDto<?> getGroupDetail(Long groupId, UserDetailsImpl userDetails) {
 
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         // 만약 참여자면 어떤 계급인지 추출
 
@@ -244,20 +225,9 @@ public class GroupService {
 
     // 그룹 수정
     @Transactional
-    public ResponseDto<?> updateGroup(Long groupId, GroupDto.Request groupRequestDto, HttpServletRequest request) throws IOException {
+    public ResponseDto<?> updateGroup(Long groupId, GroupDto.Request groupRequestDto, UserDetailsImpl userDetails) throws IOException {
 
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         Groups groups = isPresentGroup(groupId);
         if (null == groups) {
@@ -344,20 +314,9 @@ public class GroupService {
 
     // 그룹 삭제
     @Transactional
-    public ResponseDto<?> deleteGroup(Long groupId, HttpServletRequest request) {
+    public ResponseDto<?> deleteGroup(Long groupId, UserDetailsImpl userDetails) {
 
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         Groups groups = isPresentGroup(groupId);
         if (null == groups) {

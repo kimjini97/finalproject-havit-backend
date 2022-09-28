@@ -6,11 +6,11 @@ import com.havit.finalbe.entity.Comment;
 import com.havit.finalbe.entity.Member;
 import com.havit.finalbe.entity.SubComment;
 import com.havit.finalbe.repository.SubCommentRepository;
+import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 import static com.havit.finalbe.exception.ErrorMsg.*;
@@ -25,16 +25,9 @@ public class SubCommentService {
 
 
     @Transactional
-    public ResponseDto<?> createSubComment(SubCommentDto.Request subCommentDto, HttpServletRequest request) {
+    public ResponseDto<?> createSubComment(SubCommentDto.Request subCommentDto, UserDetailsImpl userDetails) {
 
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         Comment comment = commentService.isPresentComment(subCommentDto.getCommentId());
         if (null == comment) {
@@ -62,16 +55,9 @@ public class SubCommentService {
     }
 
     @Transactional
-    public ResponseDto<?> updateSubComment(Long subCommentId, SubCommentDto.Request subCommentDto, HttpServletRequest request) {
+    public ResponseDto<?> updateSubComment(Long subCommentId, SubCommentDto.Request subCommentDto, UserDetailsImpl userDetails) {
 
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         SubComment subComment = isPresentSubComment(subCommentId);
         if (null == subComment) {
@@ -97,16 +83,9 @@ public class SubCommentService {
     }
 
     @Transactional
-    public ResponseDto<?> deleteSubComment(Long subCommentId, HttpServletRequest request) {
+    public ResponseDto<?> deleteSubComment(Long subCommentId, UserDetailsImpl userDetails) {
 
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         SubComment subComment = isPresentSubComment(subCommentId);
         if (null == subComment) {
