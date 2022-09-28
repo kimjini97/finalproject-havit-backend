@@ -46,12 +46,12 @@ public class JwtUtil {
 
 
     // 토큰 생성
-    public String createToken(String username, String type){
+    public String createToken(Long memberId, String type){
         Date date = new Date();
         int time = type.equals(TokenProperties.AUTH_HEADER)? TokenProperties.ACCESS_TOKEN_VALID_TIME : TokenProperties.REFRESH_TOKEN_VALID_TIME;
 
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(String.valueOf(memberId))
                 .setIssuedAt(date)
                 .setExpiration(new Date(System.currentTimeMillis() + time))
                 .signWith(key,signatureAlgorithm)
