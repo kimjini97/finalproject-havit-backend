@@ -30,10 +30,10 @@ public class MyPageService {
         Member member = userDetails.getMember();
 
         if(!member.validatePassword(passwordEncoder, checkPasswordDto.getPassword())) {
-            return ResponseDto.fail(PASSWORD_NOT_MATCHED);
+            return ResponseDto.success("false");
         }
 
-        return ResponseDto.success("비밀번호가 일치합니다.");
+        return ResponseDto.success("true");
     }
 
     @Transactional
