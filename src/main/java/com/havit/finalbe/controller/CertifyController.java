@@ -4,7 +4,9 @@ import com.havit.finalbe.dto.CertifyDto;
 import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import com.havit.finalbe.service.CertifyService;
+import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 
+@Api(tags = {"인증샷 API"})
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth/certify")
@@ -19,7 +22,7 @@ public class CertifyController {
 
     private final CertifyService certifyService;
 
-    @Operation(summary = "인증 생성", description = "인증 관련 정보 기입후 인증이 생성됩니다.")
+    @Operation(summary = "인증 생성", description = "인증 관련 정보 기입 후 인증이 생성됩니다.")
     @PostMapping(value = "/", consumes = {"multipart/form-data"})
     public ResponseDto<?> createCertify(@ModelAttribute CertifyDto.Request certifyRequestDto,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
