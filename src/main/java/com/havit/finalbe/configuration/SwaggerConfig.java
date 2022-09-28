@@ -23,7 +23,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.OAS_30)
                 .securityContexts(Arrays.asList(securityContext()))
-                .securitySchemes(Arrays.asList(accessKey()))
+                .securitySchemes(Arrays.asList(accessKey(), refreshKey()))
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())
@@ -49,11 +49,15 @@ public class SwaggerConfig {
         AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
         AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
         authorizationScopes[0] = authorizationScope;
-        return Arrays.asList(new SecurityReference("Authorization", authorizationScopes));
+        return Arrays.asList(new SecurityReference("Authorization", authorizationScopes),
+                new SecurityReference("Refresh-Token", authorizationScopes));
     }
 
     private ApiKey accessKey() {
         return new ApiKey("Authorization", "Authorization", "header");
+    }
+    private ApiKey refreshKey() {
+        return new ApiKey("Refresh-Token", "Refresh-Token", "header");
     }
 
     //
