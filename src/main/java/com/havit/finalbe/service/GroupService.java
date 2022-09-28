@@ -246,9 +246,9 @@ public class GroupService {
             serviceUtil.deleteImage(key);
             imgUrl = serviceUtil.uploadImage(imgFile, "group");
             groups.update(groupRequestDto, imgUrl);
+        } else {
+            groups.update(groupRequestDto, originFile);
         }
-
-        groups.update(groupRequestDto, originFile);
 
         if (null == groupRequestDto.getGroupTag()) {
             List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);

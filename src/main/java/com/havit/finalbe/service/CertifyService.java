@@ -167,9 +167,9 @@ public class CertifyService {
             serviceUtil.deleteImage(key);
             imgUrl = serviceUtil.uploadImage(imgFile, "certify");
             certify.update(certifyRequestDto, imgUrl);
+        } else {
+            certify.update(certifyRequestDto, originFile);
         }
-
-        certify.update(certifyRequestDto, originFile);
 
         return ResponseDto.success(
                 CertifyDto.Response.builder()
