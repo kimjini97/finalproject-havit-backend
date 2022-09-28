@@ -148,7 +148,7 @@ public class MemberService {
             throw new NeedRefreshTokenException(ErrorMsg.NEED_REFRESH_TOKEN);
         }
 
-        if(!refreshHeader.startsWith(TokenProperties.REFRESH_TOKEN_TYPE)){
+        if(!refreshHeader.startsWith(TokenProperties.TOKEN_TYPE)){
             throw new InvalidRefreshTokenException(ErrorMsg.INVALID_TOKEN);
         }
 
@@ -204,7 +204,7 @@ public class MemberService {
     }
 
     private void TokenToHeaders(HttpServletResponse response, String accessToken, String refreshToken) {
-        response.addHeader(TokenProperties.AUTH_HEADER, TokenProperties.TOKEN_TYPE + accessToken);
+        response.addHeader(TokenProperties.AUTH_HEADER, accessToken);
         response.addHeader(TokenProperties.REFRESH_HEADER, refreshToken);
     }
 }
