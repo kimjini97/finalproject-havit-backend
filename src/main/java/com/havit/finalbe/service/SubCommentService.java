@@ -27,10 +27,6 @@ public class SubCommentService {
     @Transactional
     public ResponseDto<?> createSubComment(SubCommentDto.Request subCommentDto, HttpServletRequest request) {
 
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
         if (null == request.getHeader("Authorization")) {
             return ResponseDto.fail(INVALID_LOGIN);
         }
@@ -68,10 +64,6 @@ public class SubCommentService {
     @Transactional
     public ResponseDto<?> updateSubComment(Long subCommentId, SubCommentDto.Request subCommentDto, HttpServletRequest request) {
 
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
         if (null == request.getHeader("Authorization")) {
             return ResponseDto.fail(INVALID_LOGIN);
         }
@@ -106,10 +98,6 @@ public class SubCommentService {
 
     @Transactional
     public ResponseDto<?> deleteSubComment(Long subCommentId, HttpServletRequest request) {
-
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
 
         if (null == request.getHeader("Authorization")) {
             return ResponseDto.fail(INVALID_LOGIN);

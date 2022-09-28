@@ -26,10 +26,6 @@ public class CommentService {
     @Transactional
     public ResponseDto<?> createComment(CommentDto.Request commentRequestDto, HttpServletRequest request) {
 
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
         if (null == request.getHeader("Authorization")) {
             return ResponseDto.fail(INVALID_LOGIN);
         }
@@ -67,10 +63,6 @@ public class CommentService {
     @Transactional
     public ResponseDto<?> updateComment(Long commentId, CommentDto.Request commentRequestDto, HttpServletRequest request) {
 
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
         if (null == request.getHeader("Authorization")) {
             return ResponseDto.fail(INVALID_LOGIN);
         }
@@ -105,10 +97,6 @@ public class CommentService {
 
     @Transactional
     public ResponseDto<?> deleteComment(Long commentId, HttpServletRequest request) {
-
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
 
         if (null == request.getHeader("Authorization")) {
             return ResponseDto.fail(INVALID_LOGIN);

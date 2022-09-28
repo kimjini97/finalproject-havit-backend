@@ -35,10 +35,6 @@ public class CertifyService {
     @Transactional
     public ResponseDto<?> createCertify(CertifyDto.Request certifyRequestDto, HttpServletRequest request) throws IOException {
 
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
         if (null == request.getHeader("Authorization")) {
             return ResponseDto.fail(INVALID_LOGIN);
         }
@@ -157,10 +153,6 @@ public class CertifyService {
     @Transactional
     public ResponseDto<?> updateCertify(Long certifyId, CertifyDto.Request certifyRequestDto, HttpServletRequest request) throws IOException {
 
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
         if (null == request.getHeader("Authorization")) {
             return ResponseDto.fail(INVALID_LOGIN);
         }
@@ -213,10 +205,6 @@ public class CertifyService {
 
     @Transactional
     public ResponseDto<?> deleteCertify(Long certifyId, HttpServletRequest request) {
-
-        if (null == request.getHeader("Refresh-Token")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
 
         if (null == request.getHeader("Authorization")) {
             return ResponseDto.fail(INVALID_LOGIN);
