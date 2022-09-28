@@ -54,6 +54,7 @@ public class MemberService {
                     .username(member.getUsername())
                     .nickname(member.getNickname())
                     .createdAt(member.getCreatedAt())
+                    .modifiedAt(member.getModifiedAt())
                     .build();
 
             return ResponseDto.success(signupInfo);
@@ -74,8 +75,8 @@ public class MemberService {
         }
 
         // 토큰 발급
-        String accessToken = jwtUtil.createToken(username,TokenProperties.AUTH_HEADER);
-        String refreshToken = jwtUtil.createToken(username, TokenProperties.REFRESH_HEADER);
+        String accessToken = jwtUtil.createToken(member.getMemberId(), TokenProperties.AUTH_HEADER);
+        String refreshToken = jwtUtil.createToken(member.getMemberId(), TokenProperties.REFRESH_HEADER);
 
         RefreshToken refreshTokenFromDB = jwtUtil.getRefreshTokenFromDB(member);
 
@@ -99,6 +100,8 @@ public class MemberService {
                 .username(member.getUsername())
                 .nickname(member.getNickname())
                 .profileUrl(member.getProfileUrl())
+                .createdAt(member.getCreatedAt())
+                .modifiedAt(member.getModifiedAt())
                 .build();
         return ResponseDto.success(memberResponseDto);
     }
@@ -169,7 +172,7 @@ public class MemberService {
                 } else {
                     RefreshToken refreshTokenFromDB = jwtUtil.getRefreshTokenFromDB(member);
                     if (refreshTokenFromDB != null && refreshToken.equals(refreshTokenFromDB.getTokenValue())) { // new access token 발급
-                        String newAccessToken = jwtUtil.createToken(member.getUsername(), TokenProperties.AUTH_HEADER);
+                        String newAccessToken = jwtUtil.createToken(member.getMemberId(), TokenProperties.AUTH_HEADER);
                         response.addHeader(TokenProperties.AUTH_HEADER, TokenProperties.TOKEN_TYPE + newAccessToken);
                         return ResponseDto.success("토큰이 재발급 되었습니다.");
                     } else {
