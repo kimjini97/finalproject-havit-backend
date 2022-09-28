@@ -60,11 +60,20 @@ public class MyPageService {
             nickname = member.getNickname();
         }
 
+        String introduce = myPageDto.getIntroduce();
+        if (null == introduce || introduce.isEmpty()) {
+            if (null == findMember.getIntroduce()) {
+                introduce = null;
+            } else if (!findMember.getIntroduce().isEmpty()) {
+                introduce = findMember.getIntroduce();
+            }
+        }
+
         String password = myPageDto.getPassword();
         String passwordConfirm = myPageDto.getPasswordConfirm();
         if (password.isEmpty()) {
             password = member.getPassword();
-            findMember.edit(imgUrl, nickname, password);
+            findMember.edit(imgUrl, nickname, introduce, password);
 
             return ResponseDto.success(
                     MemberDto.Response.builder()
@@ -72,6 +81,9 @@ public class MyPageService {
                             .username(findMember.getUsername())
                             .nickname(findMember.getNickname())
                             .profileUrl(findMember.getProfileUrl())
+                            .introduce(findMember.getIntroduce())
+                            .createdAt(findMember.getCreatedAt())
+                            .modifiedAt(findMember.getModifiedAt())
                             .build()
             );
         }
@@ -81,7 +93,7 @@ public class MyPageService {
         } else if (!password.equals(passwordConfirm)) {
             return ResponseDto.fail(PASSWORD_NOT_MATCHED);
         } else {
-            findMember.edit(imgUrl, nickname, passwordEncoder.encode(password));
+            findMember.edit(imgUrl, nickname, introduce, passwordEncoder.encode(password));
         }
 
         return ResponseDto.success(
@@ -90,6 +102,9 @@ public class MyPageService {
                         .username(findMember.getUsername())
                         .nickname(findMember.getNickname())
                         .profileUrl(findMember.getProfileUrl())
+                        .introduce(findMember.getIntroduce())
+                        .createdAt(findMember.getCreatedAt())
+                        .modifiedAt(findMember.getModifiedAt())
                         .build()
         );
     }
@@ -116,6 +131,9 @@ public class MyPageService {
                         .username(findMember.getUsername())
                         .nickname(findMember.getNickname())
                         .profileUrl(findMember.getProfileUrl())
+                        .introduce(findMember.getIntroduce())
+                        .createdAt(findMember.getCreatedAt())
+                        .modifiedAt(findMember.getModifiedAt())
                         .build()
         );
     }
