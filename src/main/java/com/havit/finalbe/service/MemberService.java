@@ -100,6 +100,7 @@ public class MemberService {
                 .username(member.getUsername())
                 .nickname(member.getNickname())
                 .profileUrl(member.getProfileUrl())
+                .introduce(member.getIntroduce())
                 .createdAt(member.getCreatedAt())
                 .modifiedAt(member.getModifiedAt())
                 .build();
