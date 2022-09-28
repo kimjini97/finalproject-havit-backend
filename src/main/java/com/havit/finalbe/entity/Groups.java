@@ -55,12 +55,31 @@ public class Groups extends Timestamped{
     private List<GroupTag> groupTagList;
 
     public void update(GroupDto.Request groupRequestDto, String imgUrl) {
-        this.title = groupRequestDto.getTitle();
-        this.startDate = groupRequestDto.getStartDate();
-        this.imgUrl = imgUrl;
-        this.content = groupRequestDto.getContent();
-        this.leaderName = groupRequestDto.getLeaderName();
-        this.crewName = groupRequestDto.getCrewName();
+        String title = groupRequestDto.getTitle();
+        String startDate = groupRequestDto.getStartDate();
+        String imageUrl = imgUrl;
+        String content = groupRequestDto.getContent();
+        String leaderName = groupRequestDto.getLeaderName();
+        String crewName = groupRequestDto.getCrewName();
+
+        if (null != title) {
+            this.title = title;
+        }
+        if (null != startDate) {
+            this.startDate = startDate;
+        }
+        if (null != imageUrl) {
+            this.imgUrl = imageUrl;
+        }
+        if (null != content) {
+            this.content = content;
+        }
+        if (null != leaderName) {
+            this.leaderName = leaderName;
+        }
+        if (null != crewName) {
+            this.crewName = crewName;
+        }
     }
 
 }

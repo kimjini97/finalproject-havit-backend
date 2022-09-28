@@ -27,10 +27,10 @@ public class Certify extends Timestamped {
     private String imgUrl;
 
     @Column
-    private double latitude;
+    private String latitude;
 
     @Column
-    private double longitude;
+    private String longitude;
 
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,14 +43,24 @@ public class Certify extends Timestamped {
     @OneToMany(mappedBy = "certify", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> commentList;
 
-    public boolean isValidateMember(Member member) {
-        return !this.member.equals(member);
-    }
 
     public void update(CertifyDto.Request certifyRequestDto, String imgUrl) {
-        this.title = certifyRequestDto.getTitle();
-        this.imgUrl = imgUrl;
-        this.latitude = certifyRequestDto.getLatitude();
-        this.longitude = certifyRequestDto.getLongitude();
+        String title = certifyRequestDto.getTitle();
+        String imageUrl = imgUrl;
+        String latitude = certifyRequestDto.getLatitude();
+        String longitude = certifyRequestDto.getLongitude();
+
+        if (null != title) {
+            this.title = title;
+        }
+        if (null != imageUrl) {
+            this.imgUrl = imageUrl;
+        }
+        if (null != latitude) {
+            this.latitude = latitude;
+        }
+        if (null != longitude) {
+            this.longitude = longitude;
+        }
     }
 }

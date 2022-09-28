@@ -7,11 +7,11 @@ import com.havit.finalbe.entity.Certify;
 import com.havit.finalbe.entity.Comment;
 import com.havit.finalbe.entity.Member;
 import com.havit.finalbe.repository.CommentRepository;
+import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import static com.havit.finalbe.exception.ErrorMsg.*;
 
@@ -24,16 +24,9 @@ public class CommentService {
     private final ServiceUtil serviceUtil;
 
     @Transactional
-    public ResponseDto<?> createComment(CommentDto.Request commentRequestDto, HttpServletRequest request) {
+    public ResponseDto<?> createComment(CommentDto.Request commentRequestDto, UserDetailsImpl userDetails) {
 
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         Certify certify = certifyService.isPresentCertify(commentRequestDto.getCertifyId());
         if (null == certify) {
@@ -61,16 +54,9 @@ public class CommentService {
     }
 
     @Transactional
-    public ResponseDto<?> updateComment(Long commentId, CommentDto.Request commentRequestDto, HttpServletRequest request) {
+    public ResponseDto<?> updateComment(Long commentId, CommentDto.Request commentRequestDto, UserDetailsImpl userDetails) {
 
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         Comment comment = isPresentComment(commentId);
         if (null == comment) {
@@ -96,16 +82,9 @@ public class CommentService {
     }
 
     @Transactional
-    public ResponseDto<?> deleteComment(Long commentId, HttpServletRequest request) {
+    public ResponseDto<?> deleteComment(Long commentId, UserDetailsImpl userDetails) {
 
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         Comment comment = isPresentComment(commentId);
         if (null == comment) {
