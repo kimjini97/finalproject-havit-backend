@@ -54,7 +54,6 @@ public class Groups extends Timestamped{
     @OneToMany(mappedBy = "groups", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<GroupTag> groupTagList;
 
-
     public void update(GroupDto.Request groupRequestDto, String imgUrl) {
         this.title = groupRequestDto.getTitle();
         this.startDate = groupRequestDto.getStartDate();
