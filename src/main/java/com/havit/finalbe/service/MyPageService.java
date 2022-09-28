@@ -5,13 +5,12 @@ import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.entity.Member;
 import com.havit.finalbe.exception.*;
 import com.havit.finalbe.repository.MemberRepository;
+import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
@@ -26,12 +25,9 @@ public class MyPageService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public ResponseDto<?> checkPassword(MemberDto.CheckPassword checkPasswordDto, HttpServletRequest request) {
+    public ResponseDto<?> checkPassword(MemberDto.CheckPassword checkPasswordDto, UserDetailsImpl userDetails) {
 
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         if(!member.validatePassword(passwordEncoder, checkPasswordDto.getPassword())) {
             return ResponseDto.fail(PASSWORD_NOT_MATCHED);
@@ -41,12 +37,9 @@ public class MyPageService {
     }
 
     @Transactional
-    public ResponseDto<?> editMyInfo(MemberDto.MyPage myPageDto, HttpServletRequest request) throws IOException {
+    public ResponseDto<?> editMyInfo(MemberDto.MyPage myPageDto, UserDetailsImpl userDetails) throws IOException {
 
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         Member findMember = memberRepository.findMemberByMemberId(member.getMemberId());
 
@@ -102,12 +95,9 @@ public class MyPageService {
     }
 
     @Transactional
-    public ResponseDto<?> deleteProfile(HttpServletRequest request) {
+    public ResponseDto<?> deleteProfile(UserDetailsImpl userDetails) {
 
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         Member findMember = memberRepository.findMemberByMemberId(member.getMemberId());
 

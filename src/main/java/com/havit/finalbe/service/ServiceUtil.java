@@ -5,15 +5,12 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.havit.finalbe.entity.*;
-import com.havit.finalbe.jwt.util.JwtUtil;
-import com.havit.finalbe.jwt.util.TokenProperties;
 import com.havit.finalbe.repository.GroupTagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -30,16 +27,8 @@ public class ServiceUtil {
     @Value("${cloud.aws.s3.bucket}")
     private String havitbucket;
     private final AmazonS3Client amazonS3Client;
-    private final JwtUtil jwtUtil;
     private final GroupTagRepository groupTagRepository;
 
-    // 멤버 인증
-    public Member validateMember(HttpServletRequest request) {
-        if (jwtUtil.validateToken(request.getHeader("Refresh-Token")).equals(TokenProperties.INVALID)) {
-            return null;
-        }
-        return jwtUtil.getMemberFromAuthentication();
-    }
 
     // 댓글 작성 날짜 포맷
     public String getDateFormatOfComment(Comment comment) {

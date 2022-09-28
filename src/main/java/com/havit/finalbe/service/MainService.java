@@ -8,15 +8,14 @@ import com.havit.finalbe.entity.Member;
 import com.havit.finalbe.repository.FavoriteRepository;
 import com.havit.finalbe.repository.GroupRepository;
 import com.havit.finalbe.repository.ParticipateRepository;
+import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.havit.finalbe.exception.ErrorMsg.INVALID_TOKEN;
 
 @RequiredArgsConstructor
 @Service
@@ -29,12 +28,9 @@ public class MainService {
 
     // 그룹 통합 검색
     @Transactional
-    public ResponseDto<?> searchGroup(String searchWord, HttpServletRequest request) {
+    public ResponseDto<?> searchGroup(String searchWord, UserDetailsImpl userDetails) {
 
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         List<Groups> groupList = groupRepository
                 .findAllByTitleContainingIgnoreCaseOrMember_NicknameContainingIgnoreCase(searchWord, searchWord);

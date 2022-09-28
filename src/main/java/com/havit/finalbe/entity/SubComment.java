@@ -30,7 +30,6 @@ public class SubComment extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     private Comment comment;
 
-    // 대댓글 수정
     public void update(SubCommentDto.Request subCommentDto) {
         this.content = subCommentDto.getContent();
     }

@@ -9,12 +9,12 @@ import com.havit.finalbe.repository.CertifyRepository;
 import com.havit.finalbe.repository.CommentRepository;
 import com.havit.finalbe.repository.ParticipateRepository;
 import com.havit.finalbe.repository.SubCommentRepository;
+import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,16 +33,9 @@ public class CertifyService {
     private final ServiceUtil serviceUtil;
 
     @Transactional
-    public ResponseDto<?> createCertify(CertifyDto.Request certifyRequestDto, HttpServletRequest request) throws IOException {
+    public ResponseDto<?> createCertify(CertifyDto.Request certifyRequestDto, UserDetailsImpl userDetails) throws IOException {
 
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         Groups groups = groupService.isPresentGroup(certifyRequestDto.getGroupId());
         if (null == groups) {
@@ -151,16 +144,9 @@ public class CertifyService {
     }
 
     @Transactional
-    public ResponseDto<?> updateCertify(Long certifyId, CertifyDto.Request certifyRequestDto, HttpServletRequest request) throws IOException {
+    public ResponseDto<?> updateCertify(Long certifyId, CertifyDto.Request certifyRequestDto, UserDetailsImpl userDetails) throws IOException {
 
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         Certify certify = isPresentCertify(certifyId);
         if (null == certify) {
@@ -204,16 +190,9 @@ public class CertifyService {
     }
 
     @Transactional
-    public ResponseDto<?> deleteCertify(Long certifyId, HttpServletRequest request) {
+    public ResponseDto<?> deleteCertify(Long certifyId, UserDetailsImpl userDetails) {
 
-        if (null == request.getHeader("Authorization")) {
-            return ResponseDto.fail(INVALID_LOGIN);
-        }
-
-        Member member = serviceUtil.validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail(INVALID_TOKEN);
-        }
+        Member member = userDetails.getMember();
 
         Certify certify = isPresentCertify(certifyId);
         if (null == certify) {
