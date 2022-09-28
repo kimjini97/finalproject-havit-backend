@@ -28,10 +28,10 @@ public class CertifyDto {
         private MultipartFile imgFile;
 
         @Schema(description = "경도", example = "83.24982")
-        private double longitude;
+        private String longitude;
 
         @Schema(description = "위도", example = "92.34972")
-        private double latitude;
+        private String latitude;
     }
 
     @Builder
@@ -53,10 +53,10 @@ public class CertifyDto {
         private String imgUrl;
 
         @Schema(description = "경도", example = "83.23423")
-        private double longitude;
+        private String longitude;
 
         @Schema(description = "위도", example = "90.23434")
-        private double latitude;
+        private String latitude;
 
         @Schema(description = "생성 일시", example = "2022-07-25T12:43:01.226062")
         private LocalDateTime createdAt;
