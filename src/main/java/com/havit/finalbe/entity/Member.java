@@ -33,6 +33,9 @@ public class Member extends Timestamped{
     @Column
     private String profileUrl;
 
+    @Column
+    private String introduce;
+
     public boolean isValidateMember(Long memberId) {
         return this.memberId == memberId;
     }
@@ -41,9 +44,10 @@ public class Member extends Timestamped{
         return passwordEncoder.matches(password, this.password);
     }
 
-    public void edit(String profileUrl, String nickname, String password) {
+    public void edit(String profileUrl, String nickname, String introduce, String password) {
         this.profileUrl = profileUrl;
         this.nickname = nickname;
+        this.introduce = introduce;
         this.password = password;
     }
 
