@@ -3,12 +3,14 @@ package com.havit.finalbe.controller;
 import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import com.havit.finalbe.service.ParticipateService;
+import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-
+@Api(tags = {"참가자 API"})
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth/participate")

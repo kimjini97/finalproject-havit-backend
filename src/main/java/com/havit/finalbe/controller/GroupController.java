@@ -3,7 +3,9 @@ package com.havit.finalbe.controller;
 import com.havit.finalbe.dto.GroupDto;
 import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
+import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import com.havit.finalbe.service.GroupService;
 
 import java.io.IOException;
 
+@Api(tags = {"그룹 API"})
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth/group")
