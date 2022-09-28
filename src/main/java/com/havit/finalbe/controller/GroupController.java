@@ -2,13 +2,14 @@ package com.havit.finalbe.controller;
 
 import com.havit.finalbe.dto.GroupDto;
 import com.havit.finalbe.dto.response.ResponseDto;
+import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.havit.finalbe.service.GroupService;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @RestController
@@ -20,38 +21,38 @@ public class GroupController {
 
     @Operation(summary = "그룹 생성", description = "그룹 관련 정보 기입후 그룹이 생성 됩니다.")
     @PostMapping(value = "/", consumes = {"multipart/form-data"})
-    public ResponseDto<?> createGroup(@ModelAttribute GroupDto.Request groupRequestDto, HttpServletRequest request) throws IOException {
-        return groupService.createGroup(groupRequestDto, request);
+    public ResponseDto<?> createGroup(@ModelAttribute GroupDto.Request groupRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        return groupService.createGroup(groupRequestDto, userDetails);
     }
 
     @Operation(summary = "전체 그룹 조회", description = "생성된 전체 그룹을 조회합니다.")
     @GetMapping("/")
-    public ResponseDto<?> getAllGroup(HttpServletRequest request) {
-        return groupService.getAllGroup(request);
+    public ResponseDto<?> getAllGroup(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return groupService.getAllGroup(userDetails);
     }
 
     @Operation(summary = "태그별 전체 그룹 조회", description = "생성된 전체 그룹을 태그별로 조회합니다.")
     @GetMapping("/tag")
-    public ResponseDto<?> getAllGroup(HttpServletRequest request, @RequestParam(value = "tag") String keyword) {
-        return groupService.getAllGroupByTag(request, keyword);
+    public ResponseDto<?> getAllGroup(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam(value = "tag") String keyword) {
+        return groupService.getAllGroupByTag(userDetails, keyword);
     }
 
     @Operation(summary = "그룹 상세 조회", description = "groupId에 해당하는 그룹을 조회합니다.")
     @GetMapping("/{groupId}")
-    public ResponseDto<?> getGroupDetail(@PathVariable Long groupId, HttpServletRequest request) {
-        return groupService.getGroupDetail(groupId, request);
+    public ResponseDto<?> getGroupDetail(@PathVariable Long groupId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return groupService.getGroupDetail(groupId, userDetails);
     }
 
     @Operation(summary = "그룹 수정", description = "groupId에 해당하는 그룹을 수정합니다.")
-    @PutMapping(value = "/{groupId}", consumes = {"multipart/form-data"})
+    @PatchMapping(value = "/{groupId}", consumes = {"multipart/form-data"})
     public ResponseDto<?> updateGroup(@PathVariable Long groupId,
-                                      @ModelAttribute GroupDto.Request groupRequestDto, HttpServletRequest request) throws IOException {
-        return groupService.updateGroup(groupId, groupRequestDto, request);
+                                      @ModelAttribute GroupDto.Request groupRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+        return groupService.updateGroup(groupId, groupRequestDto, userDetails);
     }
 
     @Operation(summary = "그룹 삭제", description = "groupId에 해당하는 그룹을 삭제합니다.")
     @DeleteMapping("/{groupId}")
-    public ResponseDto<?> deleteGroup(@PathVariable Long groupId, HttpServletRequest request) {
-        return groupService.deleteGroup(groupId, request);
+    public ResponseDto<?> deleteGroup(@PathVariable Long groupId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return groupService.deleteGroup(groupId, userDetails);
     }
 }
