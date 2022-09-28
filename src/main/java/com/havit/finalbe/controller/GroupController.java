@@ -33,7 +33,7 @@ public class GroupController {
 
     @Operation(summary = "태그별 전체 그룹 조회", description = "생성된 전체 그룹을 태그별로 조회합니다.")
     @GetMapping("/tag")
-    public ResponseDto<?> getAllGroup(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam(value = "tag") String keyword) {
+    public ResponseDto<?> getAllGroupByTag(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam(value = "tag") String keyword) {
         return groupService.getAllGroupByTag(userDetails, keyword);
     }
 
