@@ -1,7 +1,6 @@
 package com.havit.finalbe.service;
 
 import com.havit.finalbe.dto.SubCommentDto;
-import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.entity.Comment;
 import com.havit.finalbe.entity.Member;
 import com.havit.finalbe.entity.SubComment;
@@ -13,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static com.havit.finalbe.exception.ErrorMsg.*;
 
 @RequiredArgsConstructor
 @Service
@@ -25,13 +23,13 @@ public class SubCommentService {
 
 
     @Transactional
-    public ResponseDto<SubCommentDto.Response> createSubComment(SubCommentDto.Request subCommentDto, UserDetailsImpl userDetails) {
+    public SubCommentDto.Response createSubComment(SubCommentDto.Request subCommentDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
         Comment comment = commentService.isPresentComment(subCommentDto.getCommentId());
         if (null == comment) {
-            return ResponseDto.fail(COMMENT_NOT_FOUND);
+            throw new IllegalArgumentException("해당 댓글을 찾을 수 없습니다.");
         }
 
         SubComment subComment = SubComment.builder()
@@ -42,63 +40,59 @@ public class SubCommentService {
 
         subCommentRepository.save(subComment);
 
-        return ResponseDto.success(
-                SubCommentDto.Response.builder()
+        return SubCommentDto.Response.builder()
                         .subCommentId(subComment.getSubCommentId())
                         .commentId(subComment.getComment().getCommentId())
                         .nickname(subComment.getMember().getNickname())
                         .profileUrl(subComment.getMember().getProfileUrl())
                         .content(subComment.getContent())
                         .dateTime(serviceUtil.getDateFormatOfSubComment(subComment))
-                        .build()
-        );
+                        .build();
     }
 
     @Transactional
-    public ResponseDto<SubCommentDto.Response> updateSubComment(Long subCommentId, SubCommentDto.Request subCommentDto, UserDetailsImpl userDetails) {
+    public SubCommentDto.Response updateSubComment(Long subCommentId, SubCommentDto.Request subCommentDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
         SubComment subComment = isPresentSubComment(subCommentId);
         if (null == subComment) {
-            return ResponseDto.fail(COMMENT_NOT_FOUND);
+            throw new IllegalArgumentException("해당 댓글을 찾을 수 없습니다.");
         }
 
         if (!subComment.getMember().isValidateMember(member.getMemberId())) {
-            return ResponseDto.fail(MEMBER_NOT_MATCHED);
+            throw new IllegalArgumentException("작성자가 아닙니다.");
         }
 
         subComment.update(subCommentDto);
 
-        return ResponseDto.success(
-                SubCommentDto.Response.builder()
+        return SubCommentDto.Response.builder()
                         .subCommentId(subComment.getSubCommentId())
                         .commentId(subComment.getComment().getCommentId())
                         .nickname(subComment.getMember().getNickname())
                         .profileUrl(subComment.getMember().getProfileUrl())
                         .content(subComment.getContent())
                         .dateTime(serviceUtil.getDateFormatOfSubComment(subComment))
-                        .build()
-        );
+                        .build();
     }
 
     @Transactional
-    public ResponseDto<String> deleteSubComment(Long subCommentId, UserDetailsImpl userDetails) {
+    public String deleteSubComment(Long subCommentId, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
         SubComment subComment = isPresentSubComment(subCommentId);
         if (null == subComment) {
-            return ResponseDto.fail(COMMENT_NOT_FOUND);
+            throw new IllegalArgumentException("해당 댓글을 찾을 수 없습니다.");
         }
 
         if (!subComment.getMember().isValidateMember(member.getMemberId())) {
-            return ResponseDto.fail(MEMBER_NOT_MATCHED);
+            throw new IllegalArgumentException("작성자가 아닙니다.");
         }
 
         subCommentRepository.delete(subComment);
 
-        return ResponseDto.success("삭제가 완료되었습니다.");
+        return "삭제가 완료되었습니다.";
     }
 
 

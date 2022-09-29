@@ -1,7 +1,6 @@
 package com.havit.finalbe.controller;
 
 import com.havit.finalbe.dto.FavoriteDto;
-import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import com.havit.finalbe.service.FavoriteService;
 import io.swagger.annotations.Api;
@@ -21,7 +20,7 @@ public class FavoriteController {
 
     @Operation(summary = "그룹 즐겨찾기", description = "해당하는 그룹을 즐겨찾기/즐겨찾기 취소 합니다.")
     @PostMapping("/api/auth/favorite")
-    public ResponseDto<FavoriteDto.Response> favorites(@RequestBody FavoriteDto.Request favoriteRequestDto,
+    public FavoriteDto.Response favorites(@RequestBody FavoriteDto.Request favoriteRequestDto,
                                     @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return favoriteService.favorites(favoriteRequestDto, userDetails);
     }

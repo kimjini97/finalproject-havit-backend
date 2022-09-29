@@ -1,7 +1,6 @@
 package com.havit.finalbe.service;
 
 import com.havit.finalbe.dto.GroupDto;
-import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.entity.Favorite;
 import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.entity.Member;
@@ -28,7 +27,7 @@ public class MainService {
 
     // 그룹 통합 검색
     @Transactional
-    public ResponseDto<List<GroupDto.AllGroupList>> searchGroup(String searchWord, UserDetailsImpl userDetails) {
+    public List<GroupDto.AllGroupList> searchGroup(String searchWord, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -61,6 +60,6 @@ public class MainService {
             searchGroupListResponseDtoList.add(allGroupListResponseDto);
         }
 
-        return ResponseDto.success(searchGroupListResponseDtoList);
+        return searchGroupListResponseDtoList;
     }
 }

@@ -2,7 +2,6 @@ package com.havit.finalbe.service;
 
 import com.havit.finalbe.dto.GroupDto;
 import com.havit.finalbe.entity.Groups;
-import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.entity.*;
 import com.havit.finalbe.repository.*;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import static com.havit.finalbe.exception.ErrorMsg.*;
 
 @RequiredArgsConstructor
 @Service
@@ -31,7 +29,7 @@ public class GroupService {
 
     // 그룹 생성
     @Transactional
-    public ResponseDto<GroupDto.Response> createGroup(GroupDto.Request groupRequestDto, UserDetailsImpl userDetails) throws IOException {
+    public GroupDto.Response createGroup(GroupDto.Request groupRequestDto, UserDetailsImpl userDetails) throws IOException {
 
         Member member = userDetails.getMember();
 
@@ -76,8 +74,7 @@ public class GroupService {
 
         List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
 
-        return ResponseDto.success(
-                GroupDto.Response.builder()
+        return GroupDto.Response.builder()
                         .groupId(groups.getGroupId())
                         .title(groups.getTitle())
                         .imgUrl(groups.getImgUrl())
@@ -89,13 +86,12 @@ public class GroupService {
                         .groupTag(tagListByGroup)
                         .createdAt(groups.getCreatedAt())
                         .modifiedAt(groups.getModifiedAt())
-                        .build()
-        );
+                        .build();
     }
 
     // 그룹 전체 목록 조회
     @Transactional(readOnly = true)
-    public ResponseDto<List<GroupDto.AllGroupList>> getAllGroup(UserDetailsImpl userDetails) {
+    public List<GroupDto.AllGroupList> getAllGroup(UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -126,18 +122,18 @@ public class GroupService {
                     .build();
             allGroupListResponseDtoList.add(allGroupListResponseDto);
         }
-        return ResponseDto.success(allGroupListResponseDtoList);
+        return allGroupListResponseDtoList;
     }
 
     // 태그별 그룹 전체 목록 조회
     @Transactional(readOnly = true)
-    public ResponseDto<List<GroupDto.AllGroupList>> getAllGroupByTag(UserDetailsImpl userDetails, String keyword) {
+    public List<GroupDto.AllGroupList> getAllGroupByTag(UserDetailsImpl userDetails, String keyword) {
 
         Member member = userDetails.getMember();
 
         Tags tags = tagsRepository.findByTagName(keyword);
         if (null == tags) {
-            return ResponseDto.fail(TAG_NOT_FOUND);
+            throw new IllegalArgumentException("태그를 찾을 수 없습니다.");
         }
 
         List<GroupTag> groupTagList = groupTagRepository.findAllByTagsOrderByGroupsDesc(tags);
@@ -167,12 +163,12 @@ public class GroupService {
                     .build();
             allGroupListResponseDtoList.add(allGroupListResponseDto);
         }
-        return ResponseDto.success(allGroupListResponseDtoList);
+        return allGroupListResponseDtoList;
     }
 
     // 그룹 상세 조회
     @Transactional(readOnly = true)
-    public ResponseDto<GroupDto.Response> getGroupDetail(Long groupId, UserDetailsImpl userDetails) {
+    public GroupDto.Response getGroupDetail(Long groupId, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -180,7 +176,7 @@ public class GroupService {
 
         Groups groups = isPresentGroup(groupId);
         if (null == groups) {
-            return ResponseDto.fail(GROUP_NOT_FOUND);
+            throw new IllegalArgumentException("해당 그룹을 찾을 수 없습니다.");
         }
 
         // 태그 가져오기
@@ -203,8 +199,7 @@ public class GroupService {
             certifyImgUrlList.add(imgUrl.getImgUrl());
         }
 
-        return ResponseDto.success(
-                GroupDto.Response.builder()
+        return GroupDto.Response.builder()
                         .groupId(groupId)
                         .title(groups.getTitle())
                         .nickname(groups.getMember().getNickname())
@@ -219,23 +214,22 @@ public class GroupService {
                         .memberCount(memberCount)
                         .memberList(memberList)
                         .certifyImgUrlList(certifyImgUrlList)
-                        .build()
-        );
+                        .build();
     }
 
     // 그룹 수정
     @Transactional
-    public ResponseDto<GroupDto.Response> updateGroup(Long groupId, GroupDto.Request groupRequestDto, UserDetailsImpl userDetails) throws IOException {
+    public GroupDto.Response updateGroup(Long groupId, GroupDto.Request groupRequestDto, UserDetailsImpl userDetails) throws IOException {
 
         Member member = userDetails.getMember();
 
         Groups groups = isPresentGroup(groupId);
         if (null == groups) {
-            return ResponseDto.fail(GROUP_NOT_FOUND);
+            throw new IllegalArgumentException("해당 그룹을 찾을 수 없습니다.");
         }
 
         if (!groups.getMember().isValidateMember(member.getMemberId())) {
-            return ResponseDto.fail(MEMBER_NOT_MATCHED);
+            throw new IllegalArgumentException("작성자가 아닙니다.");
         }
 
         String originFile = groups.getImgUrl();
@@ -252,8 +246,7 @@ public class GroupService {
 
         if (null == groupRequestDto.getGroupTag()) {
             List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
-            return ResponseDto.success(
-                    GroupDto.Response.builder()
+            return GroupDto.Response.builder()
                             .groupId(groups.getGroupId())
                             .title(groups.getTitle())
                             .imgUrl(groups.getImgUrl())
@@ -265,8 +258,7 @@ public class GroupService {
                             .groupTag(tagListByGroup)
                             .createdAt(groups.getCreatedAt())
                             .modifiedAt(groups.getModifiedAt())
-                            .build()
-            );
+                            .build();
         }
 
         groupTagRepository.deleteByGroups(groups);
@@ -295,8 +287,7 @@ public class GroupService {
 
         List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
 
-        return ResponseDto.success(
-                GroupDto.Response.builder()
+        return GroupDto.Response.builder()
                         .groupId(groups.getGroupId())
                         .title(groups.getTitle())
                         .imgUrl(groups.getImgUrl())
@@ -308,23 +299,22 @@ public class GroupService {
                         .groupTag(tagListByGroup)
                         .createdAt(groups.getCreatedAt())
                         .modifiedAt(groups.getModifiedAt())
-                        .build()
-        );
+                        .build();
     }
 
     // 그룹 삭제
     @Transactional
-    public ResponseDto<String> deleteGroup(Long groupId, UserDetailsImpl userDetails) {
+    public String deleteGroup(Long groupId, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
         Groups groups = isPresentGroup(groupId);
         if (null == groups) {
-            return ResponseDto.fail(GROUP_NOT_FOUND);
+            throw new IllegalArgumentException("해당 그룹을 찾을 수 없습니다.");
         }
 
         if (!groups.getMember().isValidateMember(member.getMemberId())) {
-            return ResponseDto.fail(MEMBER_NOT_MATCHED);
+            throw new IllegalArgumentException("작성자가 아닙니다.");
         }
 
         String originFile = groups.getImgUrl();
@@ -347,7 +337,7 @@ public class GroupService {
                 tagsRepository.delete(tags);
             }
         }
-        return ResponseDto.success("삭제가 완료되었습니다.");
+        return "삭제가 완료되었습니다.";
     }
 
     // 그룹 존재 여부 체크
