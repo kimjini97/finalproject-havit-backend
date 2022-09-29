@@ -31,7 +31,7 @@ public class GroupService {
 
     // 그룹 생성
     @Transactional
-    public ResponseDto<?> createGroup(GroupDto.Request groupRequestDto, UserDetailsImpl userDetails) throws IOException {
+    public ResponseDto<GroupDto.Response> createGroup(GroupDto.Request groupRequestDto, UserDetailsImpl userDetails) throws IOException {
 
         Member member = userDetails.getMember();
 
@@ -95,7 +95,7 @@ public class GroupService {
 
     // 그룹 전체 목록 조회
     @Transactional(readOnly = true)
-    public ResponseDto<?> getAllGroup(UserDetailsImpl userDetails) {
+    public ResponseDto<List<GroupDto.AllGroupList>> getAllGroup(UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -131,7 +131,7 @@ public class GroupService {
 
     // 태그별 그룹 전체 목록 조회
     @Transactional(readOnly = true)
-    public ResponseDto<?> getAllGroupByTag(UserDetailsImpl userDetails, String keyword) {
+    public ResponseDto<List<GroupDto.AllGroupList>> getAllGroupByTag(UserDetailsImpl userDetails, String keyword) {
 
         Member member = userDetails.getMember();
 
@@ -172,7 +172,7 @@ public class GroupService {
 
     // 그룹 상세 조회
     @Transactional(readOnly = true)
-    public ResponseDto<?> getGroupDetail(Long groupId, UserDetailsImpl userDetails) {
+    public ResponseDto<GroupDto.Response> getGroupDetail(Long groupId, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -225,7 +225,7 @@ public class GroupService {
 
     // 그룹 수정
     @Transactional
-    public ResponseDto<?> updateGroup(Long groupId, GroupDto.Request groupRequestDto, UserDetailsImpl userDetails) throws IOException {
+    public ResponseDto<GroupDto.Response> updateGroup(Long groupId, GroupDto.Request groupRequestDto, UserDetailsImpl userDetails) throws IOException {
 
         Member member = userDetails.getMember();
 
@@ -314,7 +314,7 @@ public class GroupService {
 
     // 그룹 삭제
     @Transactional
-    public ResponseDto<?> deleteGroup(Long groupId, UserDetailsImpl userDetails) {
+    public ResponseDto<String> deleteGroup(Long groupId, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 

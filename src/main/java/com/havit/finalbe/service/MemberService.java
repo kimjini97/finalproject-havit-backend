@@ -12,7 +12,6 @@ import com.havit.finalbe.repository.MemberRepository;
 import com.havit.finalbe.repository.RefreshTokenRepository;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.AllArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +32,7 @@ public class MemberService {
     private final ServiceUtil serviceUtil;
 
     @Transactional
-    public ResponseDto<?> sigunup(MemberDto.Signup signupRequestDto) {
+    public ResponseDto<MemberDto.Response> signup(MemberDto.Signup signupRequestDto) {
         String username = signupRequestDto.getEmail();
         String password = signupRequestDto.getPassword();
         String nickname = signupRequestDto.getNickname();
@@ -65,7 +64,7 @@ public class MemberService {
     }
 
     @Transactional
-    public ResponseDto<?> login(MemberDto.Login loginRequestDto, HttpServletResponse response){
+    public ResponseDto<MemberDto.Response> login(MemberDto.Login loginRequestDto, HttpServletResponse response){
         String username = loginRequestDto.getEmail();
         Member member = isPresentMemberByUsername(username);
 
@@ -109,7 +108,7 @@ public class MemberService {
     }
 
     @Transactional
-    public ResponseDto<?> logout(HttpServletRequest request, UserDetailsImpl userDetails){
+    public ResponseDto<MessageResponseDto> logout(HttpServletRequest request, UserDetailsImpl userDetails){
 
         Member member = userDetails.getMember();
 
@@ -146,7 +145,7 @@ public class MemberService {
     }
 
     @Transactional
-    public ResponseDto<?> reissue(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseDto<String> reissue(HttpServletRequest request, HttpServletResponse response) {
         String refreshHeader = request.getHeader(TokenProperties.REFRESH_HEADER);
 
         if(refreshHeader == null){
