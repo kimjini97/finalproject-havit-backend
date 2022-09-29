@@ -23,7 +23,7 @@ public class Certify extends Timestamped {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column
     private String imgUrl;
 
     @Column
