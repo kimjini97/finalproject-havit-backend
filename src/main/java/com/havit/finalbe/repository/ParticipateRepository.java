@@ -11,4 +11,5 @@ public interface ParticipateRepository extends JpaRepository<Participate, Long> 
     Optional<Participate> findByGroups_GroupIdAndMember_MemberId(Long groupId, Long memberId);
     int countByGroups_GroupId(Long groupId);
     List<Participate> findAllByGroups(Groups groups);
+    List<Participate> findAllByMember_MemberId(Long memberId);
 }
