@@ -1,7 +1,6 @@
 package com.havit.finalbe.jwt.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.entity.Member;
 import com.havit.finalbe.entity.RefreshToken;
 import com.havit.finalbe.exception.ErrorMsg;
@@ -75,8 +74,7 @@ public class JwtUtil {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.setStatus(401);
-        ResponseDto<?> responseDto = ResponseDto.fail(errorCode);
-        String httpResponse = objectMapper.writeValueAsString(responseDto);
+        String httpResponse = objectMapper.writeValueAsString(errorCode);
         response.getWriter().write(httpResponse);
     }
 
@@ -91,15 +89,15 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
     }
 
-    // 인증된 member 가져오기
-    public Member getMemberFromAuthentication() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || AnonymousAuthenticationToken.class.
-                isAssignableFrom(authentication.getClass())) {
-            return null;
-        }
-        return ((UserDetailsImpl) authentication.getPrincipal()).getMember();
-    }
+//    // 인증된 member 가져오기
+//    public Member getMemberFromAuthentication() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication == null || AnonymousAuthenticationToken.class.
+//                isAssignableFrom(authentication.getClass())) {
+//            return null;
+//        }
+//        return ((UserDetailsImpl) authentication.getPrincipal()).getMember();
+//    }
 
 
 }
