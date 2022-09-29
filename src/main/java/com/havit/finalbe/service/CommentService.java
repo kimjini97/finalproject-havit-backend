@@ -24,7 +24,7 @@ public class CommentService {
     private final ServiceUtil serviceUtil;
 
     @Transactional
-    public ResponseDto<?> createComment(CommentDto.Request commentRequestDto, UserDetailsImpl userDetails) {
+    public ResponseDto<CommentDto.Response> createComment(CommentDto.Request commentRequestDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -54,7 +54,7 @@ public class CommentService {
     }
 
     @Transactional
-    public ResponseDto<?> updateComment(Long commentId, CommentDto.Request commentRequestDto, UserDetailsImpl userDetails) {
+    public ResponseDto<CommentDto.Response> updateComment(Long commentId, CommentDto.Request commentRequestDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -82,7 +82,7 @@ public class CommentService {
     }
 
     @Transactional
-    public ResponseDto<?> deleteComment(Long commentId, UserDetailsImpl userDetails) {
+    public ResponseDto<String> deleteComment(Long commentId, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 

@@ -25,7 +25,7 @@ public class MyPageService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public ResponseDto<?> checkPassword(MemberDto.CheckPassword checkPasswordDto, UserDetailsImpl userDetails) {
+    public ResponseDto<String> checkPassword(MemberDto.CheckPassword checkPasswordDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -37,7 +37,7 @@ public class MyPageService {
     }
 
     @Transactional
-    public ResponseDto<?> editMyInfo(MemberDto.MyPage myPageDto, UserDetailsImpl userDetails) throws IOException {
+    public ResponseDto<MemberDto.Response> editMyInfo(MemberDto.MyPage myPageDto, UserDetailsImpl userDetails) throws IOException {
 
         Member member = userDetails.getMember();
 
@@ -110,7 +110,7 @@ public class MyPageService {
     }
 
     @Transactional
-    public ResponseDto<?> deleteProfile(UserDetailsImpl userDetails) {
+    public ResponseDto<MemberDto.Response> deleteProfile(UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
