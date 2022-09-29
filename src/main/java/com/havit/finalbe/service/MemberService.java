@@ -2,10 +2,8 @@ package com.havit.finalbe.service;
 
 import com.havit.finalbe.dto.MemberDto;
 import com.havit.finalbe.dto.response.MessageResponseDto;
-import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.entity.Member;
 import com.havit.finalbe.entity.RefreshToken;
-import com.havit.finalbe.exception.*;
 import com.havit.finalbe.jwt.util.JwtUtil;
 import com.havit.finalbe.jwt.util.TokenProperties;
 import com.havit.finalbe.repository.MemberRepository;
@@ -32,14 +30,14 @@ public class MemberService {
     private final ServiceUtil serviceUtil;
 
     @Transactional
-    public ResponseDto<MemberDto.Response> signup(MemberDto.Signup signupRequestDto) {
+    public MemberDto.Response signup(MemberDto.Signup signupRequestDto) {
         String username = signupRequestDto.getEmail();
         String password = signupRequestDto.getPassword();
         String nickname = signupRequestDto.getNickname();
 
-        if (!emailStrCheck(username)) {throw new InvalidUsernameException(ErrorMsg.INVALID_EMAIL);}
-        if (!emailDuplicateCheck(username)) {throw new DuplicateUsernameException(ErrorMsg.DUPLICATE_EMAIL);}
-        if (!passwordStrCheck(password)) {throw new InvalidPasswordException(ErrorMsg.INVALID_PASSWORD);}
+        if (!emailStrCheck(username)) {throw new IllegalArgumentException("필드는 100자 이하여야 하며, @ 기호 전까지 64자 이하여야 합니다.");}
+        if (!emailDuplicateCheck(username)) {throw new IllegalArgumentException("중복된 이메일 주소가 있습니다.");}
+        if (!passwordStrCheck(password)) {throw new IllegalArgumentException("비밀번호 최소 8자 이상 , 소문자 , 숫자 (0-9) 또는 특수문자 (!@#$%^&*)");}
         else {
 
             Member member = Member.builder()
@@ -57,21 +55,21 @@ public class MemberService {
                     .modifiedAt(member.getModifiedAt())
                     .build();
 
-            return ResponseDto.success(signupInfo);
+            return signupInfo;
         }
 
 
     }
 
     @Transactional
-    public ResponseDto<MemberDto.Response> login(MemberDto.Login loginRequestDto, HttpServletResponse response){
+    public MemberDto.Response login(MemberDto.Login loginRequestDto, HttpServletResponse response){
         String username = loginRequestDto.getEmail();
         Member member = isPresentMemberByUsername(username);
 
-        if(member == null){ throw new MemberNotFoundException(ErrorMsg.MEMBER_NOT_FOUND);}
+        if(member == null){ throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");}
 
         if(!member.validatePassword(passwordEncoder,loginRequestDto.getPassword())){
-            throw new MemberNotFoundException(ErrorMsg.MEMBER_NOT_FOUND);
+            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
         }
 
         // 토큰 발급
@@ -104,21 +102,21 @@ public class MemberService {
                 .createdAt(member.getCreatedAt())
                 .modifiedAt(member.getModifiedAt())
                 .build();
-        return ResponseDto.success(memberResponseDto);
+        return memberResponseDto;
     }
 
     @Transactional
-    public ResponseDto<MessageResponseDto> logout(HttpServletRequest request, UserDetailsImpl userDetails){
+    public MessageResponseDto logout(HttpServletRequest request, UserDetailsImpl userDetails){
 
         Member member = userDetails.getMember();
 
         String refreshHeader = request.getHeader(TokenProperties.REFRESH_HEADER);
 
         if(refreshHeader == null) {
-            throw new NeedRefreshTokenException(ErrorMsg.NEED_REFRESH_TOKEN);}
+            throw new IllegalArgumentException("Refresh Token이 필요합니다.");}
 
         if(!refreshHeader.startsWith(TokenProperties.TOKEN_TYPE)) {
-            throw new InvalidRefreshTokenException(ErrorMsg.INVALID_TOKEN);
+            throw new IllegalArgumentException("유효하지 않은 Token 입니다.");
         }
 
         String refreshToken = refreshHeader.replace(TokenProperties.TOKEN_TYPE,"");
@@ -135,25 +133,25 @@ public class MemberService {
                     MessageResponseDto messageResponseDto = MessageResponseDto.builder()
                             .message("로그아웃 되었습니다.")
                             .build();
-                    return ResponseDto.success(messageResponseDto);
+                    return messageResponseDto;
                 } else {
-                    throw new InvalidRefreshTokenException(ErrorMsg.INVALID_TOKEN);
+                    throw new IllegalArgumentException("유효하지 않은 Token 입니다.");
                 }
             default:
-                throw new InvalidRefreshTokenException(ErrorMsg.INVALID_TOKEN);
+                throw new IllegalArgumentException("유효하지 않은 Token 입니다.");
         }
     }
 
     @Transactional
-    public ResponseDto<String> reissue(HttpServletRequest request, HttpServletResponse response) {
+    public String reissue(HttpServletRequest request, HttpServletResponse response) {
         String refreshHeader = request.getHeader(TokenProperties.REFRESH_HEADER);
 
         if(refreshHeader == null){
-            throw new NeedRefreshTokenException(ErrorMsg.NEED_REFRESH_TOKEN);
+            throw new IllegalArgumentException("Refresh Token이 필요합니다.");
         }
 
         if(!refreshHeader.startsWith(TokenProperties.TOKEN_TYPE)){
-            throw new InvalidRefreshTokenException(ErrorMsg.INVALID_TOKEN);
+            throw new IllegalArgumentException("유효하지 않은 Token 입니다.");
         }
 
         String refreshToken = refreshHeader.replace(TokenProperties.TOKEN_TYPE, "");
@@ -163,34 +161,33 @@ public class MemberService {
 
         switch (refreshTokenValidate) {
             case TokenProperties.EXPIRED:
-                throw new ExpiredRefreshTokenException(ErrorMsg.EXPIRED_REFRESH_TOKEN);
+                throw new IllegalArgumentException("만료된 Refresh Token 입니다.");
             case TokenProperties.VALID:
                 String username = jwtUtil.getUsernameFromToken(refreshToken);
                 Member member = isPresentMemberByUsername(username);
 
                 if (member == null) {
-                    throw new MemberNotFoundException(ErrorMsg.MEMBER_NOT_FOUND);
+                    throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
                 } else {
                     RefreshToken refreshTokenFromDB = jwtUtil.getRefreshTokenFromDB(member);
                     if (refreshTokenFromDB != null && refreshToken.equals(refreshTokenFromDB.getTokenValue())) { // new access token 발급
                         String newAccessToken = jwtUtil.createToken(member.getUsername(), member.getMemberId(), TokenProperties.AUTH_HEADER);
                         response.addHeader(TokenProperties.AUTH_HEADER, TokenProperties.TOKEN_TYPE + newAccessToken);
-                        return ResponseDto.success("토큰이 재발급 되었습니다.");
+                        return "토큰이 재발급 되었습니다.";
                     } else {
-                        throw new RefreshTokenNotMatched(ErrorMsg.REFRESH_TOKEN_NOT_MATCHED);
+                        throw new IllegalArgumentException("토큰이 일치하지 않습니다.");
                     }
                 }
             default:
-                throw new InvalidRefreshTokenException(ErrorMsg.INVALID_TOKEN);
+                throw new IllegalArgumentException("유효하지 않은 Token 입니다.");
         }
     }
 
-    public ResponseDto<MemberDto.Response> getMemberInfo(UserDetailsImpl userDetails) {
+    public MemberDto.Response getMemberInfo(UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
-        return ResponseDto.success(
-                MemberDto.Response.builder()
+        return MemberDto.Response.builder()
                         .memberId(member.getMemberId())
                         .username(member.getUsername())
                         .nickname(member.getNickname())
@@ -198,8 +195,7 @@ public class MemberService {
                         .introduce(member.getIntroduce())
                         .createdAt(member.getCreatedAt())
                         .modifiedAt(member.getModifiedAt())
-                        .build()
-        );
+                        .build();
     }
 
     private boolean emailDuplicateCheck(String email){

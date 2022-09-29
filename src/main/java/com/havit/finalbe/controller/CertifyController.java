@@ -23,7 +23,7 @@ public class CertifyController {
 
     @Operation(summary = "인증 생성", description = "인증 관련 정보 기입 후 인증이 생성됩니다.")
     @PostMapping(value = "/", consumes = {"multipart/form-data"})
-    public ResponseDto<CertifyDto.Response> createCertify(@ModelAttribute CertifyDto.Request certifyRequestDto,
+    public CertifyDto.Response createCertify(@ModelAttribute CertifyDto.Request certifyRequestDto,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return certifyService.createCertify(certifyRequestDto, userDetails);
     }
