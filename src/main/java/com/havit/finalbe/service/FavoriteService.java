@@ -1,7 +1,6 @@
 package com.havit.finalbe.service;
 
 import com.havit.finalbe.dto.FavoriteDto;
-import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.entity.Favorite;
 import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.entity.Member;
@@ -14,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.havit.finalbe.exception.ErrorMsg.*;
-
 @RequiredArgsConstructor
 @Service
 
@@ -27,13 +24,13 @@ public class FavoriteService {
     private final GroupService groupService;
 
     @Transactional
-    public ResponseDto<FavoriteDto.Response> favorites(FavoriteDto.Request favoriteRequestDto, UserDetailsImpl userDetails) {
+    public FavoriteDto.Response favorites(FavoriteDto.Request favoriteRequestDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
         Groups groups = groupService.isPresentGroup(favoriteRequestDto.getGroupId());
         if (null == groups) {
-            return ResponseDto.fail(GROUP_NOT_FOUND);
+            throw new IllegalArgumentException("해당 그룹을 찾을 수 없습니다.");
         }
 
         // 태그 가져오기
@@ -57,8 +54,7 @@ public class FavoriteService {
                 isFavorites = true;
             }
 
-            return ResponseDto.success(
-                    FavoriteDto.Response.builder()
+            return FavoriteDto.Response.builder()
                             .groupId(favorite.getGroups().getGroupId())
                             .title(favorite.getGroups().getTitle())
                             .imgUrl(favorite.getGroups().getImgUrl())
@@ -68,8 +64,7 @@ public class FavoriteService {
                             .createdAt(favorite.getGroups().getCreatedAt())
                             .modifiedAt(favorite.getGroups().getModifiedAt())
                             .member(checkMember.getMember())
-                            .build()
-            );
+                            .build();
         }
 
         Favorite favorite = Favorite.builder()
@@ -84,8 +79,7 @@ public class FavoriteService {
             isFavorites = true;
         }
 
-        return ResponseDto.success(
-                FavoriteDto.Response.builder()
+        return FavoriteDto.Response.builder()
                         .groupId(favorite.getGroups().getGroupId())
                         .title(favorite.getGroups().getTitle())
                         .imgUrl(favorite.getGroups().getImgUrl())
@@ -95,7 +89,6 @@ public class FavoriteService {
                         .createdAt(favorite.getGroups().getCreatedAt())
                         .modifiedAt(favorite.getGroups().getModifiedAt())
                         .member(null)
-                        .build()
-        );
+                        .build();
     }
 }

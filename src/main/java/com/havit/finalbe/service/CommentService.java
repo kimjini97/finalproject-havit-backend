@@ -2,7 +2,6 @@ package com.havit.finalbe.service;
 
 
 import com.havit.finalbe.dto.CommentDto;
-import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.entity.Certify;
 import com.havit.finalbe.entity.Comment;
 import com.havit.finalbe.entity.Member;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import static com.havit.finalbe.exception.ErrorMsg.*;
 
 @RequiredArgsConstructor
 @Service
@@ -24,13 +22,13 @@ public class CommentService {
     private final ServiceUtil serviceUtil;
 
     @Transactional
-    public ResponseDto<CommentDto.Response> createComment(CommentDto.Request commentRequestDto, UserDetailsImpl userDetails) {
+    public CommentDto.Response createComment(CommentDto.Request commentRequestDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
         Certify certify = certifyService.isPresentCertify(commentRequestDto.getCertifyId());
         if (null == certify) {
-            return ResponseDto.fail(CERTIFY_NOT_FOUND);
+            throw new IllegalArgumentException("해당 인증샷을 찾을 수 없습니다.");
         }
 
         Comment comment = Comment.builder()
@@ -41,63 +39,59 @@ public class CommentService {
 
         commentRepository.save(comment);
 
-        return ResponseDto.success(
-                CommentDto.Response.builder()
+        return CommentDto.Response.builder()
                         .commentId(comment.getCommentId())
                         .certifyId(comment.getCertify().getCertifyId())
                         .nickname(comment.getMember().getNickname())
                         .profileUrl(comment.getMember().getProfileUrl())
                         .content(comment.getContent())
                         .dateTime(serviceUtil.getDateFormatOfComment(comment))
-                        .build()
-        );
+                        .build();
     }
 
     @Transactional
-    public ResponseDto<CommentDto.Response> updateComment(Long commentId, CommentDto.Request commentRequestDto, UserDetailsImpl userDetails) {
+    public CommentDto.Response updateComment(Long commentId, CommentDto.Request commentRequestDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
         Comment comment = isPresentComment(commentId);
         if (null == comment) {
-            return ResponseDto.fail(COMMENT_NOT_FOUND);
+            throw new IllegalArgumentException("해당 댓글을 찾을 수 없습니다.");
         }
 
         if (!comment.getMember().isValidateMember(member.getMemberId())) {
-            return ResponseDto.fail(MEMBER_NOT_MATCHED);
+            throw new IllegalArgumentException("작성자가 아닙니다.");
         }
 
         comment.update(commentRequestDto);
 
-        return ResponseDto.success(
-                CommentDto.Response.builder()
+        return CommentDto.Response.builder()
                         .commentId(comment.getCommentId())
                         .certifyId(comment.getCertify().getCertifyId())
                         .nickname(comment.getMember().getNickname())
                         .profileUrl(comment.getMember().getProfileUrl())
                         .content(comment.getContent())
                         .dateTime(serviceUtil.getDateFormatOfComment(comment))
-                        .build()
-        );
+                        .build();
     }
 
     @Transactional
-    public ResponseDto<String> deleteComment(Long commentId, UserDetailsImpl userDetails) {
+    public String deleteComment(Long commentId, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
         Comment comment = isPresentComment(commentId);
         if (null == comment) {
-            return ResponseDto.fail(COMMENT_NOT_FOUND);
+            throw new IllegalArgumentException("해당 댓글을 찾을 수 없습니다.");
         }
 
         if (!comment.getMember().isValidateMember(member.getMemberId())) {
-            return ResponseDto.fail(MEMBER_NOT_MATCHED);
+            throw new IllegalArgumentException("작성자가 아닙니다.");
         }
 
         commentRepository.delete(comment);
 
-        return ResponseDto.success("삭제가 완료되었습니다.");
+        return "삭제가 완료되었습니다.";
     }
 
 
