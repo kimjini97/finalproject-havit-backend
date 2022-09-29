@@ -33,7 +33,7 @@ public class CertifyService {
     private final ServiceUtil serviceUtil;
 
     @Transactional
-    public ResponseDto<?> createCertify(CertifyDto.Request certifyRequestDto, UserDetailsImpl userDetails) throws IOException {
+    public ResponseDto<CertifyDto.Response> createCertify(CertifyDto.Request certifyRequestDto, UserDetailsImpl userDetails) throws IOException {
 
         Member member = userDetails.getMember();
 
@@ -84,7 +84,7 @@ public class CertifyService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseDto<?> getCertifyDetail(Long certifyId) {
+    public ResponseDto<CertifyDto.Response> getCertifyDetail(Long certifyId) {
 
         Certify certify = isPresentCertify(certifyId);
         if (null == certify) {
@@ -144,7 +144,7 @@ public class CertifyService {
     }
 
     @Transactional
-    public ResponseDto<?> updateCertify(Long certifyId, CertifyDto.Request certifyRequestDto, UserDetailsImpl userDetails) throws IOException {
+    public ResponseDto<CertifyDto.Response> updateCertify(Long certifyId, CertifyDto.Request certifyRequestDto, UserDetailsImpl userDetails) throws IOException {
 
         Member member = userDetails.getMember();
 
@@ -190,7 +190,7 @@ public class CertifyService {
     }
 
     @Transactional
-    public ResponseDto<?> deleteCertify(Long certifyId, UserDetailsImpl userDetails) {
+    public ResponseDto<String> deleteCertify(Long certifyId, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 

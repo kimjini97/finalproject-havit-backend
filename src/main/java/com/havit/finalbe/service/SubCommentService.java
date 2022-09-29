@@ -25,7 +25,7 @@ public class SubCommentService {
 
 
     @Transactional
-    public ResponseDto<?> createSubComment(SubCommentDto.Request subCommentDto, UserDetailsImpl userDetails) {
+    public ResponseDto<SubCommentDto.Response> createSubComment(SubCommentDto.Request subCommentDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -55,7 +55,7 @@ public class SubCommentService {
     }
 
     @Transactional
-    public ResponseDto<?> updateSubComment(Long subCommentId, SubCommentDto.Request subCommentDto, UserDetailsImpl userDetails) {
+    public ResponseDto<SubCommentDto.Response> updateSubComment(Long subCommentId, SubCommentDto.Request subCommentDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -83,7 +83,7 @@ public class SubCommentService {
     }
 
     @Transactional
-    public ResponseDto<?> deleteSubComment(Long subCommentId, UserDetailsImpl userDetails) {
+    public ResponseDto<String> deleteSubComment(Long subCommentId, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
