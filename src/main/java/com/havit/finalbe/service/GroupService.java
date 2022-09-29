@@ -101,9 +101,9 @@ public class GroupService {
 
         List<Groups> groupList = groupRepository.findAllByOrderByCreatedAtDesc();
         List<GroupDto.AllGroupList> allGroupListResponseDtoList = new ArrayList<>();
-        boolean isFavorites = false;
 
         for (Groups groups : groupList) {
+            boolean isFavorites = false;
             int memberCount = participateRepository.countByGroups_GroupId(groups.getGroupId());
             List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
             Favorite checkFavorite = favoriteRepository
@@ -142,9 +142,9 @@ public class GroupService {
 
         List<GroupTag> groupTagList = groupTagRepository.findAllByTagsOrderByGroupsDesc(tags);
         List<GroupDto.AllGroupList> allGroupListResponseDtoList = new ArrayList<>();
-        boolean isFavorites = false;
 
         for (GroupTag groupTag : groupTagList) {
+            boolean isFavorites = false;
             Groups groups = groupTag.getGroups();
             int memberCount = participateRepository.countByGroups_GroupId(groups.getGroupId());
             List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
