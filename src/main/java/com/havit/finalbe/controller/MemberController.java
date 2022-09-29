@@ -46,4 +46,9 @@ public class MemberController {
         return memberService.reissue(request,response);
     }
 
+    @GetMapping("/auth/info")
+    public ResponseDto<MemberDto.Response> getMemberInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return memberService.getMemberInfo(userDetails);
+    }
+
 }
