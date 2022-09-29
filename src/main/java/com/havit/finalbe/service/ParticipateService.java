@@ -29,7 +29,7 @@ public class ParticipateService {
     private final ServiceUtil serviceUtil;
 
     @Transactional
-    public ResponseDto<?> participate(Long groupId, UserDetailsImpl userDetails) {
+    public ResponseDto<GroupDto.Response> participate(Long groupId, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -88,7 +88,7 @@ public class ParticipateService {
     }
 
     @Transactional
-    public ResponseDto<?> cancelParticipation(Long groupId, UserDetailsImpl userDetails) {
+    public ResponseDto<GroupDto.Response> cancelParticipation(Long groupId, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
