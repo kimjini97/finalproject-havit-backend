@@ -59,7 +59,6 @@ public class MyPageService {
         }
 
         List<GroupDto.AllGroupList> allMyGroupList = new ArrayList<>();
-        boolean isFavorites = false;
 
         for (Participate participate : myParticipation) {
             Groups myJoinGroups = groupRepository.findByGroupId(participate.getGroups().getGroupId());
@@ -67,6 +66,7 @@ public class MyPageService {
         }
 
         for (Groups groups : myGroups) {
+            boolean isFavorites = false;
             int memberCount = participateRepository.countByGroups_GroupId(groups.getGroupId());
             List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
             Favorite checkFavorite = favoriteRepository
