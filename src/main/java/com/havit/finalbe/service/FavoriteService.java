@@ -27,7 +27,7 @@ public class FavoriteService {
     private final GroupService groupService;
 
     @Transactional
-    public ResponseDto<?> favorites(FavoriteDto.Request favoriteRequestDto, UserDetailsImpl userDetails) {
+    public ResponseDto<FavoriteDto.Response> favorites(FavoriteDto.Request favoriteRequestDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
