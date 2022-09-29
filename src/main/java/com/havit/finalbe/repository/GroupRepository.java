@@ -8,4 +8,6 @@ import java.util.List;
 public interface GroupRepository extends JpaRepository<Groups, Long> {
     List<Groups> findAllByOrderByCreatedAtDesc();
     List<Groups> findAllByTitleContainingIgnoreCaseOrMember_NicknameContainingIgnoreCase(String title, String nickname);
+    List<Groups> findAllByMember_MemberId(Long memberId);
+    Groups findByGroupId(Long groupId);
 }

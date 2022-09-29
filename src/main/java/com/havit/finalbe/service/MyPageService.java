@@ -1,10 +1,17 @@
 package com.havit.finalbe.service;
 
+import com.havit.finalbe.dto.GroupDto;
 import com.havit.finalbe.dto.MemberDto;
 import com.havit.finalbe.dto.response.ResponseDto;
+import com.havit.finalbe.entity.Favorite;
+import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.entity.Member;
+import com.havit.finalbe.entity.Participate;
 import com.havit.finalbe.exception.*;
+import com.havit.finalbe.repository.FavoriteRepository;
+import com.havit.finalbe.repository.GroupRepository;
 import com.havit.finalbe.repository.MemberRepository;
+import com.havit.finalbe.repository.ParticipateRepository;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.havit.finalbe.exception.ErrorMsg.*;
@@ -21,6 +30,9 @@ import static com.havit.finalbe.exception.ErrorMsg.*;
 @Service
 public class MyPageService {
     private final MemberRepository memberRepository;
+    private final GroupRepository groupRepository;
+    private final ParticipateRepository participateRepository;
+    private final FavoriteRepository favoriteRepository;
     private final ServiceUtil serviceUtil;
     private final PasswordEncoder passwordEncoder;
 
@@ -34,6 +46,51 @@ public class MyPageService {
         }
 
         return ResponseDto.success("true");
+    }
+
+    public ResponseDto<List<GroupDto.AllGroupList>> getMyGroup(UserDetailsImpl userDetails) {
+
+        Member member = userDetails.getMember();
+        List<Groups> myGroups = groupRepository.findAllByMember_MemberId(member.getMemberId());
+        List<Participate> myParticipation = participateRepository.findAllByMember_MemberId(member.getMemberId());
+
+        if (myGroups.isEmpty() && myParticipation.isEmpty()) {
+            return ResponseDto.fail(PARTICIPATION_NOT_FOUND);
+        }
+
+        List<GroupDto.AllGroupList> allMyGroupList = new ArrayList<>();
+
+        for (Participate participate : myParticipation) {
+            Groups myJoinGroups = groupRepository.findByGroupId(participate.getGroups().getGroupId());
+            myGroups.add(myJoinGroups);
+        }
+
+        for (Groups groups : myGroups) {
+            boolean isFavorites = false;
+            int memberCount = participateRepository.countByGroups_GroupId(groups.getGroupId());
+            List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
+            Favorite checkFavorite = favoriteRepository
+                    .findByMember_MemberIdAndGroups_GroupId(member.getMemberId(), groups.getGroupId());
+            if (null != checkFavorite) {
+                isFavorites = true;
+            }
+
+            // 로그인한 멤버의 계급 확인 코드 ( 만약 추가하면 AllGroupListResponseDto 에도 필드 추가해야 함 )
+
+            GroupDto.AllGroupList MyGroupDto = GroupDto.AllGroupList.builder()
+                    .groupId(groups.getGroupId())
+                    .title(groups.getTitle())
+                    .imgUrl(groups.getImgUrl())
+                    .memberCount(memberCount)
+                    .groupTag(tagListByGroup)
+                    .createdAt(groups.getCreatedAt())
+                    .modifiedAt(groups.getModifiedAt())
+                    .favorite(isFavorites)
+                    .build();
+            allMyGroupList.add(MyGroupDto);
+        }
+
+        return ResponseDto.success(allMyGroupList);
     }
 
     @Transactional

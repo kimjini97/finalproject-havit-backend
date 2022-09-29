@@ -1,5 +1,6 @@
 package com.havit.finalbe.controller;
 
+import com.havit.finalbe.dto.GroupDto;
 import com.havit.finalbe.dto.MemberDto;
 import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
@@ -11,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @Api(tags = {"마이페이지 API"})
 @RestController
@@ -25,6 +27,12 @@ public class MyPageController {
     public ResponseDto<String> checkPassword(@RequestBody MemberDto.CheckPassword checkPasswordDto,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return myPageService.checkPassword(checkPasswordDto, userDetails);
+    }
+
+    @Operation(summary = "내가 참여한 그룹 목록", description = "내가 참여한 그룹 목록을 불러옵니다.")
+    @GetMapping("/group")
+    public ResponseDto<List<GroupDto.AllGroupList>> getMyGroup(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return myPageService.getMyGroup(userDetails);
     }
 
     @Operation(summary = "내 정보 수정", description = "프로필 사진, 닉네임, 비밀번호를 수정합니다.")

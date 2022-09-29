@@ -36,9 +36,8 @@ public class MainService {
                 .findAllByTitleContainingIgnoreCaseOrMember_NicknameContainingIgnoreCase(searchWord, searchWord);
         List<GroupDto.AllGroupList> searchGroupListResponseDtoList = new ArrayList<>();
 
-        boolean isFavorites = false;
-
         for (Groups groups : groupList) {
+            boolean isFavorites = false;
             int memberCount = participateRepository.countByGroups_GroupId(groups.getGroupId());
             List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
             Favorite checkFavorite = favoriteRepository
