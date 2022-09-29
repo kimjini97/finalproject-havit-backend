@@ -6,7 +6,6 @@ import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import com.havit.finalbe.service.FavoriteService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +21,7 @@ public class FavoriteController {
 
     @Operation(summary = "그룹 즐겨찾기", description = "해당하는 그룹을 즐겨찾기/즐겨찾기 취소 합니다.")
     @PostMapping("/api/auth/favorite")
-    public ResponseDto<?> favorites(@RequestBody FavoriteDto.Request favoriteRequestDto,
+    public ResponseDto<FavoriteDto.Response> favorites(@RequestBody FavoriteDto.Request favoriteRequestDto,
                                     @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return favoriteService.favorites(favoriteRequestDto, userDetails);
     }

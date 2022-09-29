@@ -28,7 +28,7 @@ public class MainService {
 
     // 그룹 통합 검색
     @Transactional
-    public ResponseDto<?> searchGroup(String searchWord, UserDetailsImpl userDetails) {
+    public ResponseDto<List<GroupDto.AllGroupList>> searchGroup(String searchWord, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
