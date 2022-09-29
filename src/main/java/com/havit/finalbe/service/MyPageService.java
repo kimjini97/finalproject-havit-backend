@@ -2,7 +2,6 @@ package com.havit.finalbe.service;
 
 import com.havit.finalbe.dto.GroupDto;
 import com.havit.finalbe.dto.MemberDto;
-import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.entity.Favorite;
 import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.entity.Member;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.havit.finalbe.exception.ErrorMsg.*;
 
 @RequiredArgsConstructor
 @Service
@@ -37,25 +35,25 @@ public class MyPageService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public ResponseDto<String> checkPassword(MemberDto.CheckPassword checkPasswordDto, UserDetailsImpl userDetails) {
+    public String checkPassword(MemberDto.CheckPassword checkPasswordDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
         if(!member.validatePassword(passwordEncoder, checkPasswordDto.getPassword())) {
-            return ResponseDto.success("false");
+            return "false";
         }
 
-        return ResponseDto.success("true");
+        return "true";
     }
 
-    public ResponseDto<List<GroupDto.AllGroupList>> getMyGroup(UserDetailsImpl userDetails) {
+    public List<GroupDto.AllGroupList> getMyGroup(UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
         List<Groups> myGroups = groupRepository.findAllByMember_MemberId(member.getMemberId());
         List<Participate> myParticipation = participateRepository.findAllByMember_MemberId(member.getMemberId());
 
         if (myGroups.isEmpty() && myParticipation.isEmpty()) {
-            return ResponseDto.fail(PARTICIPATION_NOT_FOUND);
+            throw new IllegalArgumentException("참여 내역이 없습니다.");
         }
 
         List<GroupDto.AllGroupList> allMyGroupList = new ArrayList<>();
@@ -90,11 +88,11 @@ public class MyPageService {
             allMyGroupList.add(MyGroupDto);
         }
 
-        return ResponseDto.success(allMyGroupList);
+        return allMyGroupList;
     }
 
     @Transactional
-    public ResponseDto<MemberDto.Response> editMyInfo(MemberDto.MyPage myPageDto, UserDetailsImpl userDetails) throws IOException {
+    public MemberDto.Response editMyInfo(MemberDto.MyPage myPageDto, UserDetailsImpl userDetails) throws IOException {
 
         Member member = userDetails.getMember();
 
@@ -132,8 +130,7 @@ public class MyPageService {
             password = member.getPassword();
             findMember.edit(imgUrl, nickname, introduce, password);
 
-            return ResponseDto.success(
-                    MemberDto.Response.builder()
+            return MemberDto.Response.builder()
                             .memberId(findMember.getMemberId())
                             .username(findMember.getUsername())
                             .nickname(findMember.getNickname())
@@ -141,20 +138,18 @@ public class MyPageService {
                             .introduce(findMember.getIntroduce())
                             .createdAt(findMember.getCreatedAt())
                             .modifiedAt(findMember.getModifiedAt())
-                            .build()
-            );
+                            .build();
         }
 
         if (!passwordStrCheck(password)) {
             throw new InvalidPasswordException(ErrorMsg.INVALID_PASSWORD);
         } else if (!password.equals(passwordConfirm)) {
-            return ResponseDto.fail(PASSWORD_NOT_MATCHED);
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         } else {
             findMember.edit(imgUrl, nickname, introduce, passwordEncoder.encode(password));
         }
 
-        return ResponseDto.success(
-                MemberDto.Response.builder()
+        return MemberDto.Response.builder()
                         .memberId(findMember.getMemberId())
                         .username(findMember.getUsername())
                         .nickname(findMember.getNickname())
@@ -162,12 +157,11 @@ public class MyPageService {
                         .introduce(findMember.getIntroduce())
                         .createdAt(findMember.getCreatedAt())
                         .modifiedAt(findMember.getModifiedAt())
-                        .build()
-        );
+                        .build();
     }
 
     @Transactional
-    public ResponseDto<MemberDto.Response> deleteProfile(UserDetailsImpl userDetails) {
+    public MemberDto.Response deleteProfile(UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -175,15 +169,14 @@ public class MyPageService {
 
         String originFile = findMember.getProfileUrl();
         if (null == originFile) {
-            return ResponseDto.fail(IMAGE_NOT_FOUND);
+            throw new IllegalArgumentException("삭제할 이미지가 없습니다.");
         }
         String key = originFile.substring(52);
         serviceUtil.deleteImage(key);
 
         findMember.deleteImg(null);
 
-        return ResponseDto.success(
-                MemberDto.Response.builder()
+        return MemberDto.Response.builder()
                         .memberId(findMember.getMemberId())
                         .username(findMember.getUsername())
                         .nickname(findMember.getNickname())
@@ -191,8 +184,7 @@ public class MyPageService {
                         .introduce(findMember.getIntroduce())
                         .createdAt(findMember.getCreatedAt())
                         .modifiedAt(findMember.getModifiedAt())
-                        .build()
-        );
+                        .build();
     }
 
     private boolean passwordStrCheck (String password) {
