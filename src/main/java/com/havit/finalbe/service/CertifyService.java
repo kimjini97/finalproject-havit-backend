@@ -3,7 +3,6 @@ package com.havit.finalbe.service;
 import com.havit.finalbe.dto.CommentDto;
 import com.havit.finalbe.dto.SubCommentDto;
 import com.havit.finalbe.dto.CertifyDto;
-import com.havit.finalbe.dto.response.ResponseDto;
 import com.havit.finalbe.entity.*;
 import com.havit.finalbe.repository.CertifyRepository;
 import com.havit.finalbe.repository.CommentRepository;
@@ -33,17 +32,17 @@ public class CertifyService {
     private final ServiceUtil serviceUtil;
 
     @Transactional
-    public ResponseDto<CertifyDto.Response> createCertify(CertifyDto.Request certifyRequestDto, UserDetailsImpl userDetails) throws IOException {
+    public CertifyDto.Response createCertify(CertifyDto.Request certifyRequestDto, UserDetailsImpl userDetails) throws IOException {
 
         Member member = userDetails.getMember();
 
         Groups groups = groupService.isPresentGroup(certifyRequestDto.getGroupId());
         if (null == groups) {
-            return ResponseDto.fail(GROUP_NOT_FOUND);
+            throw new IllegalArgumentException("해당 그룹을 찾을 수 없습니다.");
         }
 
         if (participateRepository.findByGroups_GroupIdAndMember_MemberId(groups.getGroupId(), member.getMemberId()).isEmpty()) {
-            return ResponseDto.fail(PARTICIPATION_NOT_FOUND);
+            throw new IllegalArgumentException("참여 내역이 없습니다.");
         }
 
         // 참여자면 leaderName 또는 crewName 추출하는 코드 추가 작성칸
@@ -65,8 +64,7 @@ public class CertifyService {
 
         certifyRepository.save(certify);
 
-        return ResponseDto.success(
-                CertifyDto.Response.builder()
+        return CertifyDto.Response.builder()
                         .certifyId(certify.getCertifyId())
                         .groupId(certify.getGroups().getGroupId())
                         .title(certify.getTitle())
@@ -79,8 +77,7 @@ public class CertifyService {
                         .profileUrl(certify.getMember().getProfileUrl())
                         .createdAt(certify.getCreatedAt())
                         .modifiedAt(certify.getModifiedAt())
-                        .build()
-        );
+                        .build();
     }
 
     @Transactional(readOnly = true)
