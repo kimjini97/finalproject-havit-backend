@@ -4,10 +4,7 @@ import com.havit.finalbe.dto.CommentDto;
 import com.havit.finalbe.dto.SubCommentDto;
 import com.havit.finalbe.dto.CertifyDto;
 import com.havit.finalbe.entity.*;
-import com.havit.finalbe.repository.CertifyRepository;
-import com.havit.finalbe.repository.CommentRepository;
-import com.havit.finalbe.repository.ParticipateRepository;
-import com.havit.finalbe.repository.SubCommentRepository;
+import com.havit.finalbe.repository.*;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import static com.havit.finalbe.exception.ErrorMsg.*;
 
 @RequiredArgsConstructor
 @Service
@@ -28,6 +24,7 @@ public class CertifyService {
     private final CommentRepository commentRepository;
     private final SubCommentRepository subCommentRepository;
     private final ParticipateRepository participateRepository;
+    private final GroupRepository groupRepository;
     private final GroupService groupService;
     private final ServiceUtil serviceUtil;
 
@@ -40,10 +37,13 @@ public class CertifyService {
         if (null == groups) {
             throw new IllegalArgumentException("해당 그룹을 찾을 수 없습니다.");
         }
+        Groups findGroup = groupRepository.findByGroupId(groups.getGroupId());
+        Long memberId = findGroup.getMember().getMemberId();
 
-        if (participateRepository.findByGroups_GroupIdAndMember_MemberId(groups.getGroupId(), member.getMemberId()).isEmpty()) {
-            throw new IllegalArgumentException("참여 내역이 없습니다.");
-        }
+//        if (participateRepository.findByGroups_GroupIdAndMember_MemberId(groups.getGroupId(), member.getMemberId()).isEmpty()
+//        && !memberId.equals(member.getMemberId())) {
+//            throw new IllegalArgumentException("참여 내역이 없습니다.");
+//        }
 
         // 참여자면 leaderName 또는 crewName 추출하는 코드 추가 작성칸
 
@@ -81,11 +81,11 @@ public class CertifyService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseDto<CertifyDto.Response> getCertifyDetail(Long certifyId) {
+    public CertifyDto.Response getCertifyDetail(Long certifyId) {
 
         Certify certify = isPresentCertify(certifyId);
         if (null == certify) {
-            return ResponseDto.fail(CERTIFY_NOT_FOUND);
+            throw new IllegalArgumentException("해당 인증샷을 찾을 수 없습니다.");
         }
 
         List<Comment> commentList = commentRepository.findAllByCertify(certify);
@@ -121,8 +121,7 @@ public class CertifyService {
                             .build()
             );
         }
-        return ResponseDto.success(
-                CertifyDto.Response.builder()
+        return CertifyDto.Response.builder()
                         .certifyId(certify.getCertifyId())
                         .groupId(certify.getGroups().getGroupId())
                         .title(certify.getTitle())
@@ -136,22 +135,21 @@ public class CertifyService {
                         .createdAt(certify.getCreatedAt())
                         .modifiedAt(certify.getModifiedAt())
                         .commentList(commentResponseDtoList)
-                        .build()
-        );
+                        .build();
     }
 
     @Transactional
-    public ResponseDto<CertifyDto.Response> updateCertify(Long certifyId, CertifyDto.Request certifyRequestDto, UserDetailsImpl userDetails) throws IOException {
+    public CertifyDto.Response updateCertify(Long certifyId, CertifyDto.Request certifyRequestDto, UserDetailsImpl userDetails) throws IOException {
 
         Member member = userDetails.getMember();
 
         Certify certify = isPresentCertify(certifyId);
         if (null == certify) {
-            return ResponseDto.fail(CERTIFY_NOT_FOUND);
+            throw new IllegalArgumentException("해당 인증샷을 찾을 수 없습니다.");
         }
 
         if (!certify.getMember().isValidateMember(member.getMemberId())) {
-            return ResponseDto.fail(MEMBER_NOT_MATCHED);
+            throw new IllegalArgumentException("작성자가 아닙니다.");
         }
 
         // leaderName 또는 crewName 추출하는 코드 추가 작성칸
@@ -168,8 +166,7 @@ public class CertifyService {
             certify.update(certifyRequestDto, originFile);
         }
 
-        return ResponseDto.success(
-                CertifyDto.Response.builder()
+        return CertifyDto.Response.builder()
                         .certifyId(certify.getCertifyId())
                         .groupId(certify.getGroups().getGroupId())
                         .title(certify.getTitle())
@@ -182,22 +179,21 @@ public class CertifyService {
                         .profileUrl(certify.getMember().getProfileUrl())
                         .createdAt(certify.getCreatedAt())
                         .modifiedAt(certify.getModifiedAt())
-                        .build()
-        );
+                        .build();
     }
 
     @Transactional
-    public ResponseDto<String> deleteCertify(Long certifyId, UserDetailsImpl userDetails) {
+    public String deleteCertify(Long certifyId, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
         Certify certify = isPresentCertify(certifyId);
         if (null == certify) {
-            return ResponseDto.fail(CERTIFY_NOT_FOUND);
+            throw new IllegalArgumentException("해당 인증샷을 찾을 수 없습니다.");
         }
 
         if (!certify.getMember().isValidateMember(member.getMemberId())) {
-            return ResponseDto.fail(MEMBER_NOT_MATCHED);
+            throw new IllegalArgumentException("작성자가 아닙니다.");
         }
 
         String originFile = certify.getImgUrl();
@@ -206,7 +202,7 @@ public class CertifyService {
         serviceUtil.deleteImage(key);
         certifyRepository.delete(certify);
 
-        return ResponseDto.success("삭제가 완료되었습니다.");
+        return "삭제가 완료되었습니다.";
     }
 
 
