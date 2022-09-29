@@ -46,6 +46,7 @@ public class MemberController {
         return memberService.reissue(request,response);
     }
 
+    @Operation(summary = "로그인 멤버 정보", description = "로그인한 멤버 정보를 반환합니다.")
     @GetMapping("/auth/info")
     public ResponseDto<MemberDto.Response> getMemberInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return memberService.getMemberInfo(userDetails);
