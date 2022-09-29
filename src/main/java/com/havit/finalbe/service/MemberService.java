@@ -12,6 +12,7 @@ import com.havit.finalbe.repository.MemberRepository;
 import com.havit.finalbe.repository.RefreshTokenRepository;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.AllArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -183,6 +184,23 @@ public class MemberService {
             default:
                 throw new InvalidRefreshTokenException(ErrorMsg.INVALID_TOKEN);
         }
+    }
+
+    public ResponseDto<MemberDto.Response> getMemberInfo(UserDetailsImpl userDetails) {
+
+        Member member = userDetails.getMember();
+
+        return ResponseDto.success(
+                MemberDto.Response.builder()
+                        .memberId(member.getMemberId())
+                        .username(member.getUsername())
+                        .nickname(member.getNickname())
+                        .profileUrl(member.getProfileUrl())
+                        .introduce(member.getIntroduce())
+                        .createdAt(member.getCreatedAt())
+                        .modifiedAt(member.getModifiedAt())
+                        .build()
+        );
     }
 
     private boolean emailDuplicateCheck(String email){
