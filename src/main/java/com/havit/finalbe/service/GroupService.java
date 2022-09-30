@@ -186,12 +186,8 @@ public class GroupService {
             memberList.add(participateMember.getMember());
         }
 
-        // 인증샷 이미지 URL 목록 가져오기
+        // 인증샷 목록 가져오기
         List<Certify> certifyList = certifyRepository.findByGroups_GroupId(groupId);
-        List<Long> certifyImageIdList = new ArrayList<>();
-        for (Certify imageId : certifyList) {
-            certifyImageIdList.add(imageId.getImageId());
-        }
 
         return GroupDto.Response.builder()
                         .groupId(groupId)
@@ -207,7 +203,7 @@ public class GroupService {
                         .groupTag(tagListByGroup)
                         .memberCount(memberCount)
                         .memberList(memberList)
-                        .certifyImageIdList(certifyImageIdList)
+                        .certifyList(certifyList)
                         .build();
     }
 
