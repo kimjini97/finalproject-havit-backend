@@ -17,9 +17,6 @@ public class Image {
     private Long imageId;
 
     @Column(nullable = false)
-    private String imageUrl;
-
-    @Column(nullable = false)
     private String savePath;
 
     @Column(nullable = false)
