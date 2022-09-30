@@ -29,7 +29,7 @@ public class ImageService {
 
         LocalDateTime now = LocalDateTime.now();
 
-        if (!multipartFile.isEmpty()) {
+        if (multipartFile.isEmpty()) {
             throw new IllegalArgumentException("첨부된 이미지가 없습니다.");
         }
 

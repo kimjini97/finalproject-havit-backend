@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.havit.finalbe.service.GroupService;
 
-import java.io.IOException;
 import java.util.List;
 
 @Api(tags = {"그룹 API"})
