@@ -23,12 +23,6 @@ public class ImageController {
         return imageService.getImageId(multipartFile, "havit");
     }
 
-//    @Operation(summary = "이미지 링크 반환", description = "id값에 해당하는 이미지 URL 을 불러옵니다.")
-//    @GetMapping("/{imageId}")
-//    public String getImageUrl(@PathVariable Long imageId) {
-//        return imageService.getImageUrl(imageId);
-//    }
-
     @Operation(summary = "이미지 삭제", description = "id값에 해당하는 이미지를 삭제합니다.")
     @DeleteMapping("/{imageId}")
     public String deleteImage(@PathVariable Long imageId) {

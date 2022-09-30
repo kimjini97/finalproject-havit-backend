@@ -86,7 +86,7 @@ public class GroupDto {
         private List<Member> memberList;
 
         @Schema(description = "인증 이미지 Url 목록")
-        private List<Certify> certifyList;
+        private List<CertifyDto.Response> certifyList;
     }
 
     @Builder
