@@ -43,7 +43,7 @@ public class CommentService {
                         .commentId(comment.getCommentId())
                         .certifyId(comment.getCertify().getCertifyId())
                         .nickname(comment.getMember().getNickname())
-                        .profileUrl(comment.getMember().getProfileUrl())
+                        .profileImageId(comment.getMember().getImageId())
                         .content(comment.getContent())
                         .dateTime(serviceUtil.getDateFormatOfComment(comment))
                         .build();
@@ -69,7 +69,7 @@ public class CommentService {
                         .commentId(comment.getCommentId())
                         .certifyId(comment.getCertify().getCertifyId())
                         .nickname(comment.getMember().getNickname())
-                        .profileUrl(comment.getMember().getProfileUrl())
+                        .profileImageId(comment.getMember().getImageId())
                         .content(comment.getContent())
                         .dateTime(serviceUtil.getDateFormatOfComment(comment))
                         .build();

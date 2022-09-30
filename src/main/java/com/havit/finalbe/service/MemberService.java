@@ -27,7 +27,6 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    private final ServiceUtil serviceUtil;
 
     @Transactional
     public MemberDto.Response signup(MemberDto.Signup signupRequestDto) {
@@ -97,7 +96,7 @@ public class MemberService {
                 .memberId(member.getMemberId())
                 .username(member.getUsername())
                 .nickname(member.getNickname())
-                .profileUrl(member.getProfileUrl())
+                .imageId(member.getImageId())
                 .introduce(member.getIntroduce())
                 .createdAt(member.getCreatedAt())
                 .modifiedAt(member.getModifiedAt())
@@ -191,7 +190,7 @@ public class MemberService {
                         .memberId(member.getMemberId())
                         .username(member.getUsername())
                         .nickname(member.getNickname())
-                        .profileUrl(member.getProfileUrl())
+                        .imageId(member.getImageId())
                         .introduce(member.getIntroduce())
                         .createdAt(member.getCreatedAt())
                         .modifiedAt(member.getModifiedAt())
