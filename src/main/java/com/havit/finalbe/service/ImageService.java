@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -73,7 +75,24 @@ public class ImageService {
     // 이미지 업로드 및 URL 변환
     public String uploadFile(MultipartFile multipartFile, String dirName) throws IOException {
 
-        String fileName = dirName + "/" + UUID.randomUUID() + multipartFile.getName();
+//        String fileName = dirName + "/" + UUID.randomUUID() + multipartFile.getName();
+        List<Image> imageList = imageRepository.findAll();
+        List<Long> imageLength = new ArrayList<>();
+
+        for (Image image : imageList) {
+            imageLength.add(image.getImageId());
+        }
+
+        Long[] array = imageLength.toArray(new Long[0]);
+        Long max = array[0];
+
+        for (Long aLong : array) {
+            if (max < aLong) {
+                max = aLong;
+            }
+        }
+
+        String fileName = dirName + "/" + (max + 1);
 
         ObjectMetadata objectMetaData = new ObjectMetadata();
         objectMetaData.setContentType(multipartFile.getContentType());

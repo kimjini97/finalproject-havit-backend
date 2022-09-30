@@ -1,5 +1,6 @@
 package com.havit.finalbe.dto;
 
+import com.havit.finalbe.entity.Certify;
 import com.havit.finalbe.entity.Member;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -85,7 +86,7 @@ public class GroupDto {
         private List<Member> memberList;
 
         @Schema(description = "인증 이미지 Url 목록")
-        private List<Long> certifyImageIdList;
+        private List<Certify> certifyList;
     }
 
     @Builder
