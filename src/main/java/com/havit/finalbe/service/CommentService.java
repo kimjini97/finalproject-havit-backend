@@ -5,6 +5,8 @@ import com.havit.finalbe.dto.CommentDto;
 import com.havit.finalbe.entity.Certify;
 import com.havit.finalbe.entity.Comment;
 import com.havit.finalbe.entity.Member;
+import com.havit.finalbe.exception.CustomException;
+import com.havit.finalbe.exception.ErrorCode;
 import com.havit.finalbe.repository.CommentRepository;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +30,7 @@ public class CommentService {
 
         Certify certify = certifyService.isPresentCertify(commentRequestDto.getCertifyId());
         if (null == certify) {
-            throw new IllegalArgumentException("해당 인증샷을 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.CERTIFY_NOT_FOUND);
         }
 
         Comment comment = Comment.builder()
@@ -56,11 +58,11 @@ public class CommentService {
 
         Comment comment = isPresentComment(commentId);
         if (null == comment) {
-            throw new IllegalArgumentException("해당 댓글을 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.COMMENT_NOT_FOUND);
         }
 
         if (!comment.getMember().isValidateMember(member.getMemberId())) {
-            throw new IllegalArgumentException("작성자가 아닙니다.");
+            throw new CustomException(ErrorCode.MEMBER_NOT_MATCHED);
         }
 
         comment.update(commentRequestDto);
@@ -82,11 +84,11 @@ public class CommentService {
 
         Comment comment = isPresentComment(commentId);
         if (null == comment) {
-            throw new IllegalArgumentException("해당 댓글을 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.COMMENT_NOT_FOUND);
         }
 
         if (!comment.getMember().isValidateMember(member.getMemberId())) {
-            throw new IllegalArgumentException("작성자가 아닙니다.");
+            throw new CustomException(ErrorCode.MEMBER_NOT_MATCHED);
         }
 
         commentRepository.delete(comment);
