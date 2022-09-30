@@ -35,9 +35,9 @@ public class MyPageController {
     }
 
     @Operation(summary = "내 정보 수정", description = "프로필 사진, 닉네임, 비밀번호를 수정합니다.")
-    @PutMapping(value = "/", consumes = {"multipart/form-data"})
-    public MemberDto.Response editMyInfo(@ModelAttribute MemberDto.MyPage myPageDto,
-                                     @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+    @PutMapping(value = "/")
+    public MemberDto.Response editMyInfo(@RequestBody MemberDto.MyPage myPageDto,
+                                         @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return myPageService.editMyInfo(myPageDto, userDetails);
     }
 

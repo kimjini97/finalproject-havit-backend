@@ -61,9 +61,9 @@ public class ParticipateService {
 
         // 인증샷 이미지 URL 목록 가져오기
         List<Certify> certifyList = certifyRepository.findByGroups_GroupId(groupId);
-        List<String> certifyImgUrlList = new ArrayList<>();
-        for (Certify imgUrl : certifyList) {
-            certifyImgUrlList.add(imgUrl.getImgUrl());
+        List<Long> certifyImageIdList = new ArrayList<>();
+        for (Certify imageId : certifyList) {
+            certifyImageIdList.add(imageId.getImageId());
         }
 
         return GroupDto.Response.builder()
@@ -74,13 +74,13 @@ public class ParticipateService {
                 .crewName(groups.getCrewName())
                 .startDate(groups.getStartDate())
                 .content(groups.getContent())
-                .imgUrl(groups.getImgUrl())
+                .imageId(groups.getImageId())
                 .createdAt(groups.getCreatedAt())
                 .modifiedAt(groups.getModifiedAt())
                 .groupTag(tagListByGroup)
                 .memberCount(memberCount)
                 .memberList(memberList)
-                .certifyImgUrlList(certifyImgUrlList)
+                .certifyImageIdList(certifyImageIdList)
                 .build();
     }
 
@@ -124,9 +124,9 @@ public class ParticipateService {
 
         // 인증샷 이미지 URL 목록 가져오기
         List<Certify> certifyList = certifyRepository.findByGroups_GroupId(groupId);
-        List<String> certifyImgUrlList = new ArrayList<>();
-        for (Certify imgUrl : certifyList) {
-            certifyImgUrlList.add(imgUrl.getImgUrl());
+        List<Long> certifyImageIdList = new ArrayList<>();
+        for (Certify imageId : certifyList) {
+            certifyImageIdList.add(imageId.getImageId());
         }
 
         return GroupDto.Response.builder()
@@ -137,13 +137,13 @@ public class ParticipateService {
                 .crewName(groups.getCrewName())
                 .startDate(groups.getStartDate())
                 .content(groups.getContent())
-                .imgUrl(groups.getImgUrl())
+                .imageId(groups.getImageId())
                 .createdAt(groups.getCreatedAt())
                 .modifiedAt(groups.getModifiedAt())
                 .groupTag(tagListByGroup)
                 .memberCount(memberCount)
                 .memberList(memberList)
-                .certifyImgUrlList(certifyImgUrlList)
+                .certifyImageIdList(certifyImageIdList)
                 .build();
     }
 }

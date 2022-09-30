@@ -50,7 +50,7 @@ public class MainService {
             GroupDto.AllGroupList allGroupListResponseDto = GroupDto.AllGroupList.builder()
                     .groupId(groups.getGroupId())
                     .title(groups.getTitle())
-                    .imgUrl(groups.getImgUrl())
+                    .imageId(groups.getImageId())
                     .memberCount(memberCount)
                     .groupTag(tagListByGroup)
                     .createdAt(groups.getCreatedAt())

@@ -9,7 +9,6 @@ import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,6 +25,7 @@ public class CertifyService {
     private final ParticipateRepository participateRepository;
     private final GroupRepository groupRepository;
     private final GroupService groupService;
+    private final ImageService imageService;
     private final ServiceUtil serviceUtil;
 
     @Transactional
@@ -47,17 +47,11 @@ public class CertifyService {
 
         // 참여자면 leaderName 또는 crewName 추출하는 코드 추가 작성칸
 
-        String imgUrl = "";
-        MultipartFile imgFile = certifyRequestDto.getImgFile();
-        if (!imgFile.isEmpty()) {
-            imgUrl = serviceUtil.uploadImage(imgFile, "certify");
-        }
-
         Certify certify = Certify.builder()
                 .member(member)
                 .groups(groups)
                 .title(certifyRequestDto.getTitle())
-                .imgUrl(imgUrl)
+                .imageId(certifyRequestDto.getImageId())
                 .latitude(certifyRequestDto.getLatitude())
                 .longitude(certifyRequestDto.getLongitude())
                 .build();
@@ -68,13 +62,13 @@ public class CertifyService {
                         .certifyId(certify.getCertifyId())
                         .groupId(certify.getGroups().getGroupId())
                         .title(certify.getTitle())
-                        .imgUrl(certify.getImgUrl())
+                        .imageId(certify.getImageId())
                         .longitude(certify.getLongitude())
                         .latitude(certify.getLatitude())
                         .nickname(certify.getMember().getNickname())
                         // leaderName
                         // crewName
-                        .profileUrl(certify.getMember().getProfileUrl())
+                        .profileImageId(certify.getMember().getImageId())
                         .createdAt(certify.getCreatedAt())
                         .modifiedAt(certify.getModifiedAt())
                         .build();
@@ -103,7 +97,7 @@ public class CertifyService {
                                 .subCommentId(subComment.getSubCommentId())
                                 .commentId(subComment.getComment().getCommentId())
                                 .nickname(subComment.getMember().getNickname())
-                                .profileUrl(subComment.getMember().getProfileUrl())
+                                .profileImageId(subComment.getMember().getImageId())
                                 .content(subComment.getContent())
                                 .dateTime(serviceUtil.getDateFormatOfSubComment(subComment))
                                 .build()
@@ -114,7 +108,7 @@ public class CertifyService {
                             .commentId(comment.getCommentId())
                             .certifyId(comment.getCertify().getCertifyId())
                             .nickname(comment.getMember().getNickname())
-                            .profileUrl(comment.getMember().getProfileUrl())
+                            .profileImageId(comment.getMember().getImageId())
                             .content(comment.getContent())
                             .dateTime(serviceUtil.getDateFormatOfComment(comment))
                             .subCommentList(subCommentResponseDtoList)
@@ -125,13 +119,13 @@ public class CertifyService {
                         .certifyId(certify.getCertifyId())
                         .groupId(certify.getGroups().getGroupId())
                         .title(certify.getTitle())
-                        .imgUrl(certify.getImgUrl())
+                        .imageId(certify.getImageId())
                         .longitude(certify.getLongitude())
                         .latitude(certify.getLatitude())
                         .nickname(certify.getMember().getNickname())
                         // leaderName
                         // crewName
-                        .profileUrl(certify.getMember().getProfileUrl())
+                        .profileImageId(certify.getMember().getImageId())
                         .createdAt(certify.getCreatedAt())
                         .modifiedAt(certify.getModifiedAt())
                         .commentList(commentResponseDtoList)
@@ -154,29 +148,21 @@ public class CertifyService {
 
         // leaderName 또는 crewName 추출하는 코드 추가 작성칸
 
-        String originFile = certify.getImgUrl();
-        String key = originFile.substring(52);
-        String imgUrl = "";
-        MultipartFile imgFile = certifyRequestDto.getImgFile();
-        if (!imgFile.isEmpty()) {
-            serviceUtil.deleteImage(key);
-            imgUrl = serviceUtil.uploadImage(imgFile, "certify");
-            certify.update(certifyRequestDto, imgUrl);
-        } else {
-            certify.update(certifyRequestDto, originFile);
-        }
+        Long originImage = certify.getImageId();
+        imageService.deleteImage(originImage);
+        certify.update(certifyRequestDto);
 
         return CertifyDto.Response.builder()
                         .certifyId(certify.getCertifyId())
                         .groupId(certify.getGroups().getGroupId())
                         .title(certify.getTitle())
-                        .imgUrl(certify.getImgUrl())
+                        .imageId(certify.getImageId())
                         .longitude(certify.getLongitude())
                         .latitude(certify.getLatitude())
                         .nickname(certify.getMember().getNickname())
                         // leaderName
                         // crewName
-                        .profileUrl(certify.getMember().getProfileUrl())
+                        .profileImageId(certify.getMember().getImageId())
                         .createdAt(certify.getCreatedAt())
                         .modifiedAt(certify.getModifiedAt())
                         .build();
@@ -196,10 +182,8 @@ public class CertifyService {
             throw new IllegalArgumentException("작성자가 아닙니다.");
         }
 
-        String originFile = certify.getImgUrl();
-        String key = originFile.substring(52);
-
-        serviceUtil.deleteImage(key);
+        Long originImage = certify.getImageId();
+        imageService.deleteImage(originImage);
         certifyRepository.delete(certify);
 
         return "삭제가 완료되었습니다.";

@@ -39,8 +39,8 @@ public class CommentDto {
         @Schema(description = "닉네임", example = "김병처리")
         private String nickname;
 
-        @Schema(description = "프로필 이미지", example = "aws 이미지 Url")
-        private String profileUrl;
+        @Schema(description = "프로필 이미지", example = "1")
+        private Long profileImageId;
 
         @Schema(description = "댓글 내용", example = "오늘도 일어나느라 수고하셨습니다.")
         private String content;

@@ -8,7 +8,6 @@ import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,6 +24,7 @@ public class GroupService {
     private final GroupTagRepository groupTagRepository;
     private final ParticipateRepository participateRepository;
     private final FavoriteRepository favoriteRepository;
+    private final ImageService imageService;
     private final ServiceUtil serviceUtil;
 
     // 그룹 생성
@@ -33,17 +33,11 @@ public class GroupService {
 
         Member member = userDetails.getMember();
 
-        String imgUrl = "";
-        MultipartFile imgFile = groupRequestDto.getImgFile();
-        if (!imgFile.isEmpty()) {
-            imgUrl = serviceUtil.uploadImage(imgFile, "group");
-        }
-
         Groups groups = Groups.builder()
                 .member(member)
                 .title(groupRequestDto.getTitle())
                 .startDate(groupRequestDto.getStartDate())
-                .imgUrl(imgUrl)
+                .imageId(groupRequestDto.getImageId())
                 .content(groupRequestDto.getContent())
                 .leaderName(groupRequestDto.getLeaderName())
                 .crewName(groupRequestDto.getCrewName())
@@ -77,7 +71,7 @@ public class GroupService {
         return GroupDto.Response.builder()
                         .groupId(groups.getGroupId())
                         .title(groups.getTitle())
-                        .imgUrl(groups.getImgUrl())
+                        .imageId(groups.getImageId())
                         .nickname(groups.getMember().getNickname())
                         .leaderName(groups.getLeaderName())
                         .crewName(groups.getCrewName())
@@ -113,7 +107,7 @@ public class GroupService {
             GroupDto.AllGroupList allGroupListResponseDto = GroupDto.AllGroupList.builder()
                     .groupId(groups.getGroupId())
                     .title(groups.getTitle())
-                    .imgUrl(groups.getImgUrl())
+                    .imageId(groups.getImageId())
                     .memberCount(memberCount)
                     .groupTag(tagListByGroup)
                     .createdAt(groups.getCreatedAt())
@@ -154,7 +148,7 @@ public class GroupService {
             GroupDto.AllGroupList allGroupListResponseDto = GroupDto.AllGroupList.builder()
                     .groupId(groups.getGroupId())
                     .title(groups.getTitle())
-                    .imgUrl(groups.getImgUrl())
+                    .imageId(groups.getImageId())
                     .memberCount(memberCount)
                     .groupTag(tagListByGroup)
                     .createdAt(groups.getCreatedAt())
@@ -194,9 +188,9 @@ public class GroupService {
 
         // 인증샷 이미지 URL 목록 가져오기
         List<Certify> certifyList = certifyRepository.findByGroups_GroupId(groupId);
-        List<String> certifyImgUrlList = new ArrayList<>();
-        for (Certify imgUrl : certifyList) {
-            certifyImgUrlList.add(imgUrl.getImgUrl());
+        List<Long> certifyImageIdList = new ArrayList<>();
+        for (Certify imageId : certifyList) {
+            certifyImageIdList.add(imageId.getImageId());
         }
 
         return GroupDto.Response.builder()
@@ -207,13 +201,13 @@ public class GroupService {
                         .crewName(groups.getCrewName())
                         .startDate(groups.getStartDate())
                         .content(groups.getContent())
-                        .imgUrl(groups.getImgUrl())
+                        .imageId(groups.getImageId())
                         .createdAt(groups.getCreatedAt())
                         .modifiedAt(groups.getModifiedAt())
                         .groupTag(tagListByGroup)
                         .memberCount(memberCount)
                         .memberList(memberList)
-                        .certifyImgUrlList(certifyImgUrlList)
+                        .certifyImageIdList(certifyImageIdList)
                         .build();
     }
 
@@ -232,24 +226,16 @@ public class GroupService {
             throw new IllegalArgumentException("작성자가 아닙니다.");
         }
 
-        String originFile = groups.getImgUrl();
-        String key = originFile.substring(52);
-        String imgUrl = "";
-        MultipartFile imgFile = groupRequestDto.getImgFile();
-        if (!imgFile.isEmpty()) {
-            serviceUtil.deleteImage(key);
-            imgUrl = serviceUtil.uploadImage(imgFile, "group");
-            groups.update(groupRequestDto, imgUrl);
-        } else {
-            groups.update(groupRequestDto, originFile);
-        }
+        Long originImage = groups.getImageId();
+        imageService.deleteImage(originImage);
+        groups.update(groupRequestDto);
 
         if (null == groupRequestDto.getGroupTag()) {
             List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
             return GroupDto.Response.builder()
                             .groupId(groups.getGroupId())
                             .title(groups.getTitle())
-                            .imgUrl(groups.getImgUrl())
+                            .imageId(groups.getImageId())
                             .nickname(groups.getMember().getNickname())
                             .leaderName(groups.getLeaderName())
                             .crewName(groups.getCrewName())
@@ -290,7 +276,7 @@ public class GroupService {
         return GroupDto.Response.builder()
                         .groupId(groups.getGroupId())
                         .title(groups.getTitle())
-                        .imgUrl(groups.getImgUrl())
+                        .imageId(groups.getImageId())
                         .nickname(groups.getMember().getNickname())
                         .leaderName(groups.getLeaderName())
                         .crewName(groups.getCrewName())
@@ -317,9 +303,8 @@ public class GroupService {
             throw new IllegalArgumentException("작성자가 아닙니다.");
         }
 
-        String originFile = groups.getImgUrl();
-        String key = originFile.substring(52);
-        serviceUtil.deleteImage(key);
+        Long originFile = groups.getImageId();
+        imageService.deleteImage(originFile);
 
         List<GroupTag> groupTagList = groupTagRepository.findAllByGroups(groups);
         List<Tags> tagsList = new ArrayList<>();

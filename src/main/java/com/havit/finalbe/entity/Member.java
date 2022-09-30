@@ -31,7 +31,7 @@ public class Member extends Timestamped{
     private String nickname;
 
     @Column
-    private String profileUrl;
+    private Long imageId;
 
     @Column
     private String introduce;
@@ -44,15 +44,15 @@ public class Member extends Timestamped{
         return passwordEncoder.matches(password, this.password);
     }
 
-    public void edit(String profileUrl, String nickname, String introduce, String password) {
-        this.profileUrl = profileUrl;
+    public void edit(Long imageId, String nickname, String introduce, String password) {
+        this.imageId = imageId;
         this.nickname = nickname;
         this.introduce = introduce;
         this.password = password;
     }
 
-    public void deleteImg(String profileUrl) {
-        this.profileUrl = profileUrl;
+    public void deleteImg(Long imageId) {
+        this.imageId = imageId;
     }
 
 }
