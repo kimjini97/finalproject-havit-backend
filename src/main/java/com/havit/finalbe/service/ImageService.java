@@ -50,7 +50,9 @@ public class ImageService {
     public String getImageUrl(Long imageId) {
 
         Image image = imageRepository.findImageByImageId(imageId);
-
+        if (null == image) {
+            return "이미지가 존재하지 않습니다.";
+        }
         return image.getImageUrl();
     }
 
@@ -62,6 +64,7 @@ public class ImageService {
             amazonS3Client.deleteObject(havitbucket, key);
 
             imageRepository.delete(originFile);
+            return "이미지 삭제가 완료되었습니다.";
         }
         return "삭제할 이미지가 없습니다.";
     }
