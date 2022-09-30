@@ -83,8 +83,16 @@ public class ImageService {
             imageLength.add(image.getImageId());
         }
 
-        Long cnt = (long) imageLength.size();
-        String fileName = dirName + "/" + (cnt + 1);
+        Long[] array = imageLength.toArray(new Long[0]);
+        Long max = array[0];
+
+        for (Long aLong : array) {
+            if (max < aLong) {
+                max = aLong;
+            }
+        }
+
+        String fileName = dirName + "/" + (max + 1);
 
         ObjectMetadata objectMetaData = new ObjectMetadata();
         objectMetaData.setContentType(multipartFile.getContentType());
