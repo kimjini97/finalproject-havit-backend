@@ -14,9 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -28,17 +25,16 @@ public class ImageService {
     private final ImageRepository imageRepository;
 
 
-    public Long getImageId(MultipartFile multipartFile) throws IOException {
+    public Long getImageId(MultipartFile multipartFile, String dirName) throws IOException {
 
         LocalDateTime now = LocalDateTime.now();
 
-        String imgUrl = null;
-        if (!multipartFile.isEmpty()) {
-            imgUrl = uploadFile(multipartFile, "havit");
-        }
+//        String imgUrl = null;
+//        if (!multipartFile.isEmpty()) {
+//            imgUrl = uploadFile(multipartFile, "havit");
+//        }
 
         Image image = Image.builder()
-                .imageUrl(imgUrl)
                 .fileName(multipartFile.getOriginalFilename())
                 .extension(multipartFile.getContentType())
                 .savePath(now.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")))
@@ -46,53 +42,7 @@ public class ImageService {
                 .build();
         imageRepository.save(image);
 
-        return image.getImageId();
-    }
-
-    public String getImageUrl(Long imageId) {
-
-        Image image = imageRepository.findImageByImageId(imageId);
-        if (null == image) {
-            return "이미지가 존재하지 않습니다.";
-        }
-        return image.getImageUrl();
-    }
-
-    public String deleteImage(Long imageId) {
-
-        Image originFile = imageRepository.findImageByImageId(imageId);
-        if (null != originFile) {
-            String key = originFile.getImageUrl().substring(52);
-            amazonS3Client.deleteObject(havitbucket, key);
-
-            imageRepository.delete(originFile);
-            return "이미지 삭제가 완료되었습니다.";
-        }
-        return "삭제할 이미지가 없습니다.";
-    }
-
-
-    // 이미지 업로드 및 URL 변환
-    public String uploadFile(MultipartFile multipartFile, String dirName) throws IOException {
-
-//        String fileName = dirName + "/" + UUID.randomUUID() + multipartFile.getName();
-        List<Image> imageList = imageRepository.findAll();
-        List<Long> imageLength = new ArrayList<>();
-
-        for (Image image : imageList) {
-            imageLength.add(image.getImageId());
-        }
-
-        Long[] array = imageLength.toArray(new Long[0]);
-        Long max = array[0];
-
-        for (Long aLong : array) {
-            if (max < aLong) {
-                max = aLong;
-            }
-        }
-
-        String fileName = dirName + "/" + (max + 1);
+        String fileName = dirName + "/" + image.getImageId();
 
         ObjectMetadata objectMetaData = new ObjectMetadata();
         objectMetaData.setContentType(multipartFile.getContentType());
@@ -105,6 +55,31 @@ public class ImageService {
         );
 
         // URL 변환
-        return amazonS3Client.getUrl(havitbucket, fileName).toString();
+//        return amazonS3Client.getUrl(havitbucket, fileName).toString();
+
+        return image.getImageId();
+    }
+
+//    public String getImageUrl(Long imageId) {
+//
+//        Image image = imageRepository.findImageByImageId(imageId);
+//        if (null == image) {
+//            return "이미지가 존재하지 않습니다.";
+//        }
+//        return image.getImageUrl();
+//    }
+
+    public String deleteImage(Long imageId) {
+
+        Image originFile = imageRepository.findImageByImageId(imageId);
+        if (null != originFile) {
+//            String key = originFile.getImageUrl().substring(52);
+            String key = String.valueOf(originFile.getImageId());
+            amazonS3Client.deleteObject(havitbucket, key);
+
+            imageRepository.delete(originFile);
+            return "이미지 삭제가 완료되었습니다.";
+        }
+        return "삭제할 이미지가 없습니다.";
     }
 }
