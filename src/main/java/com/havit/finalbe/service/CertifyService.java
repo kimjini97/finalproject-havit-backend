@@ -4,6 +4,8 @@ import com.havit.finalbe.dto.CommentDto;
 import com.havit.finalbe.dto.SubCommentDto;
 import com.havit.finalbe.dto.CertifyDto;
 import com.havit.finalbe.entity.*;
+import com.havit.finalbe.exception.CustomException;
+import com.havit.finalbe.exception.ErrorCode;
 import com.havit.finalbe.repository.*;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +36,7 @@ public class CertifyService {
 
         Groups groups = groupService.isPresentGroup(certifyRequestDto.getGroupId());
         if (null == groups) {
-            throw new IllegalArgumentException("해당 그룹을 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.GROUP_NOT_FOUND);
         }
         Groups findGroup = groupRepository.findByGroupId(groups.getGroupId());
         Long memberId = findGroup.getMember().getMemberId();
@@ -78,7 +80,7 @@ public class CertifyService {
 
         Certify certify = isPresentCertify(certifyId);
         if (null == certify) {
-            throw new IllegalArgumentException("해당 인증샷을 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.CERTIFY_NOT_FOUND);
         }
 
         List<Comment> commentList = commentRepository.findAllByCertify(certify);
@@ -138,11 +140,11 @@ public class CertifyService {
 
         Certify certify = isPresentCertify(certifyId);
         if (null == certify) {
-            throw new IllegalArgumentException("해당 인증샷을 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.CERTIFY_NOT_FOUND);
         }
 
         if (!certify.getMember().isValidateMember(member.getMemberId())) {
-            throw new IllegalArgumentException("작성자가 아닙니다.");
+            throw new CustomException(ErrorCode.MEMBER_NOT_MATCHED);
         }
 
         // leaderName 또는 crewName 추출하는 코드 추가 작성칸
@@ -174,11 +176,11 @@ public class CertifyService {
 
         Certify certify = isPresentCertify(certifyId);
         if (null == certify) {
-            throw new IllegalArgumentException("해당 인증샷을 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.CERTIFY_NOT_FOUND);
         }
 
         if (!certify.getMember().isValidateMember(member.getMemberId())) {
-            throw new IllegalArgumentException("작성자가 아닙니다.");
+            throw new CustomException(ErrorCode.MEMBER_NOT_MATCHED);
         }
 
         Long originImage = certify.getImageId();

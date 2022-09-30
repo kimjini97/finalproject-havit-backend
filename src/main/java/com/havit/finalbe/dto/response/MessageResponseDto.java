@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MessageResponseDto {
 
+    private String errorcode;
+
     @Schema(description = "메세지", example = "success")
     private String message;
 }

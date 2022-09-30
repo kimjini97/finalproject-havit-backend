@@ -4,6 +4,8 @@ import com.havit.finalbe.dto.CertifyDto;
 import com.havit.finalbe.dto.GroupDto;
 import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.entity.*;
+import com.havit.finalbe.exception.CustomException;
+import com.havit.finalbe.exception.ErrorCode;
 import com.havit.finalbe.repository.*;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -127,7 +129,7 @@ public class GroupService {
 
         Tags tags = tagsRepository.findByTagName(keyword);
         if (null == tags) {
-            throw new IllegalArgumentException("태그를 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.TAG_NOT_FOUND);
         }
 
         List<GroupTag> groupTagList = groupTagRepository.findAllByTagsOrderByGroupsDesc(tags);
@@ -170,7 +172,7 @@ public class GroupService {
 
         Groups groups = isPresentGroup(groupId);
         if (null == groups) {
-            throw new IllegalArgumentException("해당 그룹을 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.GROUP_NOT_FOUND);
         }
 
         // 태그 가져오기
@@ -233,11 +235,11 @@ public class GroupService {
 
         Groups groups = isPresentGroup(groupId);
         if (null == groups) {
-            throw new IllegalArgumentException("해당 그룹을 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.GROUP_NOT_FOUND);
         }
 
         if (!groups.getMember().isValidateMember(member.getMemberId())) {
-            throw new IllegalArgumentException("작성자가 아닙니다.");
+            throw new CustomException(ErrorCode.MEMBER_NOT_MATCHED);
         }
 
         Long originImage = groups.getImageId();
@@ -310,11 +312,11 @@ public class GroupService {
 
         Groups groups = isPresentGroup(groupId);
         if (null == groups) {
-            throw new IllegalArgumentException("해당 그룹을 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.GROUP_NOT_FOUND);
         }
 
         if (!groups.getMember().isValidateMember(member.getMemberId())) {
-            throw new IllegalArgumentException("작성자가 아닙니다.");
+            throw new CustomException(ErrorCode.MEMBER_NOT_MATCHED);
         }
 
         Long originFile = groups.getImageId();
