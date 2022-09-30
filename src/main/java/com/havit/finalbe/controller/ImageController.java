@@ -20,14 +20,14 @@ public class ImageController {
     @Operation(summary = "이미지 업로드", description = "이미지를 S3에 업로드 후, imageId 값을 반환합니다.")
     @PostMapping("/")
     public Long getImageId(@RequestPart(value = "image") MultipartFile multipartFile) throws IOException {
-        return imageService.getImageId(multipartFile);
+        return imageService.getImageId(multipartFile, "havit");
     }
 
-    @Operation(summary = "이미지 링크 반환", description = "id값에 해당하는 이미지 URL 을 불러옵니다.")
-    @GetMapping("/{imageId}")
-    public String getImageUrl(@PathVariable Long imageId) {
-        return imageService.getImageUrl(imageId);
-    }
+//    @Operation(summary = "이미지 링크 반환", description = "id값에 해당하는 이미지 URL 을 불러옵니다.")
+//    @GetMapping("/{imageId}")
+//    public String getImageUrl(@PathVariable Long imageId) {
+//        return imageService.getImageUrl(imageId);
+//    }
 
     @Operation(summary = "이미지 삭제", description = "id값에 해당하는 이미지를 삭제합니다.")
     @DeleteMapping("/{imageId}")
