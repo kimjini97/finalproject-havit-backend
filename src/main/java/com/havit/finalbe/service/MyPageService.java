@@ -52,7 +52,7 @@ public class MyPageService {
         List<Participate> myParticipation = participateRepository.findAllByMember_MemberId(member.getMemberId());
 
         if (myGroups.isEmpty() && myParticipation.isEmpty()) {
-            throw new IllegalArgumentException("참여 내역이 없습니다.");
+            throw new CustomException(ErrorCode.PARTICIPATION_NOT_FOUND);
         }
 
         List<GroupDto.AllGroupList> allMyGroupList = new ArrayList<>();
@@ -156,9 +156,9 @@ public class MyPageService {
         }
 
         if (!passwordStrCheck(password)) {
-            throw new InvalidPasswordException(ErrorMsg.INVALID_PASSWORD);
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
         } else if (!password.equals(passwordConfirm)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new CustomException(ErrorCode.PASSWORD_NOT_MATCHED);
         } else {
             findMember.edit(passwordEncoder.encode(password));
         }
@@ -183,7 +183,7 @@ public class MyPageService {
 
         Long originImage = findMember.getImageId();
         if (null == originImage) {
-            throw new IllegalArgumentException("삭제할 이미지가 없습니다.");
+            throw new CustomException(ErrorCode.IMAGE_NOT_FOUND);
         }
 
         imageService.deleteImage(originImage);

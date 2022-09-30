@@ -4,6 +4,7 @@ import com.havit.finalbe.dto.MemberDto;
 import com.havit.finalbe.dto.response.MessageResponseDto;
 import com.havit.finalbe.entity.Member;
 import com.havit.finalbe.entity.RefreshToken;
+import com.havit.finalbe.exception.*;
 import com.havit.finalbe.jwt.util.JwtUtil;
 import com.havit.finalbe.jwt.util.TokenProperties;
 import com.havit.finalbe.repository.MemberRepository;
@@ -65,10 +66,12 @@ public class MemberService {
         String username = loginRequestDto.getEmail();
         Member member = isPresentMemberByUsername(username);
 
-        if(member == null){ throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");}
+//        if (member == null){return new ErrorResponseDto(ErrorMsg.MEMBER_NOT_FOUND);}
+        if(member == null){ throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);}
+
 
         if(!member.validatePassword(passwordEncoder,loginRequestDto.getPassword())){
-            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.PASSWORD_NOT_MATCHED);
         }
 
         // 토큰 발급
@@ -112,10 +115,10 @@ public class MemberService {
         String refreshHeader = request.getHeader(TokenProperties.REFRESH_HEADER);
 
         if(refreshHeader == null) {
-            throw new IllegalArgumentException("Refresh Token이 필요합니다.");}
+            throw new CustomException(ErrorCode.NEED_REFRESH_TOKEN);}
 
         if(!refreshHeader.startsWith(TokenProperties.TOKEN_TYPE)) {
-            throw new IllegalArgumentException("유효하지 않은 Token 입니다.");
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
 
         String refreshToken = refreshHeader.replace(TokenProperties.TOKEN_TYPE,"");
@@ -134,10 +137,10 @@ public class MemberService {
                             .build();
                     return messageResponseDto;
                 } else {
-                    throw new IllegalArgumentException("유효하지 않은 Token 입니다.");
+                    throw new CustomException(ErrorCode.INVALID_TOKEN);
                 }
             default:
-                throw new IllegalArgumentException("유효하지 않은 Token 입니다.");
+                throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
     }
 
@@ -146,11 +149,11 @@ public class MemberService {
         String refreshHeader = request.getHeader(TokenProperties.REFRESH_HEADER);
 
         if(refreshHeader == null){
-            throw new IllegalArgumentException("Refresh Token이 필요합니다.");
+            throw new CustomException(ErrorCode.NEED_REFRESH_TOKEN);
         }
 
         if(!refreshHeader.startsWith(TokenProperties.TOKEN_TYPE)){
-            throw new IllegalArgumentException("유효하지 않은 Token 입니다.");
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
 
         String refreshToken = refreshHeader.replace(TokenProperties.TOKEN_TYPE, "");
@@ -160,13 +163,13 @@ public class MemberService {
 
         switch (refreshTokenValidate) {
             case TokenProperties.EXPIRED:
-                throw new IllegalArgumentException("만료된 Refresh Token 입니다.");
+                throw new CustomException(ErrorCode.EXPIRED_REFRESH_TOKEN);
             case TokenProperties.VALID:
                 String username = jwtUtil.getUsernameFromToken(refreshToken);
                 Member member = isPresentMemberByUsername(username);
 
                 if (member == null) {
-                    throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+                    throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
                 } else {
                     RefreshToken refreshTokenFromDB = jwtUtil.getRefreshTokenFromDB(member);
                     if (refreshTokenFromDB != null && refreshToken.equals(refreshTokenFromDB.getTokenValue())) { // new access token 발급
@@ -174,11 +177,11 @@ public class MemberService {
                         response.addHeader(TokenProperties.AUTH_HEADER, TokenProperties.TOKEN_TYPE + newAccessToken);
                         return "토큰이 재발급 되었습니다.";
                     } else {
-                        throw new IllegalArgumentException("토큰이 일치하지 않습니다.");
+                        throw new CustomException(ErrorCode.REFRESH_TOKEN_NOT_MATCHED);
                     }
                 }
             default:
-                throw new IllegalArgumentException("유효하지 않은 Token 입니다.");
+                throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
     }
 

@@ -6,6 +6,8 @@ import com.havit.finalbe.entity.Certify;
 import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.entity.Member;
 import com.havit.finalbe.entity.Participate;
+import com.havit.finalbe.exception.CustomException;
+import com.havit.finalbe.exception.ErrorCode;
 import com.havit.finalbe.repository.CertifyRepository;
 import com.havit.finalbe.repository.ParticipateRepository;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
@@ -34,11 +36,11 @@ public class ParticipateService {
 
         Groups groups = groupService.isPresentGroup(groupId);
         if (null == groups) {
-            throw new IllegalArgumentException("해당 그룹을 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.GROUP_NOT_FOUND);
         }
 
         if (participateRepository.findByGroups_GroupIdAndMember_MemberId(groups.getGroupId(), member.getMemberId()).isPresent()) {
-            throw new IllegalArgumentException("이미 참여 중인 그룹입니다.");
+            throw new CustomException(ErrorCode.DUPLICATE_PARTICIPATION);
         }
 
         Participate participate = Participate.builder()
@@ -106,11 +108,11 @@ public class ParticipateService {
 
         Groups groups = groupService.isPresentGroup(groupId);
         if (null == groups) {
-            throw new IllegalArgumentException("해당 그룹을 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.GROUP_NOT_FOUND);
         }
 
         if (participateRepository.findByGroups_GroupIdAndMember_MemberId(groups.getGroupId(), member.getMemberId()).isEmpty()) {
-            throw new IllegalArgumentException("참여 내역이 없습니다.");
+            throw new CustomException(ErrorCode.PARTICIPATION_NOT_FOUND);
 
         }
 
