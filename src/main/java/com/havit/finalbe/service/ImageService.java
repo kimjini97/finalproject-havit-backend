@@ -74,7 +74,7 @@ public class ImageService {
         Image originFile = imageRepository.findImageByImageId(imageId);
         if (null != originFile) {
 //            String key = originFile.getImageUrl().substring(52);
-            String key = String.valueOf(originFile.getImageId());
+            String key = "havit" + "/" + originFile.getImageId();
             amazonS3Client.deleteObject(havitbucket, key);
 
             imageRepository.delete(originFile);
