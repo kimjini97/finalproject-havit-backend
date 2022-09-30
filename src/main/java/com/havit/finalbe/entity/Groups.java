@@ -42,7 +42,7 @@ public class Groups extends Timestamped{
     private String startDate;
 
     @Column(nullable = false)
-    private String imgUrl;
+    private Long imageId;
 
     @Column
     private String content;
@@ -54,10 +54,10 @@ public class Groups extends Timestamped{
     @OneToMany(mappedBy = "groups", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<GroupTag> groupTagList;
 
-    public void update(GroupDto.Request groupRequestDto, String imgUrl) {
+    public void update(GroupDto.Request groupRequestDto) {
         String title = groupRequestDto.getTitle();
         String startDate = groupRequestDto.getStartDate();
-        String imageUrl = imgUrl;
+        Long newImageId = groupRequestDto.getImageId();
         String content = groupRequestDto.getContent();
         String leaderName = groupRequestDto.getLeaderName();
         String crewName = groupRequestDto.getCrewName();
@@ -68,8 +68,8 @@ public class Groups extends Timestamped{
         if (null != startDate) {
             this.startDate = startDate;
         }
-        if (null != imageUrl) {
-            this.imgUrl = imageUrl;
+        if (null != newImageId) {
+            this.imageId = newImageId;
         }
         if (null != content) {
             this.content = content;

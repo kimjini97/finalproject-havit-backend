@@ -1,34 +1,21 @@
 package com.havit.finalbe.service;
 
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.havit.finalbe.entity.*;
 import com.havit.finalbe.repository.GroupTagRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Component
 public class ServiceUtil {
-
-    @Value("${cloud.aws.s3.bucket}")
-    private String havitbucket;
-    private final AmazonS3Client amazonS3Client;
     private final GroupTagRepository groupTagRepository;
-
 
     // 댓글 작성 날짜 포맷
     public String getDateFormatOfComment(Comment comment) {
@@ -100,30 +87,6 @@ public class ServiceUtil {
         }
 
         return dateFormat;
-    }
-
-    // 이미지 업로드 및 URL 변환
-    public String uploadImage(MultipartFile multipartFile, String dirName) throws IOException {
-
-        String fileName = dirName + "/" + UUID.randomUUID() + multipartFile.getName();
-
-        ObjectMetadata objectMetaData = new ObjectMetadata();
-        objectMetaData.setContentType(multipartFile.getContentType());
-        objectMetaData.setContentLength(multipartFile.getSize());
-
-        // S3 에 업로드
-        amazonS3Client.putObject(
-                new PutObjectRequest(havitbucket, fileName, multipartFile.getInputStream(), objectMetaData)
-                        .withCannedAcl(CannedAccessControlList.PublicRead)
-        );
-
-        // URL 변환
-        return amazonS3Client.getUrl(havitbucket, fileName).toString();
-    }
-
-    // S3 이미지 객체 삭제
-    public void deleteImage(String key) {
-        amazonS3Client.deleteObject(havitbucket, key);
     }
 
     // Group 에 해당하는 TagName 불러오기

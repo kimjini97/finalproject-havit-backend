@@ -13,7 +13,6 @@ public class GroupDto {
 
     @Builder
     @Getter
-    @Setter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Request {
@@ -36,8 +35,8 @@ public class GroupDto {
         @Schema(description = "그룹 태그", example = "#오늘기상, #2030")
         private List<String> groupTag;
 
-        @Schema(description = "그룹 이미지", example = "기상.jpg")
-        private MultipartFile imgFile;
+        @Schema(description = "그룹 이미지", example = "1")
+        private Long imageId;
     }
 
     @Builder
@@ -67,8 +66,8 @@ public class GroupDto {
         @Schema(description = "그룹 내용", example = "아침 6시에 기상하는 습관을 기르고 싶은 사람들의 모임입니다!")
         private String content;
 
-        @Schema(description = "그룹 이미지", example = "aws 이미지 Url")
-        private String imgUrl;
+        @Schema(description = "그룹 이미지", example = "1")
+        private Long imageId;
 
         @Schema(description = "작성 일시", example = "2022-07-25T12:43:01.226062")
         private LocalDateTime createdAt;
@@ -86,7 +85,7 @@ public class GroupDto {
         private List<Member> memberList;
 
         @Schema(description = "인증 이미지 Url 목록")
-        private List<String> certifyImgUrlList;
+        private List<Long> certifyImageIdList;
     }
 
     @Builder
@@ -101,8 +100,8 @@ public class GroupDto {
         @Schema(description = "그룹명", example = "아침 6시 기상러들")
         private String title;
 
-        @Schema(description = "그룹 이미지", example = "aws 이미지 Url")
-        private String imgUrl;
+        @Schema(description = "그룹 이미지", example = "1")
+        private Long imageId;
 
         @Schema(description = "멤버 수", example = "15")
         private int memberCount;

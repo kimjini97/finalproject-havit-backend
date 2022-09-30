@@ -22,8 +22,8 @@ public class GroupController {
     private final GroupService groupService;
 
     @Operation(summary = "그룹 생성", description = "그룹 관련 정보 기입후 그룹이 생성 됩니다.")
-    @PostMapping(value = "/", consumes = {"multipart/form-data"})
-    public GroupDto.Response createGroup(@ModelAttribute GroupDto.Request groupRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+    @PostMapping(value = "/")
+    public GroupDto.Response createGroup(@RequestBody GroupDto.Request groupRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return groupService.createGroup(groupRequestDto, userDetails);
     }
 
@@ -46,9 +46,9 @@ public class GroupController {
     }
 
     @Operation(summary = "그룹 수정", description = "groupId에 해당하는 그룹을 수정합니다.")
-    @PatchMapping(value = "/{groupId}", consumes = {"multipart/form-data"})
+    @PatchMapping(value = "/{groupId}")
     public GroupDto.Response updateGroup(@PathVariable Long groupId,
-                                                      @ModelAttribute GroupDto.Request groupRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+                                         @RequestBody GroupDto.Request groupRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
         return groupService.updateGroup(groupId, groupRequestDto, userDetails);
     }
 
