@@ -44,10 +44,13 @@ public class Member extends Timestamped{
         return passwordEncoder.matches(password, this.password);
     }
 
-    public void edit(Long imageId, String nickname, String introduce, String password) {
+    public void update(Long imageId, String nickname, String introduce) {
         this.imageId = imageId;
         this.nickname = nickname;
         this.introduce = introduce;
+    }
+
+    public void edit(String password) {
         this.password = password;
     }
 

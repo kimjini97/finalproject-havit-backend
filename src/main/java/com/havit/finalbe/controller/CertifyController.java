@@ -23,7 +23,7 @@ public class CertifyController {
     @Operation(summary = "인증 생성", description = "인증 관련 정보 기입 후 인증이 생성됩니다.")
     @PostMapping(value = "/")
     public CertifyDto.Response createCertify(@RequestBody CertifyDto.Request certifyRequestDto,
-                                        @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return certifyService.createCertify(certifyRequestDto, userDetails);
     }
 
@@ -37,7 +37,7 @@ public class CertifyController {
     @PatchMapping(value = "/{certifyId}")
     public CertifyDto.Response updateCertify(@PathVariable Long certifyId,
                                         @RequestBody CertifyDto.Request certifyRequestDto,
-                                        @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return certifyService.updateCertify(certifyId, certifyRequestDto, userDetails);
     }
 

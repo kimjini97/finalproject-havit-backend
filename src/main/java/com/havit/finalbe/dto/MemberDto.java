@@ -63,6 +63,12 @@ public class MemberDto {
 
         @Schema(description = "소개", example = "지니는 짱짱맨")
         private String introduce;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class MyPass {
 
         @Schema(description = "비빌번호", example = "test123")
         private String password;

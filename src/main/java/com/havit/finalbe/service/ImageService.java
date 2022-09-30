@@ -29,10 +29,9 @@ public class ImageService {
 
         LocalDateTime now = LocalDateTime.now();
 
-//        String imgUrl = null;
-//        if (!multipartFile.isEmpty()) {
-//            imgUrl = uploadFile(multipartFile, "havit");
-//        }
+        if (!multipartFile.isEmpty()) {
+            throw new IllegalArgumentException("첨부된 이미지가 없습니다.");
+        }
 
         Image image = Image.builder()
                 .fileName(multipartFile.getOriginalFilename())
@@ -54,26 +53,13 @@ public class ImageService {
                         .withCannedAcl(CannedAccessControlList.PublicRead)
         );
 
-        // URL 변환
-//        return amazonS3Client.getUrl(havitbucket, fileName).toString();
-
         return image.getImageId();
     }
-
-//    public String getImageUrl(Long imageId) {
-//
-//        Image image = imageRepository.findImageByImageId(imageId);
-//        if (null == image) {
-//            return "이미지가 존재하지 않습니다.";
-//        }
-//        return image.getImageUrl();
-//    }
 
     public String deleteImage(Long imageId) {
 
         Image originFile = imageRepository.findImageByImageId(imageId);
         if (null != originFile) {
-//            String key = originFile.getImageUrl().substring(52);
             String key = "havit" + "/" + originFile.getImageId();
             amazonS3Client.deleteObject(havitbucket, key);
 

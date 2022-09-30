@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -92,7 +91,7 @@ public class MyPageService {
     }
 
     @Transactional
-    public MemberDto.Response editMyInfo(MemberDto.MyPage myPageDto, UserDetailsImpl userDetails) throws IOException {
+    public MemberDto.Response editMyInfo(MemberDto.MyPage myPageDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -119,30 +118,7 @@ public class MyPageService {
             }
         }
 
-        String password = myPageDto.getPassword();
-        String passwordConfirm = myPageDto.getPasswordConfirm();
-        if (password.isEmpty()) {
-            password = member.getPassword();
-            findMember.edit(imageId, nickname, introduce, password);
-
-            return MemberDto.Response.builder()
-                            .memberId(findMember.getMemberId())
-                            .username(findMember.getUsername())
-                            .nickname(findMember.getNickname())
-                            .imageId(findMember.getImageId())
-                            .introduce(findMember.getIntroduce())
-                            .createdAt(findMember.getCreatedAt())
-                            .modifiedAt(findMember.getModifiedAt())
-                            .build();
-        }
-
-        if (!passwordStrCheck(password)) {
-            throw new InvalidPasswordException(ErrorMsg.INVALID_PASSWORD);
-        } else if (!password.equals(passwordConfirm)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        } else {
-            findMember.edit(imageId, nickname, introduce, passwordEncoder.encode(password));
-        }
+        findMember.update(imageId, nickname, introduce);
 
         return MemberDto.Response.builder()
                         .memberId(findMember.getMemberId())
@@ -153,6 +129,49 @@ public class MyPageService {
                         .createdAt(findMember.getCreatedAt())
                         .modifiedAt(findMember.getModifiedAt())
                         .build();
+    }
+
+    @Transactional
+    public MemberDto.Response editMyPassword(MemberDto.MyPass myPassDto, UserDetailsImpl userDetails) {
+
+        Member member = userDetails.getMember();
+
+        Member findMember = memberRepository.findMemberByMemberId(member.getMemberId());
+
+        String password = myPassDto.getPassword();
+        String passwordConfirm = myPassDto.getPasswordConfirm();
+        if (password.isEmpty()) {
+            password = member.getPassword();
+            findMember.edit(password);
+
+            return MemberDto.Response.builder()
+                    .memberId(findMember.getMemberId())
+                    .username(findMember.getUsername())
+                    .nickname(findMember.getNickname())
+                    .imageId(findMember.getImageId())
+                    .introduce(findMember.getIntroduce())
+                    .createdAt(findMember.getCreatedAt())
+                    .modifiedAt(findMember.getModifiedAt())
+                    .build();
+        }
+
+        if (!passwordStrCheck(password)) {
+            throw new InvalidPasswordException(ErrorMsg.INVALID_PASSWORD);
+        } else if (!password.equals(passwordConfirm)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        } else {
+            findMember.edit(passwordEncoder.encode(password));
+        }
+
+        return MemberDto.Response.builder()
+                .memberId(findMember.getMemberId())
+                .username(findMember.getUsername())
+                .nickname(findMember.getNickname())
+                .imageId(findMember.getImageId())
+                .introduce(findMember.getIntroduce())
+                .createdAt(findMember.getCreatedAt())
+                .modifiedAt(findMember.getModifiedAt())
+                .build();
     }
 
     @Transactional
