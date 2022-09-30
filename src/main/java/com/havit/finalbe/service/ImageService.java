@@ -5,6 +5,8 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.havit.finalbe.entity.Image;
+import com.havit.finalbe.exception.CustomException;
+import com.havit.finalbe.exception.ErrorCode;
 import com.havit.finalbe.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +32,7 @@ public class ImageService {
         LocalDateTime now = LocalDateTime.now();
 
         if (!multipartFile.isEmpty()) {
-            throw new IllegalArgumentException("첨부된 이미지가 없습니다.");
+            throw new CustomException(ErrorCode.NO_IMAGE_ATTACHED);
         }
 
         Image image = Image.builder()

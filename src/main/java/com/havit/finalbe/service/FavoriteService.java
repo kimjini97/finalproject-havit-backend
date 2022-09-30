@@ -4,6 +4,8 @@ import com.havit.finalbe.dto.FavoriteDto;
 import com.havit.finalbe.entity.Favorite;
 import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.entity.Member;
+import com.havit.finalbe.exception.CustomException;
+import com.havit.finalbe.exception.ErrorCode;
 import com.havit.finalbe.repository.FavoriteRepository;
 import com.havit.finalbe.repository.ParticipateRepository;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
@@ -30,7 +32,7 @@ public class FavoriteService {
 
         Groups groups = groupService.isPresentGroup(favoriteRequestDto.getGroupId());
         if (null == groups) {
-            throw new IllegalArgumentException("해당 그룹을 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.GROUP_NOT_FOUND);
         }
 
         // 태그 가져오기
