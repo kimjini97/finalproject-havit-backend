@@ -35,9 +35,9 @@ public class MemberService {
         String password = signupRequestDto.getPassword();
         String nickname = signupRequestDto.getNickname();
 
-        if (!emailStrCheck(username)) {throw new IllegalArgumentException("필드는 100자 이하여야 하며, @ 기호 전까지 64자 이하여야 합니다.");}
-        if (!emailDuplicateCheck(username)) {throw new IllegalArgumentException("중복된 이메일 주소가 있습니다.");}
-        if (!passwordStrCheck(password)) {throw new IllegalArgumentException("비밀번호 최소 8자 이상 , 소문자 , 숫자 (0-9) 또는 특수문자 (!@#$%^&*)");}
+        if (!emailStrCheck(username)) {throw new CustomException(ErrorCode.INVALID_EMAIL);}
+        if (!emailDuplicateCheck(username)) {throw new CustomException(ErrorCode.DUPLICATE_EMAIL);}
+        if (!passwordStrCheck(password)) {throw new CustomException(ErrorCode.INVALID_PASSWORD);}
         else {
 
             Member member = Member.builder()
@@ -66,7 +66,6 @@ public class MemberService {
         String username = loginRequestDto.getEmail();
         Member member = isPresentMemberByUsername(username);
 
-//        if (member == null){return new ErrorResponseDto(ErrorMsg.MEMBER_NOT_FOUND);}
         if(member == null){ throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);}
 
 
