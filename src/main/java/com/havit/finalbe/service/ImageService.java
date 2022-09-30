@@ -57,15 +57,13 @@ public class ImageService {
     public String deleteImage(Long imageId) {
 
         Image originFile = imageRepository.findImageByImageId(imageId);
-        if (null == originFile) {
-            throw new IllegalArgumentException("삭제할 이미지가 없습니다.");
+        if (null != originFile) {
+            String key = originFile.getImageUrl().substring(52);
+            amazonS3Client.deleteObject(havitbucket, key);
+
+            imageRepository.delete(originFile);
         }
-        String key = originFile.getImageUrl().substring(52);
-        amazonS3Client.deleteObject(havitbucket, key);
-
-        imageRepository.delete(originFile);
-
-        return "삭제가 완료되었습니다.";
+        return "삭제할 이미지가 없습니다.";
     }
 
 
