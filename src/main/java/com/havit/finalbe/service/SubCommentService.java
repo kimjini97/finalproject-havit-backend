@@ -4,6 +4,8 @@ import com.havit.finalbe.dto.SubCommentDto;
 import com.havit.finalbe.entity.Comment;
 import com.havit.finalbe.entity.Member;
 import com.havit.finalbe.entity.SubComment;
+import com.havit.finalbe.exception.CustomException;
+import com.havit.finalbe.exception.ErrorCode;
 import com.havit.finalbe.repository.SubCommentRepository;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,7 @@ public class SubCommentService {
 
         Comment comment = commentService.isPresentComment(subCommentDto.getCommentId());
         if (null == comment) {
-            throw new IllegalArgumentException("해당 댓글을 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.COMMENT_NOT_FOUND);
         }
 
         SubComment subComment = SubComment.builder()
@@ -57,11 +59,11 @@ public class SubCommentService {
 
         SubComment subComment = isPresentSubComment(subCommentId);
         if (null == subComment) {
-            throw new IllegalArgumentException("해당 댓글을 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.COMMENT_NOT_FOUND);
         }
 
         if (!subComment.getMember().isValidateMember(member.getMemberId())) {
-            throw new IllegalArgumentException("작성자가 아닙니다.");
+            throw new CustomException(ErrorCode.MEMBER_NOT_MATCHED);
         }
 
         subComment.update(subCommentDto);
@@ -83,11 +85,11 @@ public class SubCommentService {
 
         SubComment subComment = isPresentSubComment(subCommentId);
         if (null == subComment) {
-            throw new IllegalArgumentException("해당 댓글을 찾을 수 없습니다.");
+            throw new CustomException(ErrorCode.COMMENT_NOT_FOUND);
         }
 
         if (!subComment.getMember().isValidateMember(member.getMemberId())) {
-            throw new IllegalArgumentException("작성자가 아닙니다.");
+            throw new CustomException(ErrorCode.MEMBER_NOT_MATCHED);
         }
 
         subCommentRepository.delete(subComment);
