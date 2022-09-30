@@ -23,7 +23,7 @@ public class GroupController {
 
     @Operation(summary = "그룹 생성", description = "그룹 관련 정보 기입후 그룹이 생성 됩니다.")
     @PostMapping(value = "/")
-    public GroupDto.Response createGroup(@RequestBody GroupDto.Request groupRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+    public GroupDto.Response createGroup(@RequestBody GroupDto.Request groupRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return groupService.createGroup(groupRequestDto, userDetails);
     }
 
@@ -48,7 +48,7 @@ public class GroupController {
     @Operation(summary = "그룹 수정", description = "groupId에 해당하는 그룹을 수정합니다.")
     @PatchMapping(value = "/{groupId}")
     public GroupDto.Response updateGroup(@PathVariable Long groupId,
-                                         @RequestBody GroupDto.Request groupRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
+                                         @RequestBody GroupDto.Request groupRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return groupService.updateGroup(groupId, groupRequestDto, userDetails);
     }
 

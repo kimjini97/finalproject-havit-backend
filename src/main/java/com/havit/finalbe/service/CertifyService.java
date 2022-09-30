@@ -29,7 +29,7 @@ public class CertifyService {
     private final ServiceUtil serviceUtil;
 
     @Transactional
-    public CertifyDto.Response createCertify(CertifyDto.Request certifyRequestDto, UserDetailsImpl userDetails) throws IOException {
+    public CertifyDto.Response createCertify(CertifyDto.Request certifyRequestDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -133,7 +133,7 @@ public class CertifyService {
     }
 
     @Transactional
-    public CertifyDto.Response updateCertify(Long certifyId, CertifyDto.Request certifyRequestDto, UserDetailsImpl userDetails) throws IOException {
+    public CertifyDto.Response updateCertify(Long certifyId, CertifyDto.Request certifyRequestDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 

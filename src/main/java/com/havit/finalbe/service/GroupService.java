@@ -1,5 +1,6 @@
 package com.havit.finalbe.service;
 
+import com.havit.finalbe.dto.CertifyDto;
 import com.havit.finalbe.dto.GroupDto;
 import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.entity.*;
@@ -29,7 +30,7 @@ public class GroupService {
 
     // 그룹 생성
     @Transactional
-    public GroupDto.Response createGroup(GroupDto.Request groupRequestDto, UserDetailsImpl userDetails) throws IOException {
+    public GroupDto.Response createGroup(GroupDto.Request groupRequestDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -188,6 +189,24 @@ public class GroupService {
 
         // 인증샷 목록 가져오기
         List<Certify> certifyList = certifyRepository.findByGroups_GroupId(groupId);
+        List<CertifyDto.Response> certifyResponseDtoList = new ArrayList<>();
+
+        for (Certify certify : certifyList) {
+            certifyResponseDtoList.add(
+                    CertifyDto.Response.builder()
+                            .certifyId(certify.getCertifyId())
+                            .groupId(certify.getGroups().getGroupId())
+                            .title(certify.getTitle())
+                            .imageId(certify.getImageId())
+                            .longitude(certify.getLongitude())
+                            .latitude(certify.getLatitude())
+                            .nickname(certify.getMember().getNickname())
+                            .profileImageId(certify.getMember().getImageId())
+                            .createdAt(certify.getCreatedAt())
+                            .modifiedAt(certify.getModifiedAt())
+                            .build()
+            );
+        }
 
         return GroupDto.Response.builder()
                         .groupId(groupId)
@@ -203,13 +222,13 @@ public class GroupService {
                         .groupTag(tagListByGroup)
                         .memberCount(memberCount)
                         .memberList(memberList)
-                        .certifyList(certifyList)
+                        .certifyList(certifyResponseDtoList)
                         .build();
     }
 
     // 그룹 수정
     @Transactional
-    public GroupDto.Response updateGroup(Long groupId, GroupDto.Request groupRequestDto, UserDetailsImpl userDetails) throws IOException {
+    public GroupDto.Response updateGroup(Long groupId, GroupDto.Request groupRequestDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
