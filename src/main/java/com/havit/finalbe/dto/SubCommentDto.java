@@ -37,8 +37,8 @@ public class SubCommentDto {
         @Schema(description = "닉네임", example = "김병처리")
         private String nickname;
 
-        @Schema(description = "프로필 이미지 Url", example = "aws 이미지 Url")
-        private String profileUrl;
+        @Schema(description = "프로필 이미지 Url", example = "1")
+        private Long profileImageId;
 
         @Schema(description = "대댓글 내용", example = "댓글 달아주셔서 감사합니다.")
         private String content;

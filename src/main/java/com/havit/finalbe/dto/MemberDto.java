@@ -50,14 +50,13 @@ public class MemberDto {
         private String password;
     }
 
-    @Setter
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class MyPage {
 
-        @Schema(description = "프로필 이미지", example = "내예쁜셀카.jpg")
-        private MultipartFile imgFile;
+        @Schema(description = "프로필 이미지", example = "1")
+        private Long imageId;
 
         @Schema(description = "닉네임", example = "지니짱")
         private String nickname;
@@ -87,8 +86,8 @@ public class MemberDto {
         @Schema(description = "닉네임", example = "김병처리")
         private String nickname;
 
-        @Schema(description = "프로필 이미지 url")
-        private String profileUrl;
+        @Schema(description = "프로필 이미지 url", example = "1")
+        private Long imageId;
 
         @Schema(description = "소개", example = "지니는 짱짱맨")
         private String introduce;

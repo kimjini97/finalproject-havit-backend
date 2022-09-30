@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +31,7 @@ public class MyPageService {
     private final ParticipateRepository participateRepository;
     private final FavoriteRepository favoriteRepository;
     private final ServiceUtil serviceUtil;
+    private final ImageService imageService;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
@@ -78,7 +78,7 @@ public class MyPageService {
             GroupDto.AllGroupList MyGroupDto = GroupDto.AllGroupList.builder()
                     .groupId(groups.getGroupId())
                     .title(groups.getTitle())
-                    .imgUrl(groups.getImgUrl())
+                    .imageId(groups.getImageId())
                     .memberCount(memberCount)
                     .groupTag(tagListByGroup)
                     .createdAt(groups.getCreatedAt())
@@ -98,21 +98,16 @@ public class MyPageService {
 
         Member findMember = memberRepository.findMemberByMemberId(member.getMemberId());
 
-        String imgUrl = "";
-        MultipartFile imgFile = myPageDto.getImgFile();
-        if (null == imgFile || imgFile.isEmpty()) {
-            if (null == findMember.getProfileUrl()) {
-                imgUrl = null;
-            } else if (!findMember.getProfileUrl().isEmpty()) {
-                imgUrl = findMember.getProfileUrl();
-            }
+        Long imageId = myPageDto.getImageId();
+        if (null == imageId) {
+            imageId = findMember.getImageId();
         } else {
-            imgUrl = serviceUtil.uploadImage(imgFile, "profile");
+            imageService.deleteImage(findMember.getImageId());
         }
 
         String nickname = myPageDto.getNickname();
         if (nickname.isEmpty()) {
-            nickname = member.getNickname();
+            nickname = findMember.getNickname();
         }
 
         String introduce = myPageDto.getIntroduce();
@@ -128,13 +123,13 @@ public class MyPageService {
         String passwordConfirm = myPageDto.getPasswordConfirm();
         if (password.isEmpty()) {
             password = member.getPassword();
-            findMember.edit(imgUrl, nickname, introduce, password);
+            findMember.edit(imageId, nickname, introduce, password);
 
             return MemberDto.Response.builder()
                             .memberId(findMember.getMemberId())
                             .username(findMember.getUsername())
                             .nickname(findMember.getNickname())
-                            .profileUrl(findMember.getProfileUrl())
+                            .imageId(findMember.getImageId())
                             .introduce(findMember.getIntroduce())
                             .createdAt(findMember.getCreatedAt())
                             .modifiedAt(findMember.getModifiedAt())
@@ -146,14 +141,14 @@ public class MyPageService {
         } else if (!password.equals(passwordConfirm)) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         } else {
-            findMember.edit(imgUrl, nickname, introduce, passwordEncoder.encode(password));
+            findMember.edit(imageId, nickname, introduce, passwordEncoder.encode(password));
         }
 
         return MemberDto.Response.builder()
                         .memberId(findMember.getMemberId())
                         .username(findMember.getUsername())
                         .nickname(findMember.getNickname())
-                        .profileUrl(findMember.getProfileUrl())
+                        .imageId(findMember.getImageId())
                         .introduce(findMember.getIntroduce())
                         .createdAt(findMember.getCreatedAt())
                         .modifiedAt(findMember.getModifiedAt())
@@ -167,20 +162,19 @@ public class MyPageService {
 
         Member findMember = memberRepository.findMemberByMemberId(member.getMemberId());
 
-        String originFile = findMember.getProfileUrl();
-        if (null == originFile) {
+        Long originImage = findMember.getImageId();
+        if (null == originImage) {
             throw new IllegalArgumentException("삭제할 이미지가 없습니다.");
         }
-        String key = originFile.substring(52);
-        serviceUtil.deleteImage(key);
 
+        imageService.deleteImage(originImage);
         findMember.deleteImg(null);
 
         return MemberDto.Response.builder()
                         .memberId(findMember.getMemberId())
                         .username(findMember.getUsername())
                         .nickname(findMember.getNickname())
-                        .profileUrl(findMember.getProfileUrl())
+                        .imageId(findMember.getImageId())
                         .introduce(findMember.getIntroduce())
                         .createdAt(findMember.getCreatedAt())
                         .modifiedAt(findMember.getModifiedAt())

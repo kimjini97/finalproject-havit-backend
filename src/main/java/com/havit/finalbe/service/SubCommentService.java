@@ -44,7 +44,7 @@ public class SubCommentService {
                         .subCommentId(subComment.getSubCommentId())
                         .commentId(subComment.getComment().getCommentId())
                         .nickname(subComment.getMember().getNickname())
-                        .profileUrl(subComment.getMember().getProfileUrl())
+                        .profileImageId(subComment.getMember().getImageId())
                         .content(subComment.getContent())
                         .dateTime(serviceUtil.getDateFormatOfSubComment(subComment))
                         .build();
@@ -70,7 +70,7 @@ public class SubCommentService {
                         .subCommentId(subComment.getSubCommentId())
                         .commentId(subComment.getComment().getCommentId())
                         .nickname(subComment.getMember().getNickname())
-                        .profileUrl(subComment.getMember().getProfileUrl())
+                        .profileImageId(subComment.getMember().getImageId())
                         .content(subComment.getContent())
                         .dateTime(serviceUtil.getDateFormatOfSubComment(subComment))
                         .build();

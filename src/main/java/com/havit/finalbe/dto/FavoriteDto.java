@@ -35,8 +35,8 @@ public class FavoriteDto {
         @Schema(description = "그룹명", example = "아침 6시 기상러들")
         private String title;
 
-        @Schema(description = "그룹 이미지", example = "aws 이미지 Url")
-        private String imgUrl;
+        @Schema(description = "그룹 이미지", example = "1")
+        private Long imageId;
 
         @Schema(description = "멤버 수", example = "15")
         private int memberCount;

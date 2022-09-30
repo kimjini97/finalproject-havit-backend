@@ -24,7 +24,7 @@ public class Certify extends Timestamped {
     private String title;
 
     @Column
-    private String imgUrl;
+    private Long imageId;
 
     @Column
     private String latitude;
@@ -44,17 +44,17 @@ public class Certify extends Timestamped {
     private List<Comment> commentList;
 
 
-    public void update(CertifyDto.Request certifyRequestDto, String imgUrl) {
+    public void update(CertifyDto.Request certifyRequestDto) {
         String title = certifyRequestDto.getTitle();
-        String imageUrl = imgUrl;
+        Long newImageId = certifyRequestDto.getImageId();
         String latitude = certifyRequestDto.getLatitude();
         String longitude = certifyRequestDto.getLongitude();
 
         if (null != title) {
             this.title = title;
         }
-        if (null != imageUrl) {
-            this.imgUrl = imageUrl;
+        if (null != newImageId) {
+            this.imageId = newImageId;
         }
         if (null != latitude) {
             this.latitude = latitude;
