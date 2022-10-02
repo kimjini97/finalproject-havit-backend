@@ -28,4 +28,16 @@ public class ImageController {
     public String deleteImage(@PathVariable Long imageId) {
         return imageService.deleteImage(imageId);
     }
+
+    @Operation(summary = "랜덤 이미지 업로드", description = "랜덤 프로필로 쓸 이미지를 첨부합니다.")
+    @PostMapping("/random")
+    public Long randomImgUpload(@RequestPart(value = "image") MultipartFile multipartFile) throws IOException {
+        return imageService.randomImgUpload(multipartFile, "random");
+    }
+
+    @Operation(summary = "랜덤 이미지 id", description = "프로필로 쓸 이미지 id를 랜덤으로 불러옵니다.")
+    @GetMapping("/random")
+    public int getRandomProfileId() {
+        return imageService.randomImage();
+    }
 }
