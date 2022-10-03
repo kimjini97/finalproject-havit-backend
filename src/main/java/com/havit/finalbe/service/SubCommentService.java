@@ -1,6 +1,7 @@
 package com.havit.finalbe.service;
 
-import com.havit.finalbe.dto.SubCommentDto;
+import com.havit.finalbe.dto.request.SubCommentRequestDto;
+import com.havit.finalbe.dto.response.SubCommentResponseDto;
 import com.havit.finalbe.entity.Comment;
 import com.havit.finalbe.entity.Member;
 import com.havit.finalbe.entity.SubComment;
@@ -25,7 +26,7 @@ public class SubCommentService {
 
 
     @Transactional
-    public SubCommentDto.Response createSubComment(SubCommentDto.Request subCommentDto, UserDetailsImpl userDetails) {
+    public SubCommentResponseDto createSubComment(SubCommentRequestDto subCommentDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -42,7 +43,7 @@ public class SubCommentService {
 
         subCommentRepository.save(subComment);
 
-        return SubCommentDto.Response.builder()
+        return SubCommentResponseDto.builder()
                         .subCommentId(subComment.getSubCommentId())
                         .commentId(subComment.getComment().getCommentId())
                         .nickname(subComment.getMember().getNickname())
@@ -53,7 +54,7 @@ public class SubCommentService {
     }
 
     @Transactional
-    public SubCommentDto.Response updateSubComment(Long subCommentId, SubCommentDto.Request subCommentDto, UserDetailsImpl userDetails) {
+    public SubCommentResponseDto updateSubComment(Long subCommentId, SubCommentRequestDto subCommentDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -68,7 +69,7 @@ public class SubCommentService {
 
         subComment.update(subCommentDto);
 
-        return SubCommentDto.Response.builder()
+        return SubCommentResponseDto.builder()
                         .subCommentId(subComment.getSubCommentId())
                         .commentId(subComment.getComment().getCommentId())
                         .nickname(subComment.getMember().getNickname())

@@ -1,6 +1,6 @@
 package com.havit.finalbe.entity;
 
-import com.havit.finalbe.dto.SubCommentDto;
+import com.havit.finalbe.dto.request.SubCommentRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,7 +30,7 @@ public class SubComment extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     private Comment comment;
 
-    public void update(SubCommentDto.Request subCommentDto) {
+    public void update(SubCommentRequestDto subCommentDto) {
         this.content = subCommentDto.getContent();
     }
 }

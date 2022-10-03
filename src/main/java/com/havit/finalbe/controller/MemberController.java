@@ -1,6 +1,8 @@
 package com.havit.finalbe.controller;
 
-import com.havit.finalbe.dto.MemberDto;
+import com.havit.finalbe.dto.request.LoginRequestDto;
+import com.havit.finalbe.dto.request.SignupRequestDto;
+import com.havit.finalbe.dto.response.MemberResponseDto;
 import com.havit.finalbe.dto.response.MessageResponseDto;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import com.havit.finalbe.service.MemberService;
@@ -23,13 +25,13 @@ public class MemberController {
 
     @Operation(summary = "회원가입", description = "회원 정보를 입력하고 회원가입을 완료합니다")
     @PostMapping("/signup")
-    public MemberDto.Response signup(@RequestBody MemberDto.Signup signupRequestDto) {
+    public MemberResponseDto signup(@RequestBody SignupRequestDto signupRequestDto) {
         return memberService.signup(signupRequestDto);
     }
 
     @Operation(summary = "로그인", description = "회원 정보 시 기입한 이메일과 비밀번호로 로그인을 합니다.(Access Token, Refresh Token 생성)")
     @PostMapping("/login")
-    public MemberDto.Response login(@RequestBody MemberDto.Login loginRequestDto, HttpServletResponse response) {
+    public MemberResponseDto login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         return memberService.login(loginRequestDto, response);
     }
 
@@ -47,7 +49,7 @@ public class MemberController {
 
     @Operation(summary = "로그인 멤버 정보", description = "로그인한 멤버 정보를 반환합니다.")
     @GetMapping("/auth/info")
-    public MemberDto.Response getMemberInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public MemberResponseDto getMemberInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return memberService.getMemberInfo(userDetails);
     }
 

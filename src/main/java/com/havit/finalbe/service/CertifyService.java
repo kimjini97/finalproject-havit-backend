@@ -1,8 +1,9 @@
 package com.havit.finalbe.service;
 
-import com.havit.finalbe.dto.CommentDto;
-import com.havit.finalbe.dto.SubCommentDto;
-import com.havit.finalbe.dto.CertifyDto;
+import com.havit.finalbe.dto.request.CertifyRequestDto;
+import com.havit.finalbe.dto.response.CertifyResponseDto;
+import com.havit.finalbe.dto.response.CommentResponseDto;
+import com.havit.finalbe.dto.response.SubCommentResponseDto;
 import com.havit.finalbe.entity.*;
 import com.havit.finalbe.exception.CustomException;
 import com.havit.finalbe.exception.ErrorCode;
@@ -30,7 +31,7 @@ public class CertifyService {
     private final ServiceUtil serviceUtil;
 
     @Transactional
-    public CertifyDto.Response createCertify(CertifyDto.Request certifyRequestDto, UserDetailsImpl userDetails) {
+    public CertifyResponseDto createCertify(CertifyRequestDto certifyRequestDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -59,7 +60,7 @@ public class CertifyService {
 
         certifyRepository.save(certify);
 
-        return CertifyDto.Response.builder()
+        return CertifyResponseDto.builder()
                         .certifyId(certify.getCertifyId())
                         .groupId(certify.getGroups().getGroupId())
                         .title(certify.getTitle())
@@ -76,7 +77,7 @@ public class CertifyService {
     }
 
     @Transactional(readOnly = true)
-    public CertifyDto.Response getCertifyDetail(Long certifyId) {
+    public CertifyResponseDto getCertifyDetail(Long certifyId) {
 
         Certify certify = isPresentCertify(certifyId);
         if (null == certify) {
@@ -84,17 +85,17 @@ public class CertifyService {
         }
 
         List<Comment> commentList = commentRepository.findAllByCertify(certify);
-        List<CommentDto.Response> commentResponseDtoList = new ArrayList<>();
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
 
         for (Comment comment : commentList) {
 
             List<SubComment> subCommentList = subCommentRepository.findAllByComment(comment);
-            List<SubCommentDto.Response> subCommentResponseDtoList = new ArrayList<>();
+            List<SubCommentResponseDto> subCommentResponseDtoList = new ArrayList<>();
 
             for (SubComment subComment : subCommentList) {
 
                 subCommentResponseDtoList.add(
-                        SubCommentDto.Response.builder()
+                        SubCommentResponseDto.builder()
                                 .subCommentId(subComment.getSubCommentId())
                                 .commentId(subComment.getComment().getCommentId())
                                 .nickname(subComment.getMember().getNickname())
@@ -105,7 +106,7 @@ public class CertifyService {
                 );
             }
             commentResponseDtoList.add(
-                    CommentDto.Response.builder()
+                    CommentResponseDto.builder()
                             .commentId(comment.getCommentId())
                             .certifyId(comment.getCertify().getCertifyId())
                             .nickname(comment.getMember().getNickname())
@@ -116,7 +117,7 @@ public class CertifyService {
                             .build()
             );
         }
-        return CertifyDto.Response.builder()
+        return CertifyResponseDto.builder()
                         .certifyId(certify.getCertifyId())
                         .groupId(certify.getGroups().getGroupId())
                         .title(certify.getTitle())
@@ -134,7 +135,7 @@ public class CertifyService {
     }
 
     @Transactional
-    public CertifyDto.Response updateCertify(Long certifyId, CertifyDto.Request certifyRequestDto, UserDetailsImpl userDetails) {
+    public CertifyResponseDto updateCertify(Long certifyId, CertifyRequestDto certifyRequestDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -153,7 +154,7 @@ public class CertifyService {
         imageService.deleteImage(originImage);
         certify.update(certifyRequestDto);
 
-        return CertifyDto.Response.builder()
+        return CertifyResponseDto.builder()
                         .certifyId(certify.getCertifyId())
                         .groupId(certify.getGroups().getGroupId())
                         .title(certify.getTitle())

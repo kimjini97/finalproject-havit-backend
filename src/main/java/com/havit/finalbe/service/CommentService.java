@@ -1,7 +1,7 @@
 package com.havit.finalbe.service;
 
-
-import com.havit.finalbe.dto.CommentDto;
+import com.havit.finalbe.dto.request.CommentRequestDto;
+import com.havit.finalbe.dto.response.CommentResponseDto;
 import com.havit.finalbe.entity.Certify;
 import com.havit.finalbe.entity.Comment;
 import com.havit.finalbe.entity.Member;
@@ -24,7 +24,7 @@ public class CommentService {
     private final ServiceUtil serviceUtil;
 
     @Transactional
-    public CommentDto.Response createComment(CommentDto.Request commentRequestDto, UserDetailsImpl userDetails) {
+    public CommentResponseDto createComment(CommentRequestDto commentRequestDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -41,7 +41,7 @@ public class CommentService {
 
         commentRepository.save(comment);
 
-        return CommentDto.Response.builder()
+        return CommentResponseDto.builder()
                         .commentId(comment.getCommentId())
                         .certifyId(comment.getCertify().getCertifyId())
                         .nickname(comment.getMember().getNickname())
@@ -52,7 +52,7 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentDto.Response updateComment(Long commentId, CommentDto.Request commentRequestDto, UserDetailsImpl userDetails) {
+    public CommentResponseDto updateComment(Long commentId, CommentRequestDto commentRequestDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -67,7 +67,7 @@ public class CommentService {
 
         comment.update(commentRequestDto);
 
-        return CommentDto.Response.builder()
+        return CommentResponseDto.builder()
                         .commentId(comment.getCommentId())
                         .certifyId(comment.getCertify().getCertifyId())
                         .nickname(comment.getMember().getNickname())

@@ -1,6 +1,6 @@
 package com.havit.finalbe.entity;
 
-import com.havit.finalbe.dto.CommentDto;
+import com.havit.finalbe.dto.request.CommentRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,7 +34,7 @@ public class Comment extends Timestamped {
     @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<SubComment> subCommentList;
 
-    public void update(CommentDto.Request commentRequestDto) {
+    public void update(CommentRequestDto commentRequestDto) {
         this.content = commentRequestDto.getContent();
     }
 
