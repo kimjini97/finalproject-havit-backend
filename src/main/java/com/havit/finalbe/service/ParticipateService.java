@@ -1,7 +1,7 @@
 package com.havit.finalbe.service;
 
-import com.havit.finalbe.dto.CertifyDto;
-import com.havit.finalbe.dto.GroupDto;
+import com.havit.finalbe.dto.response.CertifyResponseDto;
+import com.havit.finalbe.dto.response.GroupResponseDto;
 import com.havit.finalbe.entity.Certify;
 import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.entity.Member;
@@ -30,7 +30,7 @@ public class ParticipateService {
     private final ServiceUtil serviceUtil;
 
     @Transactional
-    public GroupDto.Response participate(Long groupId, UserDetailsImpl userDetails) {
+    public GroupResponseDto participate(Long groupId, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -64,11 +64,11 @@ public class ParticipateService {
 
         // 인증샷 목록 가져오기
         List<Certify> certifyList = certifyRepository.findByGroups_GroupId(groupId);
-        List<CertifyDto.Response> certifyResponseDtoList = new ArrayList<>();
+        List<CertifyResponseDto> certifyResponseDtoList = new ArrayList<>();
 
         for (Certify certify : certifyList) {
             certifyResponseDtoList.add(
-                    CertifyDto.Response.builder()
+                    CertifyResponseDto.builder()
                             .certifyId(certify.getCertifyId())
                             .groupId(certify.getGroups().getGroupId())
                             .title(certify.getTitle())
@@ -83,7 +83,7 @@ public class ParticipateService {
             );
         }
 
-        return GroupDto.Response.builder()
+        return GroupResponseDto.builder()
                 .groupId(groupId)
                 .title(groups.getTitle())
                 .nickname(groups.getMember().getNickname())
@@ -102,7 +102,7 @@ public class ParticipateService {
     }
 
     @Transactional
-    public GroupDto.Response cancelParticipation(Long groupId, UserDetailsImpl userDetails) {
+    public GroupResponseDto cancelParticipation(Long groupId, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -141,11 +141,11 @@ public class ParticipateService {
 
         // 인증샷 목록 가져오기
         List<Certify> certifyList = certifyRepository.findByGroups_GroupId(groupId);
-        List<CertifyDto.Response> certifyResponseDtoList = new ArrayList<>();
+        List<CertifyResponseDto> certifyResponseDtoList = new ArrayList<>();
 
         for (Certify certify : certifyList) {
             certifyResponseDtoList.add(
-                    CertifyDto.Response.builder()
+                    CertifyResponseDto.builder()
                             .certifyId(certify.getCertifyId())
                             .groupId(certify.getGroups().getGroupId())
                             .title(certify.getTitle())
@@ -160,7 +160,7 @@ public class ParticipateService {
             );
         }
 
-        return GroupDto.Response.builder()
+        return GroupResponseDto.builder()
                 .groupId(groupId)
                 .title(groups.getTitle())
                 .nickname(groups.getMember().getNickname())
