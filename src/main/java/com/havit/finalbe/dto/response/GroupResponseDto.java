@@ -23,8 +23,8 @@ public class GroupResponseDto {
     @Schema(description = "그룹명", example = "아침 6시 기상러들")
     private String title;
 
-    @Schema(description = "닉네임", example = "김병처리")
-    private String nickname;
+    @Schema(description = "작성자 정보")
+    private Member writer;
 
     @Schema(description = "리더명", example = "추장")
     private String leaderName;
