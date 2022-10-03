@@ -1,6 +1,6 @@
 package com.havit.finalbe.controller;
 
-import com.havit.finalbe.dto.GroupDto;
+import com.havit.finalbe.dto.response.GroupResponseDto;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import com.havit.finalbe.service.ParticipateService;
 import io.swagger.annotations.Api;
@@ -19,13 +19,13 @@ public class ParticipateController {
 
     @Operation(summary = "그룹 참여하기", description = "해당하는 그룹의 참여 이력을 확인하고 참여합니다.")
     @PostMapping("/{groupId}")
-    public GroupDto.Response participate(@PathVariable Long groupId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public GroupResponseDto participate(@PathVariable Long groupId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return participateService.participate(groupId, userDetails);
     }
 
     @Operation(summary = "그룹 참여 취소하기", description = "해당하는 그룹의 참여 이력을 확인하고 취소합니다.")
     @DeleteMapping("/{groupId}")
-    public GroupDto.Response cancelParticipation(@PathVariable Long groupId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public GroupResponseDto cancelParticipation(@PathVariable Long groupId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return participateService.cancelParticipation(groupId, userDetails);
     }
 }

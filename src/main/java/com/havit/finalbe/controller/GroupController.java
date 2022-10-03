@@ -1,6 +1,8 @@
 package com.havit.finalbe.controller;
 
-import com.havit.finalbe.dto.GroupDto;
+import com.havit.finalbe.dto.request.GroupRequestDto;
+import com.havit.finalbe.dto.response.AllGroupListResponseDto;
+import com.havit.finalbe.dto.response.GroupResponseDto;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,32 +24,32 @@ public class GroupController {
 
     @Operation(summary = "그룹 생성", description = "그룹 관련 정보 기입후 그룹이 생성 됩니다.")
     @PostMapping(value = "/")
-    public GroupDto.Response createGroup(@RequestBody GroupDto.Request groupRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public GroupResponseDto createGroup(@RequestBody GroupRequestDto groupRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return groupService.createGroup(groupRequestDto, userDetails);
     }
 
     @Operation(summary = "전체 그룹 조회", description = "생성된 전체 그룹을 조회합니다.")
     @GetMapping("/")
-    public List<GroupDto.AllGroupList> getAllGroup(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public List<AllGroupListResponseDto> getAllGroup(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return groupService.getAllGroup(userDetails);
     }
 
     @Operation(summary = "태그별 전체 그룹 조회", description = "생성된 전체 그룹을 태그별로 조회합니다.")
     @GetMapping("/tag")
-    public List<GroupDto.AllGroupList> getAllGroupByTag(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam(value = "tag") String keyword) {
+    public List<AllGroupListResponseDto> getAllGroupByTag(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam(value = "tag") String keyword) {
         return groupService.getAllGroupByTag(userDetails, keyword);
     }
 
     @Operation(summary = "그룹 상세 조회", description = "groupId에 해당하는 그룹을 조회합니다.")
     @GetMapping("/{groupId}")
-    public GroupDto.Response getGroupDetail(@PathVariable Long groupId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public GroupResponseDto getGroupDetail(@PathVariable Long groupId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return groupService.getGroupDetail(groupId, userDetails);
     }
 
     @Operation(summary = "그룹 수정", description = "groupId에 해당하는 그룹을 수정합니다.")
     @PatchMapping(value = "/{groupId}")
-    public GroupDto.Response updateGroup(@PathVariable Long groupId,
-                                         @RequestBody GroupDto.Request groupRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public GroupResponseDto updateGroup(@PathVariable Long groupId,
+                                         @RequestBody GroupRequestDto groupRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return groupService.updateGroup(groupId, groupRequestDto, userDetails);
     }
 

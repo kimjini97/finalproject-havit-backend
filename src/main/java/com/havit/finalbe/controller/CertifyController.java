@@ -1,6 +1,7 @@
 package com.havit.finalbe.controller;
 
-import com.havit.finalbe.dto.CertifyDto;
+import com.havit.finalbe.dto.request.CertifyRequestDto;
+import com.havit.finalbe.dto.response.CertifyResponseDto;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import com.havit.finalbe.service.CertifyService;
 import io.swagger.annotations.Api;
@@ -20,21 +21,21 @@ public class CertifyController {
 
     @Operation(summary = "인증 생성", description = "인증 관련 정보 기입 후 인증이 생성됩니다.")
     @PostMapping(value = "/")
-    public CertifyDto.Response createCertify(@RequestBody CertifyDto.Request certifyRequestDto,
-                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public CertifyResponseDto createCertify(@RequestBody CertifyRequestDto certifyRequestDto,
+                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return certifyService.createCertify(certifyRequestDto, userDetails);
     }
 
     @Operation(summary = "인증 상세조회", description = "certifyId에 해당하는 인증을 조회합니다.")
     @GetMapping("/{certifyId}")
-    public CertifyDto.Response getCertifyDetail(@PathVariable Long certifyId) {
+    public CertifyResponseDto getCertifyDetail(@PathVariable Long certifyId) {
         return certifyService.getCertifyDetail(certifyId);
     }
 
     @Operation(summary = "인증 수정", description = "certifyId에 해당하는 인증을 수정합니다.")
     @PatchMapping(value = "/{certifyId}")
-    public CertifyDto.Response updateCertify(@PathVariable Long certifyId,
-                                        @RequestBody CertifyDto.Request certifyRequestDto,
+    public CertifyResponseDto updateCertify(@PathVariable Long certifyId,
+                                        @RequestBody CertifyRequestDto certifyRequestDto,
                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return certifyService.updateCertify(certifyId, certifyRequestDto, userDetails);
     }

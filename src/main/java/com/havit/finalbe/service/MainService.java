@@ -1,6 +1,6 @@
 package com.havit.finalbe.service;
 
-import com.havit.finalbe.dto.GroupDto;
+import com.havit.finalbe.dto.response.AllGroupListResponseDto;
 import com.havit.finalbe.entity.Favorite;
 import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.entity.Member;
@@ -27,13 +27,13 @@ public class MainService {
 
     // 그룹 통합 검색
     @Transactional
-    public List<GroupDto.AllGroupList> searchGroup(String searchWord, UserDetailsImpl userDetails) {
+    public List<AllGroupListResponseDto> searchGroup(String searchWord, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
         List<Groups> groupList = groupRepository
                 .findAllByTitleContainingIgnoreCaseOrMember_NicknameContainingIgnoreCase(searchWord, searchWord);
-        List<GroupDto.AllGroupList> searchGroupListResponseDtoList = new ArrayList<>();
+        List<AllGroupListResponseDto> searchGroupListResponseDtoList = new ArrayList<>();
 
         for (Groups groups : groupList) {
             boolean isFavorites = false;
@@ -47,7 +47,7 @@ public class MainService {
 
             // 로그인한 멤버의 계급 확인 코드 ( 만약 추가하면 AllGroupListResponseDto 에도 필드 추가해야 함 )
 
-            GroupDto.AllGroupList allGroupListResponseDto = GroupDto.AllGroupList.builder()
+            AllGroupListResponseDto allGroupListResponseDto = AllGroupListResponseDto.builder()
                     .groupId(groups.getGroupId())
                     .title(groups.getTitle())
                     .imageId(groups.getImageId())

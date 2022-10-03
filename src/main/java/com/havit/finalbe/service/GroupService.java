@@ -1,7 +1,9 @@
 package com.havit.finalbe.service;
 
-import com.havit.finalbe.dto.CertifyDto;
-import com.havit.finalbe.dto.GroupDto;
+import com.havit.finalbe.dto.request.GroupRequestDto;
+import com.havit.finalbe.dto.response.AllGroupListResponseDto;
+import com.havit.finalbe.dto.response.CertifyResponseDto;
+import com.havit.finalbe.dto.response.GroupResponseDto;
 import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.entity.*;
 import com.havit.finalbe.exception.CustomException;
@@ -31,7 +33,7 @@ public class GroupService {
 
     // 그룹 생성
     @Transactional
-    public GroupDto.Response createGroup(GroupDto.Request groupRequestDto, UserDetailsImpl userDetails) {
+    public GroupResponseDto createGroup(GroupRequestDto groupRequestDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -70,7 +72,7 @@ public class GroupService {
 
         List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
 
-        return GroupDto.Response.builder()
+        return GroupResponseDto.builder()
                         .groupId(groups.getGroupId())
                         .title(groups.getTitle())
                         .imageId(groups.getImageId())
@@ -87,12 +89,12 @@ public class GroupService {
 
     // 그룹 전체 목록 조회
     @Transactional(readOnly = true)
-    public List<GroupDto.AllGroupList> getAllGroup(UserDetailsImpl userDetails) {
+    public List<AllGroupListResponseDto> getAllGroup(UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
         List<Groups> groupList = groupRepository.findAllByOrderByCreatedAtDesc();
-        List<GroupDto.AllGroupList> allGroupListResponseDtoList = new ArrayList<>();
+        List<AllGroupListResponseDto> allGroupListResponseDtoList = new ArrayList<>();
 
         for (Groups groups : groupList) {
             boolean isFavorites = false;
@@ -106,7 +108,7 @@ public class GroupService {
 
             // 로그인한 멤버의 계급 확인 코드 ( 만약 추가하면 AllGroupListResponseDto 에도 필드 추가해야 함 )
 
-            GroupDto.AllGroupList allGroupListResponseDto = GroupDto.AllGroupList.builder()
+            AllGroupListResponseDto allGroupListResponseDto = AllGroupListResponseDto.builder()
                     .groupId(groups.getGroupId())
                     .title(groups.getTitle())
                     .imageId(groups.getImageId())
@@ -123,7 +125,7 @@ public class GroupService {
 
     // 태그별 그룹 전체 목록 조회
     @Transactional(readOnly = true)
-    public List<GroupDto.AllGroupList> getAllGroupByTag(UserDetailsImpl userDetails, String keyword) {
+    public List<AllGroupListResponseDto> getAllGroupByTag(UserDetailsImpl userDetails, String keyword) {
 
         Member member = userDetails.getMember();
 
@@ -133,7 +135,7 @@ public class GroupService {
         }
 
         List<GroupTag> groupTagList = groupTagRepository.findAllByTagsOrderByGroupsDesc(tags);
-        List<GroupDto.AllGroupList> allGroupListResponseDtoList = new ArrayList<>();
+        List<AllGroupListResponseDto> allGroupListResponseDtoList = new ArrayList<>();
 
         for (GroupTag groupTag : groupTagList) {
             boolean isFavorites = false;
@@ -147,7 +149,7 @@ public class GroupService {
 
             // 로그인한 멤버의 계급 확인 코드 ( 만약 추가하면 AllGroupListResponseDto 에도 필드 추가해야 함 )
 
-            GroupDto.AllGroupList allGroupListResponseDto = GroupDto.AllGroupList.builder()
+            AllGroupListResponseDto allGroupListResponseDto = AllGroupListResponseDto.builder()
                     .groupId(groups.getGroupId())
                     .title(groups.getTitle())
                     .imageId(groups.getImageId())
@@ -164,7 +166,7 @@ public class GroupService {
 
     // 그룹 상세 조회
     @Transactional(readOnly = true)
-    public GroupDto.Response getGroupDetail(Long groupId, UserDetailsImpl userDetails) {
+    public GroupResponseDto getGroupDetail(Long groupId, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -190,11 +192,11 @@ public class GroupService {
 
         // 인증샷 목록 가져오기
         List<Certify> certifyList = certifyRepository.findByGroups_GroupId(groupId);
-        List<CertifyDto.Response> certifyResponseDtoList = new ArrayList<>();
+        List<CertifyResponseDto> certifyResponseDtoList = new ArrayList<>();
 
         for (Certify certify : certifyList) {
             certifyResponseDtoList.add(
-                    CertifyDto.Response.builder()
+                    CertifyResponseDto.builder()
                             .certifyId(certify.getCertifyId())
                             .groupId(certify.getGroups().getGroupId())
                             .title(certify.getTitle())
@@ -209,7 +211,7 @@ public class GroupService {
             );
         }
 
-        return GroupDto.Response.builder()
+        return GroupResponseDto.builder()
                         .groupId(groupId)
                         .title(groups.getTitle())
                         .nickname(groups.getMember().getNickname())
@@ -229,7 +231,7 @@ public class GroupService {
 
     // 그룹 수정
     @Transactional
-    public GroupDto.Response updateGroup(Long groupId, GroupDto.Request groupRequestDto, UserDetailsImpl userDetails) {
+    public GroupResponseDto updateGroup(Long groupId, GroupRequestDto groupRequestDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -248,7 +250,7 @@ public class GroupService {
 
         if (null == groupRequestDto.getGroupTag()) {
             List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
-            return GroupDto.Response.builder()
+            return GroupResponseDto.builder()
                             .groupId(groups.getGroupId())
                             .title(groups.getTitle())
                             .imageId(groups.getImageId())
@@ -289,7 +291,7 @@ public class GroupService {
 
         List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
 
-        return GroupDto.Response.builder()
+        return GroupResponseDto.builder()
                         .groupId(groups.getGroupId())
                         .title(groups.getTitle())
                         .imageId(groups.getImageId())

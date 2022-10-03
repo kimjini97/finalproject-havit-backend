@@ -1,6 +1,6 @@
 package com.havit.finalbe.entity;
 
-import com.havit.finalbe.dto.GroupDto;
+import com.havit.finalbe.dto.request.GroupRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -57,7 +57,7 @@ public class Groups extends Timestamped{
     @OneToMany(mappedBy = "groups", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Certify> certifyList;
 
-    public void update(GroupDto.Request groupRequestDto) {
+    public void update(GroupRequestDto groupRequestDto) {
         String title = groupRequestDto.getTitle();
         String startDate = groupRequestDto.getStartDate();
         Long newImageId = groupRequestDto.getImageId();
