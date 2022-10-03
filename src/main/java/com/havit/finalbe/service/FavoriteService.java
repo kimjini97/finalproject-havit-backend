@@ -1,6 +1,7 @@
 package com.havit.finalbe.service;
 
-import com.havit.finalbe.dto.FavoriteDto;
+import com.havit.finalbe.dto.request.FavoriteRequestDto;
+import com.havit.finalbe.dto.response.FavoriteResponseDto;
 import com.havit.finalbe.entity.Favorite;
 import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.entity.Member;
@@ -26,7 +27,7 @@ public class FavoriteService {
     private final GroupService groupService;
 
     @Transactional
-    public FavoriteDto.Response favorites(FavoriteDto.Request favoriteRequestDto, UserDetailsImpl userDetails) {
+    public FavoriteResponseDto favorites(FavoriteRequestDto favoriteRequestDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -56,7 +57,7 @@ public class FavoriteService {
                 isFavorites = true;
             }
 
-            return FavoriteDto.Response.builder()
+            return FavoriteResponseDto.builder()
                             .groupId(favorite.getGroups().getGroupId())
                             .title(favorite.getGroups().getTitle())
                             .imageId(favorite.getGroups().getImageId())
@@ -81,7 +82,7 @@ public class FavoriteService {
             isFavorites = true;
         }
 
-        return FavoriteDto.Response.builder()
+        return FavoriteResponseDto.builder()
                         .groupId(favorite.getGroups().getGroupId())
                         .title(favorite.getGroups().getTitle())
                         .imageId(favorite.getGroups().getImageId())

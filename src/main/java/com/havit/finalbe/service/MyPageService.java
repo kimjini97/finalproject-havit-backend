@@ -1,7 +1,10 @@
 package com.havit.finalbe.service;
 
-import com.havit.finalbe.dto.GroupDto;
-import com.havit.finalbe.dto.MemberDto;
+import com.havit.finalbe.dto.request.CheckPasswordRequestDto;
+import com.havit.finalbe.dto.request.MyPageRequestDto;
+import com.havit.finalbe.dto.request.MyPasswordRequestDto;
+import com.havit.finalbe.dto.response.AllGroupListResponseDto;
+import com.havit.finalbe.dto.response.MemberResponseDto;
 import com.havit.finalbe.entity.Favorite;
 import com.havit.finalbe.entity.Groups;
 import com.havit.finalbe.entity.Member;
@@ -34,7 +37,7 @@ public class MyPageService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public String checkPassword(MemberDto.CheckPassword checkPasswordDto, UserDetailsImpl userDetails) {
+    public String checkPassword(CheckPasswordRequestDto checkPasswordDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -45,7 +48,7 @@ public class MyPageService {
         return "true";
     }
 
-    public List<GroupDto.AllGroupList> getMyGroup(UserDetailsImpl userDetails) {
+    public List<AllGroupListResponseDto> getMyGroup(UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
         List<Groups> myGroups = groupRepository.findAllByMember_MemberId(member.getMemberId());
@@ -55,7 +58,7 @@ public class MyPageService {
             throw new CustomException(ErrorCode.PARTICIPATION_NOT_FOUND);
         }
 
-        List<GroupDto.AllGroupList> allMyGroupList = new ArrayList<>();
+        List<AllGroupListResponseDto> allMyGroupList = new ArrayList<>();
 
         for (Participate participate : myParticipation) {
             Groups myJoinGroups = groupRepository.findByGroupId(participate.getGroups().getGroupId());
@@ -74,7 +77,7 @@ public class MyPageService {
 
             // 로그인한 멤버의 계급 확인 코드 ( 만약 추가하면 AllGroupListResponseDto 에도 필드 추가해야 함 )
 
-            GroupDto.AllGroupList MyGroupDto = GroupDto.AllGroupList.builder()
+            AllGroupListResponseDto MyGroupDto = AllGroupListResponseDto.builder()
                     .groupId(groups.getGroupId())
                     .title(groups.getTitle())
                     .imageId(groups.getImageId())
@@ -91,7 +94,7 @@ public class MyPageService {
     }
 
     @Transactional
-    public MemberDto.Response editMyInfo(MemberDto.MyPage myPageDto, UserDetailsImpl userDetails) {
+    public MemberResponseDto editMyInfo(MyPageRequestDto myPageDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -120,7 +123,7 @@ public class MyPageService {
 
         findMember.update(imageId, nickname, introduce);
 
-        return MemberDto.Response.builder()
+        return MemberResponseDto.builder()
                         .memberId(findMember.getMemberId())
                         .username(findMember.getUsername())
                         .nickname(findMember.getNickname())
@@ -132,7 +135,7 @@ public class MyPageService {
     }
 
     @Transactional
-    public MemberDto.Response editMyPassword(MemberDto.MyPass myPassDto, UserDetailsImpl userDetails) {
+    public MemberResponseDto editMyPassword(MyPasswordRequestDto myPassDto, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -144,7 +147,7 @@ public class MyPageService {
             password = member.getPassword();
             findMember.edit(password);
 
-            return MemberDto.Response.builder()
+            return MemberResponseDto.builder()
                     .memberId(findMember.getMemberId())
                     .username(findMember.getUsername())
                     .nickname(findMember.getNickname())
@@ -163,7 +166,7 @@ public class MyPageService {
             findMember.edit(passwordEncoder.encode(password));
         }
 
-        return MemberDto.Response.builder()
+        return MemberResponseDto.builder()
                 .memberId(findMember.getMemberId())
                 .username(findMember.getUsername())
                 .nickname(findMember.getNickname())
@@ -175,7 +178,7 @@ public class MyPageService {
     }
 
     @Transactional
-    public MemberDto.Response deleteProfile(UserDetailsImpl userDetails) {
+    public MemberResponseDto deleteProfile(UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
@@ -189,7 +192,7 @@ public class MyPageService {
         imageService.deleteImage(originImage);
         findMember.deleteImg(null);
 
-        return MemberDto.Response.builder()
+        return MemberResponseDto.builder()
                         .memberId(findMember.getMemberId())
                         .username(findMember.getUsername())
                         .nickname(findMember.getNickname())

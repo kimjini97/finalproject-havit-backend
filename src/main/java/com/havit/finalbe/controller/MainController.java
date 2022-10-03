@@ -1,6 +1,6 @@
 package com.havit.finalbe.controller;
 
-import com.havit.finalbe.dto.GroupDto;
+import com.havit.finalbe.dto.response.AllGroupListResponseDto;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import com.havit.finalbe.service.MainService;
 import io.swagger.annotations.Api;
@@ -24,8 +24,8 @@ public class MainController {
 
     @Operation(summary = "그룹 검색", description = "그룹 제목, 그룹 작성자 닉네임으로 전체 그룹을 검색합니다.")
     @GetMapping("/search")
-    public List<GroupDto.AllGroupList> searchGroup(@RequestParam(value = "search") String searchWord,
-                                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public List<AllGroupListResponseDto> searchGroup(@RequestParam(value = "search") String searchWord,
+                                                     @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return mainService.searchGroup(searchWord, userDetails);
     }
 }

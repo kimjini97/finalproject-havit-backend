@@ -1,6 +1,8 @@
 package com.havit.finalbe.service;
 
-import com.havit.finalbe.dto.MemberDto;
+import com.havit.finalbe.dto.request.LoginRequestDto;
+import com.havit.finalbe.dto.request.SignupRequestDto;
+import com.havit.finalbe.dto.response.MemberResponseDto;
 import com.havit.finalbe.dto.response.MessageResponseDto;
 import com.havit.finalbe.entity.Member;
 import com.havit.finalbe.entity.RefreshToken;
@@ -30,7 +32,7 @@ public class MemberService {
 
 
     @Transactional
-    public MemberDto.Response signup(MemberDto.Signup signupRequestDto) {
+    public MemberResponseDto signup(SignupRequestDto signupRequestDto) {
         String username = signupRequestDto.getEmail();
         String password = signupRequestDto.getPassword();
         String nickname = signupRequestDto.getNickname();
@@ -47,7 +49,7 @@ public class MemberService {
                     .build();
             memberRepository.save(member);
 
-            MemberDto.Response signupInfo = MemberDto.Response.builder()
+            MemberResponseDto signupInfo = MemberResponseDto.builder()
                     .memberId(member.getMemberId())
                     .username(member.getUsername())
                     .nickname(member.getNickname())
@@ -62,7 +64,7 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberDto.Response login(MemberDto.Login loginRequestDto, HttpServletResponse response){
+    public MemberResponseDto login(LoginRequestDto loginRequestDto, HttpServletResponse response){
         String username = loginRequestDto.getEmail();
         Member member = isPresentMemberByUsername(username);
 
@@ -94,7 +96,7 @@ public class MemberService {
         // 헤더에 응답으로 보내줌
         TokenToHeaders(response, accessToken, refreshToken);
 
-        MemberDto.Response memberResponseDto = MemberDto.Response.builder()
+        MemberResponseDto memberResponseDto = MemberResponseDto.builder()
                 .memberId(member.getMemberId())
                 .username(member.getUsername())
                 .nickname(member.getNickname())
@@ -184,11 +186,11 @@ public class MemberService {
         }
     }
 
-    public MemberDto.Response getMemberInfo(UserDetailsImpl userDetails) {
+    public MemberResponseDto getMemberInfo(UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
 
-        return MemberDto.Response.builder()
+        return MemberResponseDto.builder()
                         .memberId(member.getMemberId())
                         .username(member.getUsername())
                         .nickname(member.getNickname())
