@@ -19,6 +19,9 @@ public class SubCommentResponseDto {
     @Schema(description = "댓글 id", example = "1")
     private Long commentId;
 
+    @Schema(description = "작성자 PK", example = "1")
+    private Long memberId;
+
     @Schema(description = "닉네임", example = "김병처리")
     private String nickname;
 
