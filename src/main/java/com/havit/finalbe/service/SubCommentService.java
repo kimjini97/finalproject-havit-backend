@@ -44,13 +44,14 @@ public class SubCommentService {
         subCommentRepository.save(subComment);
 
         return SubCommentResponseDto.builder()
-                        .subCommentId(subComment.getSubCommentId())
-                        .commentId(subComment.getComment().getCommentId())
-                        .nickname(subComment.getMember().getNickname())
-                        .profileImageId(subComment.getMember().getImageId())
-                        .content(subComment.getContent())
-                        .dateTime(serviceUtil.getDateFormatOfSubComment(subComment))
-                        .build();
+                .subCommentId(subComment.getSubCommentId())
+                .commentId(subComment.getComment().getCommentId())
+                .memberId(subComment.getMember().getMemberId())
+                .nickname(subComment.getMember().getNickname())
+                .profileImageId(subComment.getMember().getImageId())
+                .content(subComment.getContent())
+                .dateTime(serviceUtil.getDateFormatOfSubComment(subComment))
+                .build();
     }
 
     @Transactional
@@ -70,13 +71,14 @@ public class SubCommentService {
         subComment.update(subCommentDto);
 
         return SubCommentResponseDto.builder()
-                        .subCommentId(subComment.getSubCommentId())
-                        .commentId(subComment.getComment().getCommentId())
-                        .nickname(subComment.getMember().getNickname())
-                        .profileImageId(subComment.getMember().getImageId())
-                        .content(subComment.getContent())
-                        .dateTime(serviceUtil.getDateFormatOfSubComment(subComment))
-                        .build();
+                .subCommentId(subComment.getSubCommentId())
+                .commentId(subComment.getComment().getCommentId())
+                .memberId(subComment.getMember().getMemberId())
+                .nickname(subComment.getMember().getNickname())
+                .profileImageId(subComment.getMember().getImageId())
+                .content(subComment.getContent())
+                .dateTime(serviceUtil.getDateFormatOfSubComment(subComment))
+                .build();
     }
 
     @Transactional

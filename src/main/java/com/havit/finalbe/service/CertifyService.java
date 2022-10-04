@@ -67,6 +67,7 @@ public class CertifyService {
                         .imageId(certify.getImageId())
                         .longitude(certify.getLongitude())
                         .latitude(certify.getLatitude())
+                        .memberId(certify.getMember().getMemberId())
                         .nickname(certify.getMember().getNickname())
                         // leaderName
                         // crewName
@@ -98,6 +99,7 @@ public class CertifyService {
                         SubCommentResponseDto.builder()
                                 .subCommentId(subComment.getSubCommentId())
                                 .commentId(subComment.getComment().getCommentId())
+                                .memberId(subComment.getMember().getMemberId())
                                 .nickname(subComment.getMember().getNickname())
                                 .profileImageId(subComment.getMember().getImageId())
                                 .content(subComment.getContent())
@@ -109,6 +111,7 @@ public class CertifyService {
                     CommentResponseDto.builder()
                             .commentId(comment.getCommentId())
                             .certifyId(comment.getCertify().getCertifyId())
+                            .memberId(comment.getMember().getMemberId())
                             .nickname(comment.getMember().getNickname())
                             .profileImageId(comment.getMember().getImageId())
                             .content(comment.getContent())
@@ -124,6 +127,7 @@ public class CertifyService {
                         .imageId(certify.getImageId())
                         .longitude(certify.getLongitude())
                         .latitude(certify.getLatitude())
+                        .memberId(certify.getMember().getMemberId())
                         .nickname(certify.getMember().getNickname())
                         // leaderName
                         // crewName
@@ -161,6 +165,7 @@ public class CertifyService {
                         .imageId(certify.getImageId())
                         .longitude(certify.getLongitude())
                         .latitude(certify.getLatitude())
+                        .memberId(certify.getMember().getMemberId())
                         .nickname(certify.getMember().getNickname())
                         // leaderName
                         // crewName
