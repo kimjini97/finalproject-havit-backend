@@ -21,6 +21,9 @@ public class CommentResponseDto {
     @Schema(description = "인증샷 id", example = "1")
     private Long certifyId;
 
+    @Schema(description = "작성자 PK", example = "1")
+    private Long memberId;
+
     @Schema(description = "닉네임", example = "김병처리")
     private String nickname;
 

@@ -40,6 +40,9 @@ public class CertifyResponseDto {
     @Schema(description = "수정 일시", example = "2022-07-25T12:43:01.226062")
     private LocalDateTime modifiedAt;
 
+    @Schema(description = "작성자 PK", example = "1")
+    private Long memberId;
+
     @Schema(description = "닉네임", example = "김병처리")
     private String nickname;
 
