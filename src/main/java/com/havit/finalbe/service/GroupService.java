@@ -191,7 +191,7 @@ public class GroupService {
         }
 
         // 인증샷 목록 가져오기
-        List<Certify> certifyList = certifyRepository.findByGroups_GroupId(groupId);
+        List<Certify> certifyList = certifyRepository.findByGroups_GroupIdOrderByCreatedAtDesc(groupId);
         List<CertifyResponseDto> certifyResponseDtoList = new ArrayList<>();
 
         for (Certify certify : certifyList) {
