@@ -106,8 +106,6 @@ public class GroupService {
                 isFavorites = true;
             }
 
-            // 로그인한 멤버의 계급 확인 코드 ( 만약 추가하면 AllGroupListResponseDto 에도 필드 추가해야 함 )
-
             AllGroupListResponseDto allGroupListResponseDto = AllGroupListResponseDto.builder()
                     .groupId(groups.getGroupId())
                     .title(groups.getTitle())
@@ -147,8 +145,6 @@ public class GroupService {
                 isFavorites = true;
             }
 
-            // 로그인한 멤버의 계급 확인 코드 ( 만약 추가하면 AllGroupListResponseDto 에도 필드 추가해야 함 )
-
             AllGroupListResponseDto allGroupListResponseDto = AllGroupListResponseDto.builder()
                     .groupId(groups.getGroupId())
                     .title(groups.getTitle())
@@ -169,8 +165,6 @@ public class GroupService {
     public GroupResponseDto getGroupDetail(Long groupId, UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
-
-        // 만약 참여자면 어떤 계급인지 추출
 
         Groups groups = isPresentGroup(groupId);
         if (null == groups) {

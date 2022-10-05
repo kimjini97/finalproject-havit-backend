@@ -47,8 +47,6 @@ public class CertifyService {
 //            throw new IllegalArgumentException("참여 내역이 없습니다.");
 //        }
 
-        // 참여자면 leaderName 또는 crewName 추출하는 코드 추가 작성칸
-
         Certify certify = Certify.builder()
                 .member(member)
                 .groups(groups)
@@ -69,8 +67,6 @@ public class CertifyService {
                         .latitude(certify.getLatitude())
                         .memberId(certify.getMember().getMemberId())
                         .nickname(certify.getMember().getNickname())
-                        // leaderName
-                        // crewName
                         .profileImageId(certify.getMember().getImageId())
                         .createdAt(certify.getCreatedAt())
                         .modifiedAt(certify.getModifiedAt())
@@ -129,8 +125,6 @@ public class CertifyService {
                         .latitude(certify.getLatitude())
                         .memberId(certify.getMember().getMemberId())
                         .nickname(certify.getMember().getNickname())
-                        // leaderName
-                        // crewName
                         .profileImageId(certify.getMember().getImageId())
                         .createdAt(certify.getCreatedAt())
                         .modifiedAt(certify.getModifiedAt())
@@ -152,8 +146,6 @@ public class CertifyService {
             throw new CustomException(ErrorCode.MEMBER_NOT_MATCHED);
         }
 
-        // leaderName 또는 crewName 추출하는 코드 추가 작성칸
-
         Long originImage = certify.getImageId();
         imageService.deleteImage(originImage);
         certify.update(certifyRequestDto);
@@ -167,8 +159,6 @@ public class CertifyService {
                         .latitude(certify.getLatitude())
                         .memberId(certify.getMember().getMemberId())
                         .nickname(certify.getMember().getNickname())
-                        // leaderName
-                        // crewName
                         .profileImageId(certify.getMember().getImageId())
                         .createdAt(certify.getCreatedAt())
                         .modifiedAt(certify.getModifiedAt())
