@@ -46,12 +46,6 @@ public class CertifyResponseDto {
     @Schema(description = "닉네임", example = "김병처리")
     private String nickname;
 
-    @Schema(description = "리더명", example = "추장")
-    private String leaderName;
-
-    @Schema(description = "크루원명", example = "백성")
-    private String crewName;
-
     @Schema(description = "프로필 이미지", example = "1")
     private Long profileImageId;
 
