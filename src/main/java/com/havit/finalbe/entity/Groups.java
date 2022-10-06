@@ -27,16 +27,8 @@ public class Groups extends Timestamped{
     @Column(nullable = false)
     private String leaderName;
 
-//    @JoinColumn(name = "leader_member_id", nullable = false)
-//    @OneToMany
-//    private List<Member> leaderMember;
-
     @Column(nullable = false)
     private String crewName;
-
-//    @JoinColumn(name = "crew_member_id", nullable = false)
-//    @OneToMany
-//    private List<Member> crewMember;
 
     @Column
     private String startDate;
@@ -59,7 +51,6 @@ public class Groups extends Timestamped{
 
     public void update(GroupRequestDto groupRequestDto) {
         String title = groupRequestDto.getTitle();
-        String startDate = groupRequestDto.getStartDate();
         Long newImageId = groupRequestDto.getImageId();
         String content = groupRequestDto.getContent();
         String leaderName = groupRequestDto.getLeaderName();
@@ -67,9 +58,6 @@ public class Groups extends Timestamped{
 
         if (null != title) {
             this.title = title;
-        }
-        if (null != startDate) {
-            this.startDate = startDate;
         }
         if (null != newImageId) {
             this.imageId = newImageId;

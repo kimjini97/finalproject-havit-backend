@@ -32,9 +32,6 @@ public class GroupResponseDto {
     @Schema(description = "크루원명", example = "백성")
     private String crewName;
 
-    @Schema(description = "개시일", example = "2022-07-25T12:43:01.226062")
-    private String startDate;
-
     @Schema(description = "그룹 내용", example = "아침 6시에 기상하는 습관을 기르고 싶은 사람들의 모임입니다!")
     private String content;
 

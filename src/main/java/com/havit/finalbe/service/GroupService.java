@@ -40,7 +40,6 @@ public class GroupService {
         Groups groups = Groups.builder()
                 .member(member)
                 .title(groupRequestDto.getTitle())
-                .startDate(groupRequestDto.getStartDate())
                 .imageId(groupRequestDto.getImageId())
                 .content(groupRequestDto.getContent())
                 .leaderName(groupRequestDto.getLeaderName())
@@ -85,7 +84,6 @@ public class GroupService {
                         .writer(groups.getMember())
                         .leaderName(groups.getLeaderName())
                         .crewName(groups.getCrewName())
-                        .startDate(groups.getStartDate())
                         .content(groups.getContent())
                         .groupTag(tagListByGroup)
                         .createdAt(groups.getCreatedAt())
@@ -217,7 +215,6 @@ public class GroupService {
                         .writer(groups.getMember())
                         .leaderName(groups.getLeaderName())
                         .crewName(groups.getCrewName())
-                        .startDate(groups.getStartDate())
                         .content(groups.getContent())
                         .imageId(groups.getImageId())
                         .createdAt(groups.getCreatedAt())
@@ -245,7 +242,9 @@ public class GroupService {
         }
 
         Long originImage = groups.getImageId();
-        imageService.deleteImage(originImage);
+        if (!originImage.equals(groupRequestDto.getImageId())) {
+            imageService.deleteImage(originImage);
+        }
         groups.update(groupRequestDto);
 
         if (null == groupRequestDto.getGroupTag()) {
@@ -257,7 +256,6 @@ public class GroupService {
                             .writer(groups.getMember())
                             .leaderName(groups.getLeaderName())
                             .crewName(groups.getCrewName())
-                            .startDate(groups.getStartDate())
                             .content(groups.getContent())
                             .groupTag(tagListByGroup)
                             .createdAt(groups.getCreatedAt())
@@ -298,7 +296,6 @@ public class GroupService {
                         .writer(groups.getMember())
                         .leaderName(groups.getLeaderName())
                         .crewName(groups.getCrewName())
-                        .startDate(groups.getStartDate())
                         .content(groups.getContent())
                         .groupTag(tagListByGroup)
                         .createdAt(groups.getCreatedAt())
