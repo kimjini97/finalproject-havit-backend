@@ -42,10 +42,10 @@ public class CertifyService {
         Groups findGroup = groupRepository.findByGroupId(groups.getGroupId());
         Long memberId = findGroup.getMember().getMemberId();
 
-//        if (participateRepository.findByGroups_GroupIdAndMember_MemberId(groups.getGroupId(), member.getMemberId()).isEmpty()
-//        && !memberId.equals(member.getMemberId())) {
-//            throw new IllegalArgumentException("참여 내역이 없습니다.");
-//        }
+        if (participateRepository.findByGroups_GroupIdAndMember_MemberId(groups.getGroupId(), member.getMemberId()).isEmpty()
+        && !memberId.equals(member.getMemberId())) {
+            throw new CustomException(ErrorCode.PARTICIPATION_NOT_FOUND);
+        }
 
         Certify certify = Certify.builder()
                 .member(member)
@@ -147,7 +147,9 @@ public class CertifyService {
         }
 
         Long originImage = certify.getImageId();
-        imageService.deleteImage(originImage);
+        if (!originImage.equals(certifyRequestDto.getImageId())) {
+            imageService.deleteImage(originImage);
+        }
         certify.update(certifyRequestDto);
 
         return CertifyResponseDto.builder()
