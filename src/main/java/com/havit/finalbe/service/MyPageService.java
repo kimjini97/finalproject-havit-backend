@@ -51,10 +51,15 @@ public class MyPageService {
     public List<AllGroupListResponseDto> getMyGroup(UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
-        List<Groups> myGroups = groupRepository.findAllByMember_MemberId(member.getMemberId());
+//        List<Groups> myGroups = groupRepository.findAllByMember_MemberId(member.getMemberId());
+        List<Groups> myGroups = new ArrayList<>();
         List<Participate> myParticipation = participateRepository.findAllByMember_MemberId(member.getMemberId());
 
-        if (myGroups.isEmpty() && myParticipation.isEmpty()) {
+//        if (myGroups.isEmpty() && myParticipation.isEmpty()) {
+//            throw new CustomException(ErrorCode.PARTICIPATION_NOT_FOUND);
+//        }
+
+        if (myParticipation.isEmpty()) {
             throw new CustomException(ErrorCode.PARTICIPATION_NOT_FOUND);
         }
 

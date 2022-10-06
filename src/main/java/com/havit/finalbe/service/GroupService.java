@@ -72,6 +72,12 @@ public class GroupService {
 
         List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
 
+        Participate participate = Participate.builder()
+                .groups(saveGroups)
+                .member(member)
+                .build();
+        participateRepository.save(participate);
+
         return GroupResponseDto.builder()
                         .groupId(groups.getGroupId())
                         .title(groups.getTitle())
