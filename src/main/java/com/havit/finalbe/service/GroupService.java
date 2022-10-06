@@ -242,7 +242,9 @@ public class GroupService {
         }
 
         Long originImage = groups.getImageId();
-        imageService.deleteImage(originImage);
+        if (!originImage.equals(groupRequestDto.getImageId())) {
+            imageService.deleteImage(originImage);
+        }
         groups.update(groupRequestDto);
 
         if (null == groupRequestDto.getGroupTag()) {
