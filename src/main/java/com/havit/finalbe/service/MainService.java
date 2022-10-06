@@ -84,24 +84,32 @@ public class MainService {
         calendar.add(Calendar.DATE, -1);
         LocalDate yesterday = LocalDate.parse(dateFormat.format(calendar.getTime()));
 
-        // 내가 작성한 그룹, 참여한 그룹 불러오기
+        // 내가 참여한 그룹 불러오기
         List<Participate> getMyGroupList = participateRepository.findAllByMember_MemberId(member.getMemberId());
-        List<Groups> getMyGroups = groupRepository.findAllByMember_MemberId(member.getMemberId());
 
-        if (getMyGroupList.isEmpty() && getMyGroups.isEmpty()) {
+        if (getMyGroupList.isEmpty()) {
             throw new CustomException(ErrorCode.PARTICIPATION_NOT_FOUND);
         }
 
+        // 내가 작성한 그룹 불러오기
+//        List<Groups> getMyGroups = groupRepository.findAllByMember_MemberId(member.getMemberId());
+
+//        if (getMyGroupList.isEmpty() && getMyGroups.isEmpty()) {
+//            throw new CustomException(ErrorCode.PARTICIPATION_NOT_FOUND);
+//        }
+
+
         List<Groups> getAllGroupList = new ArrayList<>();
 
-        // 내가 작성한 그룹, 참여한 그룹에서 그룹 객체만 따로 빼기
+        // 내가 참여한 그룹에서 그룹 객체만 따로 빼기
         for (Participate myParticipate : getMyGroupList) {
             getAllGroupList.add(myParticipate.getGroups());
         }
 
-        for (Groups myGroups : getMyGroups) {
-            getAllGroupList.add(myGroups);
-        }
+        // 내가 작성한 그룹에서 그룹 객체만 따로 빼기
+//        for (Groups myGroups 성 getMyGroups) {
+//            getAllGroupList.add(myGroups);
+//        }
 
         List<UnchallengerResponseDto> unchallengerResponseDtoList = new ArrayList<>();
 
