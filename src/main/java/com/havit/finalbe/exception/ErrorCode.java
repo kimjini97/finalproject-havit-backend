@@ -52,7 +52,10 @@ public enum ErrorCode {
 
     // 이미지
     IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, "삭제할 이미지가 없습니다."),
-    NO_IMAGE_ATTACHED(HttpStatus.NOT_FOUND, "첨부된 이미지가 없습니다.");
+    NO_IMAGE_ATTACHED(HttpStatus.NOT_FOUND, "첨부된 이미지가 없습니다."),
+
+    // 메인 : 참여하지 않은 사람 목록
+    CHALLENGERS_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 그룹의 참여자가 없습니다.");
     /* 400 BAD_REQUEST : 잘못된 요청 */
     /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
     //
