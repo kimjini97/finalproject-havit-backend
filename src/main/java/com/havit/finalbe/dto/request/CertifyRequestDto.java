@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 @Builder
 @Getter
 @AllArgsConstructor
@@ -16,9 +18,11 @@ public class CertifyRequestDto {
     @Schema(description = "그룹 id", example = "1")
     private Long groupId;
 
+    @NotBlank
     @Schema(description = "제목", example = "6시 기상 완료")
     private String title;
 
+    @NotBlank
     @Schema(description = "이미지 파일", example = "1")
     private Long imageId;
 
