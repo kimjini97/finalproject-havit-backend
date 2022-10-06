@@ -147,7 +147,9 @@ public class CertifyService {
         }
 
         Long originImage = certify.getImageId();
-        imageService.deleteImage(originImage);
+        if (!originImage.equals(certifyRequestDto.getImageId())) {
+            imageService.deleteImage(originImage);
+        }
         certify.update(certifyRequestDto);
 
         return CertifyResponseDto.builder()
