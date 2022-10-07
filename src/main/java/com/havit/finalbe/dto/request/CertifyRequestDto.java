@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Builder
 @Getter
@@ -22,7 +24,7 @@ public class CertifyRequestDto {
     @Schema(description = "제목", example = "6시 기상 완료")
     private String title;
 
-    @NotBlank
+    @NotNull
     @Schema(description = "이미지 파일", example = "1")
     private Long imageId;
 
