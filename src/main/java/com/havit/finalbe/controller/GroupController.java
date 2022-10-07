@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.havit.finalbe.service.GroupService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Api(tags = {"그룹 API"})
@@ -24,7 +25,7 @@ public class GroupController {
 
     @Operation(summary = "그룹 생성", description = "그룹 관련 정보 기입후 그룹이 생성 됩니다.")
     @PostMapping(value = "/")
-    public GroupResponseDto createGroup(@RequestBody GroupRequestDto groupRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public GroupResponseDto createGroup(@RequestBody @Valid GroupRequestDto groupRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return groupService.createGroup(groupRequestDto, userDetails);
     }
 
