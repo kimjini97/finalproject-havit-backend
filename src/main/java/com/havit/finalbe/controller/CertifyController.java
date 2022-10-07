@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 
 @Api(tags = {"인증샷 API"})
 @RestController
@@ -21,7 +23,7 @@ public class CertifyController {
 
     @Operation(summary = "인증 생성", description = "인증 관련 정보 기입 후 인증이 생성됩니다.")
     @PostMapping(value = "/")
-    public CertifyResponseDto createCertify(@RequestBody CertifyRequestDto certifyRequestDto,
+    public CertifyResponseDto createCertify(@RequestBody @Valid CertifyRequestDto certifyRequestDto,
                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return certifyService.createCertify(certifyRequestDto, userDetails);
     }
