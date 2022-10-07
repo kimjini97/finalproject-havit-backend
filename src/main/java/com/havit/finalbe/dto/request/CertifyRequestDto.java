@@ -20,11 +20,11 @@ public class CertifyRequestDto {
     @Schema(description = "그룹 id", example = "1")
     private Long groupId;
 
-    @NotBlank
+    @NotBlank(message = "제목은 빈 칸일 수 없습니다.")
     @Schema(description = "제목", example = "6시 기상 완료")
     private String title;
 
-    @NotNull
+    @NotNull(message = "이미지는 빈 칸일 수 없습니다.")
     @Schema(description = "이미지 파일", example = "1")
     private Long imageId;
 
