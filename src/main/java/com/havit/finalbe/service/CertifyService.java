@@ -30,6 +30,7 @@ public class CertifyService {
     private final ImageService imageService;
     private final ServiceUtil serviceUtil;
 
+
     @Transactional
     public CertifyResponseDto createCertify(CertifyRequestDto certifyRequestDto, UserDetailsImpl userDetails) {
 

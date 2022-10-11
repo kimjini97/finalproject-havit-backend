@@ -42,7 +42,7 @@ public class MemberController {
     }
 
     @Operation(summary = "토큰 재발급", description = "토큰 재발급합니다")
-    @PostMapping("/auth/reissue")
+    @PostMapping("/reissue")
     public String reissue(HttpServletRequest request, HttpServletResponse response) {
         return memberService.reissue(request,response);
     }
