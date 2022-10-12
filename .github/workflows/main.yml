@@ -63,7 +63,7 @@ jobs:
       run: |
         aws deploy create-deployment \
         --application-name springboot-intro \
-        --deployment-group-name ${{ secrets.AWS_S3_BUCKET_ADDRESS }}t \
+        --deployment-group-name cicd-havit \
         --file-exists-behavior OVERWRITE \
-        --s3-location bucket=springboot-intro-build,bundleType=zip,key=springboot-intro-build.zip \
+        --s3-location bucket=${{ secrets.AWS_S3_BUCKET_ADDRESS }},bundleType=zip,key=springboot-intro-build.zip \
         --region ap-northeast-2
