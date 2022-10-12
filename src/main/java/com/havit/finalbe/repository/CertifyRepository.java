@@ -10,4 +10,5 @@ import java.util.List;
 public interface CertifyRepository extends JpaRepository<Certify, Long> {
     List<Certify> findByGroups_GroupIdOrderByCreatedAtDesc(Long groupId);
     List<Certify> findByCreatedDateAndMember_MemberIdAndGroups_GroupId(LocalDate yesterday, Long memberId, Long groupId);
+    List<Certify> findAllByMember_MemberId(Long memberId);
 }

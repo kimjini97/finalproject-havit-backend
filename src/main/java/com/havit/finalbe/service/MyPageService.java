@@ -106,7 +106,9 @@ public class MyPageService {
         Long imageId = myPageDto.getImageId();
         if (null == imageId) {
             imageId = findMember.getImageId();
-        } else {
+        }
+
+        if (!findMember.getImageId().equals(imageId)) {
             imageService.deleteImage(findMember.getImageId());
         }
 
