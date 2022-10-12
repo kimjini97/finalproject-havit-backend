@@ -1,24 +1,20 @@
-#!/bin/bash
-BUILD_JAR=$(ls /home/ec2-user/cicd-havit/build/libs/*.jar)
-JAR_NAME=$(basename $BUILD_JAR)
-echo "> build : $JAR_NAME" >> /home/ec2-user/deploy.log
+REPOSITORY=/home/ec2-user/app/deploy
+cd $REPOSITORY
 
-echo "> build 파일 복사" >> /home/ec2-user/deploy.log
-DEPLOY_PATH=/home/ec2-user/
-cp $BUILD_JAR $DEPLOY_PATH
+APP_NAME=curriculum #1
+JAR_NAME=$(ls $REPOSITORY/build/libs/ | grep '.jar' | tail -n 1)
+JAR_PATH=$REPOSITORY/build/libs/$JAR_NAME
 
-echo "> 실행중인 애플리케이션 pid 확인" >> /home/ec2-user/deploy.log
-CURRENT_PID=$(pgrep -f $JAR_NAME)
+CURRENT_PID=$(pgrep -f $APP_NAME)
 
-if [ -z $CURRENT_PID ]
+if [ -z $CURRENT_PID ] #2
 then
-  echo "> 실행중인 애플리케이션이 없으므로 종료하지 않음" >> /home/ec2-user/deploy.log
+  echo "> 현재 구동중인 애플리케이션이 없으므로 종료하지 않습니다."
 else
-  echo "> kill -15 $CURRENT_PID" >> /home/ec2-user/deploy.log
-  kill -15 $CURRENT_PID
-  sleep 10
+  echo "> kill -15 $CURRENT_PID"
+  sudo kill -15 $CURRENT_PID
+  sleep 5
 fi
 
-DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
-echo "> DEPLOY_JAR 배포"    >> /home/ec2-user/deploy.log
-nohup java -jar $DEPLOY_JAR >> /home/ec2-user/deploy.log 2>/home/ec2-user/deploy_err.log &
+echo "> $JAR_PATH 배포" #3
+nohup java -jar /home/ec2-user/app/deploy/build/libs/curriculum-1.0.jar --spring.config.location=/home/ec2-user/application.yml > /dev/null 2> /dev/null < /dev/null &
