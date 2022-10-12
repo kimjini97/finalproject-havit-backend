@@ -43,7 +43,7 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://test-8-bucket/$GITHUB_SHA.zip
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{secrets.AWS_S3_BUCKET_NAME}}/$GITHUB_SHA.zip
       # 새로 추가 된 부분
       - name: Code Deploy
-        run: aws deploy create-deployment --application-name Gitgub-Actions-Deploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name Gitgub-Actions-Group --s3-location bucket=test-8-bucket,bundleType=zip,key=$GITHUB_SHA.zip
+        run: aws deploy create-deployment --application-name Gitgub-Actions-Deploy --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name Gitgub-Actions-Group --s3-location bucket=${{secrets.AWS_S3_BUCKET_NAME}},bundleType=zip,key=$GITHUB_SHA.zip
