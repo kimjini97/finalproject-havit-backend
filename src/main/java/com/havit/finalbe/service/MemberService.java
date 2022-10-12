@@ -2,15 +2,12 @@ package com.havit.finalbe.service;
 
 import com.havit.finalbe.dto.request.LoginRequestDto;
 import com.havit.finalbe.dto.request.SignupRequestDto;
-import com.havit.finalbe.dto.response.MemberResponseDto;
-import com.havit.finalbe.dto.response.MessageResponseDto;
-import com.havit.finalbe.entity.Member;
-import com.havit.finalbe.entity.RefreshToken;
+import com.havit.finalbe.dto.response.*;
+import com.havit.finalbe.entity.*;
 import com.havit.finalbe.exception.*;
 import com.havit.finalbe.jwt.util.JwtUtil;
 import com.havit.finalbe.jwt.util.TokenProperties;
-import com.havit.finalbe.repository.MemberRepository;
-import com.havit.finalbe.repository.RefreshTokenRepository;
+import com.havit.finalbe.repository.*;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -26,6 +25,11 @@ import java.util.regex.Pattern;
 @AllArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final GroupRepository groupRepository;
+    private final CertifyRepository certifyRepository;
+    private final ParticipateRepository participateRepository;
+    private final FavoriteRepository favoriteRepository;
+    private final ServiceUtil serviceUtil;
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
@@ -186,9 +190,29 @@ public class MemberService {
         }
     }
 
-    public MemberResponseDto getMemberInfo(UserDetailsImpl userDetails) {
+    public MemberResponseDto getMyInfo(UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
+
+        List<Certify> myCertifyList = certifyRepository.findAllByMember_MemberId(member.getMemberId());
+        List<CertifyResponseDto> certifyResponseDtoList = new ArrayList<>();
+
+        for (Certify certify : myCertifyList) {
+            certifyResponseDtoList.add(
+                    CertifyResponseDto.builder()
+                            .certifyId(certify.getCertifyId())
+                            .groupId(certify.getGroups().getGroupId())
+                            .title(certify.getTitle())
+                            .imageId(certify.getImageId())
+                            .longitude(certify.getLongitude())
+                            .latitude(certify.getLatitude())
+                            .nickname(certify.getMember().getNickname())
+                            .profileImageId(certify.getMember().getImageId())
+                            .createdAt(certify.getCreatedAt())
+                            .modifiedAt(certify.getModifiedAt())
+                            .build()
+            );
+        }
 
         return MemberResponseDto.builder()
                         .memberId(member.getMemberId())
@@ -198,7 +222,78 @@ public class MemberService {
                         .introduce(member.getIntroduce())
                         .createdAt(member.getCreatedAt())
                         .modifiedAt(member.getModifiedAt())
+                        .certifyList(certifyResponseDtoList)
                         .build();
+    }
+
+    public MemberProfileResponseDto getMemberInfo(Long memberId) {
+
+        Member member = memberRepository.findMemberByMemberId(memberId);
+
+        List<Groups> myGroups = new ArrayList<>();
+        List<AllGroupListResponseDto> allMyGroupList = new ArrayList<>();
+
+        List<Participate> myParticipation = participateRepository.findAllByMember_MemberId(memberId);
+
+        for (Participate participate : myParticipation) {
+            Groups myJoinGroups = groupRepository.findByGroupId(participate.getGroups().getGroupId());
+            myGroups.add(myJoinGroups);
+        }
+
+        for (Groups groups : myGroups) {
+            boolean isFavorites = false;
+            int memberCount = participateRepository.countByGroups_GroupId(groups.getGroupId());
+            List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
+            Favorite checkFavorite = favoriteRepository
+                    .findByMember_MemberIdAndGroups_GroupId(member.getMemberId(), groups.getGroupId());
+            if (null != checkFavorite) {
+                isFavorites = true;
+            }
+
+            AllGroupListResponseDto MyGroupDto = AllGroupListResponseDto.builder()
+                    .groupId(groups.getGroupId())
+                    .title(groups.getTitle())
+                    .imageId(groups.getImageId())
+                    .memberCount(memberCount)
+                    .groupTag(tagListByGroup)
+                    .createdAt(groups.getCreatedAt())
+                    .modifiedAt(groups.getModifiedAt())
+                    .favorite(isFavorites)
+                    .build();
+            allMyGroupList.add(MyGroupDto);
+        }
+
+        List<Certify> myCertifyList = certifyRepository.findAllByMember_MemberId(memberId);
+        List<CertifyResponseDto> certifyResponseDtoList = new ArrayList<>();
+
+        for (Certify certify : myCertifyList) {
+            certifyResponseDtoList.add(
+                    CertifyResponseDto.builder()
+                            .certifyId(certify.getCertifyId())
+                            .groupId(certify.getGroups().getGroupId())
+                            .title(certify.getTitle())
+                            .imageId(certify.getImageId())
+                            .longitude(certify.getLongitude())
+                            .latitude(certify.getLatitude())
+                            .nickname(certify.getMember().getNickname())
+                            .profileImageId(certify.getMember().getImageId())
+                            .createdAt(certify.getCreatedAt())
+                            .modifiedAt(certify.getModifiedAt())
+                            .build()
+            );
+        }
+
+        return MemberProfileResponseDto.builder()
+                .memberId(member.getMemberId())
+                .username(member.getUsername())
+                .nickname(member.getNickname())
+                .imageId(member.getImageId())
+                .introduce(member.getIntroduce())
+                .createdAt(member.getCreatedAt())
+                .modifiedAt(member.getModifiedAt())
+                .groupList(allMyGroupList)
+                .certifyList(certifyResponseDtoList)
+                .build();
     }
 
     private boolean emailDuplicateCheck(String email){
