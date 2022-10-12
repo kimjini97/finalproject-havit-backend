@@ -2,7 +2,7 @@ name: havit-deploy
 
 on:
   push:
-    branches: [havit-deploy]
+    branches: [main]
     
 permissions:
   contents: read
