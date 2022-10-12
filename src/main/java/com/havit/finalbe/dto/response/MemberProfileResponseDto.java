@@ -13,8 +13,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Schema(description = "멤버 응답 DTO")
-public class MemberResponseDto {
+@Schema(description = "멤버별 프로필 응답 DTO")
+public class MemberProfileResponseDto {
 
     @Schema(description = "멤버 id", example = "1")
     private Long memberId;
@@ -37,6 +37,9 @@ public class MemberResponseDto {
     @Schema(description = "수정 일시", example = "2022-07-25T12:43:01.226062")
     private LocalDateTime modifiedAt;
 
-    @Schema(description = "내가 작성한 인증샷 목록")
+    @Schema(description = "해당 멤버가 참여한 그룹 목록")
+    private List<AllGroupListResponseDto> groupList;
+
+    @Schema(description = "해당 멤버가 작성한 인증샷 목록")
     private List<CertifyResponseDto> certifyList;
 }
