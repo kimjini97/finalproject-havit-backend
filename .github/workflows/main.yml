@@ -68,4 +68,3 @@ jobs:
         --s3-location bucket=${{ secrets.AWS_S3_BUCKET_NAME }},bundleType=zip,key=springboot-intro-build.zip \
         --region ap-northeast-2
         
-        
