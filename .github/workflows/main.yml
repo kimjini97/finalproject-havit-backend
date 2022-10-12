@@ -46,4 +46,4 @@ jobs:
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://${{secrets.AWS_S3_BUCKET_NAME}}/$GITHUB_SHA.zip
       # 새로 추가 된 부분
       - name: Code Deploy
-        run: aws deploy create-deployment --application-name springboot-intro --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name Gitgub-Actions-Group --s3-location bucket=${{secrets.AWS_S3_BUCKET_NAME}},bundleType=zip,key=$GITHUB_SHA.zip
+        run: aws deploy create-deployment --application-name springboot-intro --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name cicd-havit --s3-location bucket=${{secrets.AWS_S3_BUCKET_NAME}},bundleType=zip,key=$GITHUB_SHA.zip
