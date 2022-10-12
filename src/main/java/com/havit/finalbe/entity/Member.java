@@ -19,6 +19,7 @@ public class Member extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
+    
 
     @Column(nullable = false)
     private String username;
