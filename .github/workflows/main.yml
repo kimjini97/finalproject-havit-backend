@@ -32,18 +32,6 @@ jobs:
           echo $JWT_PROPERTIES | base64 --decode > ./src/main/resources/application-jwt.properties
         env:
           JWT_PROPERTIES: ${{secrets.JWT_PROPERTIES}}
-          
-      - name: Add Application Property
-        run: |
-          echo $MYSQLDB_PROPERTIES | base64 --decode > ./src/main/resources/application-mysqlDB.properties
-        env:
-          MYSQLDB_PROPERTIES: ${{secrets.MYSQLDB_PROPERTIES}}
-          
-      - name: Add Application Property
-        run: |
-          echo $S3BUCKET_PROPERTIES | base64 --decode > ./src/main/resources/application-S3bucket.properties
-        env:
-          S3BUCKET_PROPERTIES: ${{secrets.S3BUCKET_PROPERTIES}}
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
