@@ -29,9 +29,11 @@ jobs:
           
       - name: Add Application Property
         run: |
-          echo $JWT_PROPERTIES | base64 --decode > ./src/main/resources/application-jwt.properties
+          echo $JWT_PROPERTIES | base64 --decode > ./src/main/resources/application.properties
         env:
           JWT_PROPERTIES: ${{secrets.JWT_PROPERTIES}}
+          
+      
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
