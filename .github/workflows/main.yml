@@ -22,19 +22,6 @@ jobs:
         with:
           java-version: 11
 
-      # application.properties 추가정보 입력 시작
-      - name: Create ./src/main/resources/
-        run: |
-          mkdir -p  ./src/main/resources/
-          
-      - name: Add Application Property
-        run: |
-          echo $JWT_PROPERTIES | ./src/main/resources/application-jwt.properties
-        env:
-          JWT_PROPERTIES: ${{secrets.JWT_PROPERTIES}}
-          
-      
-
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
