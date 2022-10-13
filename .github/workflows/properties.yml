@@ -5,10 +5,9 @@ permissions:
   pull-requests: write
 
 on:
-  push:
+  pull_request:
     branches:
       - main
-  workflow_dispatch:
 
 env:
   S3_BUCKET_NAME: ${{secrets.AWS_S3_BUCKET_NAME}}
