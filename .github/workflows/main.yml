@@ -29,7 +29,7 @@ jobs:
           
       - name: Add Application Property
         run: |
-          echo $JWT_PROPERTIES | base64 --decode > ./src/main/resources/jwt.properties
+          echo $JWT_PROPERTIES | base64 --decode > touch ./src/main/resources/application-jwt.properties
         env:
           JWT_PROPERTIES: ${{secrets.JWT_PROPERTIES}}
           
