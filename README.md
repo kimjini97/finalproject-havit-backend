@@ -19,7 +19,6 @@
 ### Back-end
 [<img src="https://img.shields.io/badge/부리더 김성준-181717?style=flat&logo=GitHub&logoColor=white"/>](https://github.com/namuneo)
 [<img src="https://img.shields.io/badge/김진이-181717?style=flat&logo=GitHub&logoColor=white"/>](https://github.com/kimjini97)
-
 <br>
 <br>
 <br>
