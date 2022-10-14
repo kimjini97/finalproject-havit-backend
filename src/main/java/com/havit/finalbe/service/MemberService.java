@@ -41,9 +41,9 @@ public class MemberService {
         String password = signupRequestDto.getPassword();
         String nickname = signupRequestDto.getNickname();
 
-        if (!emailStrCheck(username)) {throw new CustomException(ErrorCode.INVALID_EMAIL);}
+//        if (!emailStrCheck(username)) {throw new CustomException(ErrorCode.INVALID_EMAIL);}
         if (!emailDuplicateCheck(username)) {throw new CustomException(ErrorCode.DUPLICATE_EMAIL);}
-        if (!passwordStrCheck(password)) {throw new CustomException(ErrorCode.INVALID_PASSWORD);}
+//        if (!passwordStrCheck(password)) {throw new CustomException(ErrorCode.INVALID_PASSWORD);}
         else {
 
             Member member = Member.builder()
@@ -303,14 +303,14 @@ public class MemberService {
 
     // 회원가입, 로그인 조건 검증
 
-    private boolean emailStrCheck (String email){
-//        return Pattern.matches("^[a-zA-Z0-9]{1,64}+@[a-zA-Z0-9]{1,100}+$", email);
-        return Pattern.matches("^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z]){1,64}@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$", email);
-    }
-
-    private boolean passwordStrCheck (String password){
-        return Pattern.matches("^(?=.*\\d)[a-z\\d!@#$%^&*]{8,}$", password);
-    }
+//    private boolean emailStrCheck (String email){
+////        return Pattern.matches("^[a-zA-Z0-9]{1,64}+@[a-zA-Z0-9]{1,100}+$", email);
+//        return Pattern.matches("^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z]){1,64}@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$", email);
+//    }
+//
+//    private boolean passwordStrCheck (String password){
+//        return Pattern.matches("^(?=.*\\d)[a-z\\d!@#$%^&*]{8,}$", password);
+//    }
 
     @Transactional(readOnly = true)
     public Member isPresentMemberByUsername(String username) {
