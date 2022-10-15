@@ -108,8 +108,10 @@ public class MyPageService {
             imageId = findMember.getImageId();
         }
 
-        if (!findMember.getImageId().equals(imageId)) {
-            imageService.deleteImage(findMember.getImageId());
+        if (null != findMember.getImageId()) {
+            if (!findMember.getImageId().equals(imageId)) {
+                imageService.deleteImage(findMember.getImageId());
+            }
         }
 
         String nickname = myPageDto.getNickname();
