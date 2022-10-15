@@ -101,7 +101,7 @@ public class NotificationService {
     @Transactional
     public NotificationsResponseDto findAllByMemberId(UserDetailsImpl userDetails) {
         List<NotificationResponseDto> notificationResponseDtoList =
-                notificationRepository.findAllByReceiver_MemberId(userDetails.getMember().getMemberId()).stream()
+                notificationRepository.findAllByReceiver_MemberIdOrderByCreatedAtDesc(userDetails.getMember().getMemberId()).stream()
                         .map(NotificationResponseDto::from)
                         .collect(Collectors.toList());
 
@@ -118,5 +118,9 @@ public class NotificationService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOTIFICATION_NOT_FOUND));
         notification.read();
         return notification.isRead();
+    }
+
+    public void deleteNotification(Long notificationId) {
+        notificationRepository.deleteById(notificationId);
     }
 }
