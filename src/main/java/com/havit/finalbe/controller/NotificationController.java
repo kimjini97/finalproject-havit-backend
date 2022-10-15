@@ -39,4 +39,10 @@ public class NotificationController {
     public boolean isReadNotification(@PathVariable Long notificationId) {
         return notificationService.isReadNotification(notificationId);
     }
+
+    // 해당 알림 DB 에서 삭제
+    @DeleteMapping("/api/auth/notification/{notificationId}")
+    public void deleteNotification(@PathVariable Long notificationId) {
+        notificationService.deleteNotification(notificationId);
+    }
 }
