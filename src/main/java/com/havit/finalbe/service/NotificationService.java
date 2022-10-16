@@ -33,8 +33,9 @@ public class NotificationService {
 
     private static final Long DEFAULT_TIMEOUT = 60L * 1000L * 60L;
 
-    public SseEmitter subscribe(UserDetailsImpl userDetails, String lastEventId) {
-        Long memberId = userDetails.getMember().getMemberId();
+    public SseEmitter subscribe(Long memberId, String lastEventId) {
+//        UserDetailsImpl userDetails
+//        Long memberId = userDetails.getMember().getMemberId();
         String emitterId = memberId + "_" + System.currentTimeMillis();
 
         // 생성된 emitterId 를 기반으로 emitter 를 저장
