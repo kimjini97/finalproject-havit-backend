@@ -50,6 +50,7 @@ public class WebSecurityConfig {
 
         http.authorizeRequests((authz)->authz
                 .antMatchers("/signup/**").permitAll()
+                .antMatchers("/subscribe/**").permitAll()
                 .anyRequest().permitAll());
 
         return http.build();

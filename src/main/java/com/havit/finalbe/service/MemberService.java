@@ -29,6 +29,7 @@ public class MemberService {
     private final CertifyRepository certifyRepository;
     private final ParticipateRepository participateRepository;
     private final FavoriteRepository favoriteRepository;
+    private final EmitterRepository emitterRepository;
     private final ServiceUtil serviceUtil;
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
@@ -136,6 +137,8 @@ public class MemberService {
             case TokenProperties.EXPIRED:
                 RefreshToken refreshTokenFromDB = jwtUtil.getRefreshTokenFromDB(member);
                 if (refreshTokenFromDB != null && refreshToken.equals(refreshTokenFromDB.getTokenValue())) {
+                    emitterRepository.deleteAllEmittersStartWithMemberId(String.valueOf(member.getMemberId()));
+                    emitterRepository.deleteAllEventCacheStartWithMemberId(String.valueOf(member.getMemberId()));
                     refreshTokenRepository.delete(refreshTokenFromDB);
                     MessageResponseDto messageResponseDto = MessageResponseDto.builder()
                             .message("로그아웃 되었습니다.")

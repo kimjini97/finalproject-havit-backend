@@ -16,11 +16,18 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     // 로그인한 유저 SSE 연결
-    @GetMapping(value = "/api/auth/subscribe", produces = "text/event-stream")
-    public SseEmitter subscribe(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                @RequestParam(value = "lastEventId", required = false, defaultValue = "") String lastEventId) {
-        return notificationService.subscribe(userDetails, lastEventId);
+//    @GetMapping(value = "/api/auth/subscribe", produces = "text/event-stream")
+//    public SseEmitter subscribe(@AuthenticationPrincipal UserDetailsImpl userDetails,
+//                                @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
+//        return notificationService.subscribe(userDetails, lastEventId);
+//    }
+
+    @GetMapping(value = "/subscribe/{memberId}", produces = "text/event-stream")
+    public SseEmitter subscribe(@PathVariable Long memberId,
+                                @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
+        return notificationService.subscribe(memberId, lastEventId);
     }
+
 
     // 알림 보내기
     @PostMapping("/api/auth/notification")
