@@ -32,11 +32,17 @@ public class GroupController {
         return groupService.createGroup(groupRequestDto, userDetails);
     }
 
+    @Operation(summary = "전체 그룹 조회 무한스크롤", description = "생성된 전체 그룹을 조회합니다.")
+    @GetMapping("/page")
+    public List<AllGroupListResponseDto> getAllGroupPaging(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                     @PageableDefault(size = 5) Pageable pageable) {
+        return groupService.getAllGroupPaging(userDetails, pageable);
+    }
+
     @Operation(summary = "전체 그룹 조회", description = "생성된 전체 그룹을 조회합니다.")
     @GetMapping("/")
-    public List<AllGroupListResponseDto> getAllGroup(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                     @PageableDefault(size = 5) Pageable pageable) {
-        return groupService.getAllGroup(userDetails, pageable);
+    public List<AllGroupListResponseDto> getAllGroup(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return groupService.getAllGroup(userDetails);
     }
 
     @Operation(summary = "태그별 전체 그룹 조회", description = "생성된 전체 그룹을 태그별로 조회합니다.")
