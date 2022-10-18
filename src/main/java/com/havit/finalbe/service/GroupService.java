@@ -93,14 +93,47 @@ public class GroupService {
                         .build();
     }
 
-    // 그룹 전체 목록 조회
+    // 그룹 전체 목록 조회 : 무한 스크롤
     @Transactional(readOnly = true)
-    public List<AllGroupListResponseDto> getAllGroup(UserDetailsImpl userDetails, Pageable pageable) {
+    public List<AllGroupListResponseDto> getAllGroupPaging(UserDetailsImpl userDetails, Pageable pageable) {
 
         Member member = userDetails.getMember();
 
-//        List<Groups> groupList = groupRepository.findAllByOrderByCreatedAtDesc();
         Slice<Groups> groupList = groupRepository.findAllByOrderByCreatedAtDesc(pageable);
+        List<AllGroupListResponseDto> allGroupListResponseDtoList = new ArrayList<>();
+
+        for (Groups groups : groupList) {
+            boolean isFavorites = false;
+            int memberCount = participateRepository.countByGroups_GroupId(groups.getGroupId());
+            List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
+            Favorite checkFavorite = favoriteRepository
+                    .findByMember_MemberIdAndGroups_GroupId(member.getMemberId(), groups.getGroupId());
+            if (null != checkFavorite) {
+                isFavorites = true;
+            }
+
+            AllGroupListResponseDto allGroupListResponseDto = AllGroupListResponseDto.builder()
+                    .groupId(groups.getGroupId())
+                    .title(groups.getTitle())
+                    .imageId(groups.getImageId())
+                    .memberCount(memberCount)
+                    .groupTag(tagListByGroup)
+                    .createdAt(groups.getCreatedAt())
+                    .modifiedAt(groups.getModifiedAt())
+                    .favorite(isFavorites)
+                    .build();
+            allGroupListResponseDtoList.add(allGroupListResponseDto);
+        }
+        return allGroupListResponseDtoList;
+    }
+
+    // 그룹 전체 목록 조회
+    @Transactional(readOnly = true)
+    public List<AllGroupListResponseDto> getAllGroup(UserDetailsImpl userDetails) {
+
+        Member member = userDetails.getMember();
+
+        List<Groups> groupList = groupRepository.findAllByOrderByCreatedAtDesc();
         List<AllGroupListResponseDto> allGroupListResponseDtoList = new ArrayList<>();
 
         for (Groups groups : groupList) {

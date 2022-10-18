@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface GroupRepository extends JpaRepository<Groups, Long> {
+    List<Groups> findAllByOrderByCreatedAtDesc();
     Slice<Groups> findAllByOrderByCreatedAtDesc(Pageable pageable);
     List<Groups> findAllByTitleContainingIgnoreCaseOrMember_NicknameContainingIgnoreCase(String title, String nickname);
     Groups findByGroupId(Long groupId);
