@@ -11,6 +11,8 @@ import com.havit.finalbe.exception.ErrorCode;
 import com.havit.finalbe.repository.*;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,11 +95,12 @@ public class GroupService {
 
     // 그룹 전체 목록 조회
     @Transactional(readOnly = true)
-    public List<AllGroupListResponseDto> getAllGroup(UserDetailsImpl userDetails) {
+    public List<AllGroupListResponseDto> getAllGroup(UserDetailsImpl userDetails, Pageable pageable) {
 
         Member member = userDetails.getMember();
 
-        List<Groups> groupList = groupRepository.findAllByOrderByCreatedAtDesc();
+//        List<Groups> groupList = groupRepository.findAllByOrderByCreatedAtDesc();
+        Slice<Groups> groupList = groupRepository.findAllByOrderByCreatedAtDesc(pageable);
         List<AllGroupListResponseDto> allGroupListResponseDtoList = new ArrayList<>();
 
         for (Groups groups : groupList) {
@@ -166,9 +169,7 @@ public class GroupService {
 
     // 그룹 상세 조회
     @Transactional(readOnly = true)
-    public GroupResponseDto getGroupDetail(Long groupId, UserDetailsImpl userDetails) {
-
-        Member member = userDetails.getMember();
+    public GroupResponseDto getGroupDetail(Long groupId) {
 
         Groups groups = isPresentGroup(groupId);
         if (null == groups) {

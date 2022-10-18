@@ -7,6 +7,8 @@ import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,14 +27,16 @@ public class GroupController {
 
     @Operation(summary = "그룹 생성", description = "그룹 관련 정보 기입후 그룹이 생성 됩니다.")
     @PostMapping(value = "/")
-    public GroupResponseDto createGroup(@RequestBody @Valid GroupRequestDto groupRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public GroupResponseDto createGroup(@RequestBody @Valid GroupRequestDto groupRequestDto,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return groupService.createGroup(groupRequestDto, userDetails);
     }
 
     @Operation(summary = "전체 그룹 조회", description = "생성된 전체 그룹을 조회합니다.")
     @GetMapping("/")
-    public List<AllGroupListResponseDto> getAllGroup(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return groupService.getAllGroup(userDetails);
+    public List<AllGroupListResponseDto> getAllGroup(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                     @PageableDefault(size = 5) Pageable pageable) {
+        return groupService.getAllGroup(userDetails, pageable);
     }
 
     @Operation(summary = "태그별 전체 그룹 조회", description = "생성된 전체 그룹을 태그별로 조회합니다.")
@@ -43,8 +47,8 @@ public class GroupController {
 
     @Operation(summary = "그룹 상세 조회", description = "groupId에 해당하는 그룹을 조회합니다.")
     @GetMapping("/{groupId}")
-    public GroupResponseDto getGroupDetail(@PathVariable Long groupId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return groupService.getGroupDetail(groupId, userDetails);
+    public GroupResponseDto getGroupDetail(@PathVariable Long groupId) {
+        return groupService.getGroupDetail(groupId);
     }
 
     @Operation(summary = "그룹 수정", description = "groupId에 해당하는 그룹을 수정합니다.")
