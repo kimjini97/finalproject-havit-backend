@@ -2,15 +2,12 @@ package com.havit.finalbe.service;
 
 import com.havit.finalbe.dto.request.LoginRequestDto;
 import com.havit.finalbe.dto.request.SignupRequestDto;
-import com.havit.finalbe.dto.response.MemberResponseDto;
-import com.havit.finalbe.dto.response.MessageResponseDto;
-import com.havit.finalbe.entity.Member;
-import com.havit.finalbe.entity.RefreshToken;
+import com.havit.finalbe.dto.response.*;
+import com.havit.finalbe.entity.*;
 import com.havit.finalbe.exception.*;
 import com.havit.finalbe.jwt.util.JwtUtil;
 import com.havit.finalbe.jwt.util.TokenProperties;
-import com.havit.finalbe.repository.MemberRepository;
-import com.havit.finalbe.repository.RefreshTokenRepository;
+import com.havit.finalbe.repository.*;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -26,6 +25,12 @@ import java.util.regex.Pattern;
 @AllArgsConstructor
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final GroupRepository groupRepository;
+    private final CertifyRepository certifyRepository;
+    private final ParticipateRepository participateRepository;
+    private final FavoriteRepository favoriteRepository;
+    private final EmitterRepository emitterRepository;
+    private final ServiceUtil serviceUtil;
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
@@ -37,9 +42,9 @@ public class MemberService {
         String password = signupRequestDto.getPassword();
         String nickname = signupRequestDto.getNickname();
 
-        if (!emailStrCheck(username)) {throw new CustomException(ErrorCode.INVALID_EMAIL);}
+//        if (!emailStrCheck(username)) {throw new CustomException(ErrorCode.INVALID_EMAIL);}
         if (!emailDuplicateCheck(username)) {throw new CustomException(ErrorCode.DUPLICATE_EMAIL);}
-        if (!passwordStrCheck(password)) {throw new CustomException(ErrorCode.INVALID_PASSWORD);}
+//        if (!passwordStrCheck(password)) {throw new CustomException(ErrorCode.INVALID_PASSWORD);}
         else {
 
             Member member = Member.builder()
@@ -132,6 +137,8 @@ public class MemberService {
             case TokenProperties.EXPIRED:
                 RefreshToken refreshTokenFromDB = jwtUtil.getRefreshTokenFromDB(member);
                 if (refreshTokenFromDB != null && refreshToken.equals(refreshTokenFromDB.getTokenValue())) {
+                    emitterRepository.deleteAllEmittersStartWithMemberId(String.valueOf(member.getMemberId()));
+                    emitterRepository.deleteAllEventCacheStartWithMemberId(String.valueOf(member.getMemberId()));
                     refreshTokenRepository.delete(refreshTokenFromDB);
                     MessageResponseDto messageResponseDto = MessageResponseDto.builder()
                             .message("로그아웃 되었습니다.")
@@ -186,9 +193,29 @@ public class MemberService {
         }
     }
 
-    public MemberResponseDto getMemberInfo(UserDetailsImpl userDetails) {
+    public MemberResponseDto getMyInfo(UserDetailsImpl userDetails) {
 
         Member member = userDetails.getMember();
+
+        List<Certify> myCertifyList = certifyRepository.findAllByMember_MemberId(member.getMemberId());
+        List<CertifyResponseDto> certifyResponseDtoList = new ArrayList<>();
+
+        for (Certify certify : myCertifyList) {
+            certifyResponseDtoList.add(
+                    CertifyResponseDto.builder()
+                            .certifyId(certify.getCertifyId())
+                            .groupId(certify.getGroups().getGroupId())
+                            .title(certify.getTitle())
+                            .imageId(certify.getImageId())
+                            .longitude(certify.getLongitude())
+                            .latitude(certify.getLatitude())
+                            .nickname(certify.getMember().getNickname())
+                            .profileImageId(certify.getMember().getImageId())
+                            .createdAt(certify.getCreatedAt())
+                            .modifiedAt(certify.getModifiedAt())
+                            .build()
+            );
+        }
 
         return MemberResponseDto.builder()
                         .memberId(member.getMemberId())
@@ -198,7 +225,78 @@ public class MemberService {
                         .introduce(member.getIntroduce())
                         .createdAt(member.getCreatedAt())
                         .modifiedAt(member.getModifiedAt())
+                        .certifyList(certifyResponseDtoList)
                         .build();
+    }
+
+    public MemberProfileResponseDto getMemberInfo(Long memberId) {
+
+        Member member = memberRepository.findMemberByMemberId(memberId);
+
+        List<Groups> myGroups = new ArrayList<>();
+        List<AllGroupListResponseDto> allMyGroupList = new ArrayList<>();
+
+        List<Participate> myParticipation = participateRepository.findAllByMember_MemberId(memberId);
+
+        for (Participate participate : myParticipation) {
+            Groups myJoinGroups = groupRepository.findByGroupId(participate.getGroups().getGroupId());
+            myGroups.add(myJoinGroups);
+        }
+
+        for (Groups groups : myGroups) {
+            boolean isFavorites = false;
+            int memberCount = participateRepository.countByGroups_GroupId(groups.getGroupId());
+            List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
+            Favorite checkFavorite = favoriteRepository
+                    .findByMember_MemberIdAndGroups_GroupId(member.getMemberId(), groups.getGroupId());
+            if (null != checkFavorite) {
+                isFavorites = true;
+            }
+
+            AllGroupListResponseDto MyGroupDto = AllGroupListResponseDto.builder()
+                    .groupId(groups.getGroupId())
+                    .title(groups.getTitle())
+                    .imageId(groups.getImageId())
+                    .memberCount(memberCount)
+                    .groupTag(tagListByGroup)
+                    .createdAt(groups.getCreatedAt())
+                    .modifiedAt(groups.getModifiedAt())
+                    .favorite(isFavorites)
+                    .build();
+            allMyGroupList.add(MyGroupDto);
+        }
+
+        List<Certify> myCertifyList = certifyRepository.findAllByMember_MemberId(memberId);
+        List<CertifyResponseDto> certifyResponseDtoList = new ArrayList<>();
+
+        for (Certify certify : myCertifyList) {
+            certifyResponseDtoList.add(
+                    CertifyResponseDto.builder()
+                            .certifyId(certify.getCertifyId())
+                            .groupId(certify.getGroups().getGroupId())
+                            .title(certify.getTitle())
+                            .imageId(certify.getImageId())
+                            .longitude(certify.getLongitude())
+                            .latitude(certify.getLatitude())
+                            .nickname(certify.getMember().getNickname())
+                            .profileImageId(certify.getMember().getImageId())
+                            .createdAt(certify.getCreatedAt())
+                            .modifiedAt(certify.getModifiedAt())
+                            .build()
+            );
+        }
+
+        return MemberProfileResponseDto.builder()
+                .memberId(member.getMemberId())
+                .username(member.getUsername())
+                .nickname(member.getNickname())
+                .imageId(member.getImageId())
+                .introduce(member.getIntroduce())
+                .createdAt(member.getCreatedAt())
+                .modifiedAt(member.getModifiedAt())
+                .groupList(allMyGroupList)
+                .certifyList(certifyResponseDtoList)
+                .build();
     }
 
     private boolean emailDuplicateCheck(String email){
@@ -208,14 +306,14 @@ public class MemberService {
 
     // 회원가입, 로그인 조건 검증
 
-    private boolean emailStrCheck (String email){
-//        return Pattern.matches("^[a-zA-Z0-9]{1,64}+@[a-zA-Z0-9]{1,100}+$", email);
-        return Pattern.matches("^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z]){1,64}@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$", email);
-    }
-
-    private boolean passwordStrCheck (String password){
-        return Pattern.matches("^(?=.*\\d)[a-z\\d!@#$%^&*]{8,}$", password);
-    }
+//    private boolean emailStrCheck (String email){
+////        return Pattern.matches("^[a-zA-Z0-9]{1,64}+@[a-zA-Z0-9]{1,100}+$", email);
+//        return Pattern.matches("^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z]){1,64}@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$", email);
+//    }
+//
+//    private boolean passwordStrCheck (String password){
+//        return Pattern.matches("^(?=.*\\d)[a-z\\d!@#$%^&*]{8,}$", password);
+//    }
 
     @Transactional(readOnly = true)
     public Member isPresentMemberByUsername(String username) {

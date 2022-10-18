@@ -2,6 +2,7 @@ package com.havit.finalbe.controller;
 
 import com.havit.finalbe.dto.request.LoginRequestDto;
 import com.havit.finalbe.dto.request.SignupRequestDto;
+import com.havit.finalbe.dto.response.MemberProfileResponseDto;
 import com.havit.finalbe.dto.response.MemberResponseDto;
 import com.havit.finalbe.dto.response.MessageResponseDto;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
@@ -49,8 +50,14 @@ public class MemberController {
 
     @Operation(summary = "로그인 멤버 정보", description = "로그인한 멤버 정보를 반환합니다.")
     @GetMapping("/auth/info")
-    public MemberResponseDto getMemberInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return memberService.getMemberInfo(userDetails);
+    public MemberResponseDto getMyInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return memberService.getMyInfo(userDetails);
+    }
+
+    @Operation(summary = "다른 멤버 정보", description = "다른 멤버 정보를 조회합니다.")
+    @GetMapping("/auth/info/{memberId}")
+    public MemberProfileResponseDto getMemberInfo(@PathVariable Long memberId) {
+        return memberService.getMemberInfo(memberId);
     }
 
 }
