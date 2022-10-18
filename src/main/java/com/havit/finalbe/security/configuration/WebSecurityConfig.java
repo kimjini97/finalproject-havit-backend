@@ -50,6 +50,7 @@ public class WebSecurityConfig {
 
         http.authorizeRequests((authz)->authz
                 .antMatchers("/signup/**").permitAll()
+                .antMatchers("/subscribe/**").permitAll()
                 .anyRequest().permitAll());
 
         return http.build();
@@ -61,8 +62,9 @@ public class WebSecurityConfig {
 
         //허용할 url 설정
         configuration.addAllowedOrigin("http://localhost:3000");
-        configuration.addAllowedOrigin("https://develop.d3iap887isxp5y.amplifyapp.com/");
         configuration.addAllowedOrigin("https://distribute.d3u2pv79ruw5xg.amplifyapp.com/");
+        configuration.addAllowedOrigin("https://havit.life");
+        configuration.addAllowedOrigin("https://www.havit.life");
 
         //허용할 헤더 설정
         configuration.addAllowedHeader("*");
