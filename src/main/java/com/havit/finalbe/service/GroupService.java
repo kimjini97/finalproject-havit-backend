@@ -10,15 +10,14 @@ import com.havit.finalbe.exception.CustomException;
 import com.havit.finalbe.exception.ErrorCode;
 import com.havit.finalbe.repository.*;
 import com.havit.finalbe.security.userDetail.UserDetailsImpl;
+import com.havit.finalbe.util.ListComparator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -159,6 +158,50 @@ public class GroupService {
             allGroupListResponseDtoList.add(allGroupListResponseDto);
         }
         return allGroupListResponseDtoList;
+    }
+
+    // 그룹 인기순 조회
+    @Transactional(readOnly = true)
+    public List<AllGroupListResponseDto> getAllGroupByPopularity(UserDetailsImpl userDetails, int page) {
+
+        Member member = userDetails.getMember();
+
+        List<Groups> groupList = groupRepository.findAllByOrderByCreatedAtDesc();
+        List<AllGroupListResponseDto> allGroupListResponseDtoList = new ArrayList<>();
+
+        for (Groups groups : groupList) {
+            boolean isFavorites = false;
+            int memberCount = participateRepository.countByGroups_GroupId(groups.getGroupId());
+            List<String> tagListByGroup = serviceUtil.getTagNameListFromGroupTag(groups);
+            Favorite checkFavorite = favoriteRepository
+                    .findByMember_MemberIdAndGroups_GroupId(member.getMemberId(), groups.getGroupId());
+            if (null != checkFavorite) {
+                isFavorites = true;
+            }
+
+            AllGroupListResponseDto allGroupListResponseDto = AllGroupListResponseDto.builder()
+                    .groupId(groups.getGroupId())
+                    .title(groups.getTitle())
+                    .imageId(groups.getImageId())
+                    .memberCount(memberCount)
+                    .groupTag(tagListByGroup)
+                    .createdAt(groups.getCreatedAt())
+                    .modifiedAt(groups.getModifiedAt())
+                    .favorite(isFavorites)
+                    .build();
+            allGroupListResponseDtoList.add(allGroupListResponseDto);
+        }
+
+        // 생성일자 내림차순으로 정렬된 그룹을 memberCount 내림차순으로 정렬
+        allGroupListResponseDtoList.sort(new ListComparator());
+
+        // 5개씩 페이징 처리
+        int fromIndex = page * 5;
+        if (null == allGroupListResponseDtoList || allGroupListResponseDtoList.size() <= fromIndex) {
+            return Collections.emptyList();
+        }
+
+        return allGroupListResponseDtoList.subList(fromIndex, Math.min(fromIndex + 5, allGroupListResponseDtoList.size()));
     }
 
     // 태그별 그룹 전체 목록 조회
