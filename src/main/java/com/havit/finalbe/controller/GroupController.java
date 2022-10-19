@@ -45,6 +45,13 @@ public class GroupController {
         return groupService.getAllGroup(userDetails);
     }
 
+    @Operation(summary = "전체 그룹 인기순 조회", description = "생성된 전체 그룹을 인기순으로 조회합니다.")
+    @GetMapping("/popularity")
+    public List<AllGroupListResponseDto> getAllGroupByPopularity(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                 @RequestParam(value = "page") int page) {
+        return groupService.getAllGroupByPopularity(userDetails, page);
+    }
+
     @Operation(summary = "태그별 전체 그룹 조회", description = "생성된 전체 그룹을 태그별로 조회합니다.")
     @GetMapping("/tag")
     public List<AllGroupListResponseDto> getAllGroupByTag(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam(value = "tag") String keyword) {
