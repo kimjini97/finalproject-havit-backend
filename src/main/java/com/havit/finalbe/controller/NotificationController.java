@@ -22,7 +22,7 @@ public class NotificationController {
 //        return notificationService.subscribe(userDetails, lastEventId);
 //    }
 
-    @GetMapping(value = "/subscribe/{memberId}", produces = "text/event-stream")
+    @GetMapping(value = "/subscribe/{memberId}", produces = "text/event-stream;charset=utf-8")
     public SseEmitter subscribe(@PathVariable Long memberId,
                                 @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
         return notificationService.subscribe(memberId, lastEventId);
