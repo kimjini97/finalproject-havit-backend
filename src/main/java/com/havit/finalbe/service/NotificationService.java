@@ -64,6 +64,7 @@ public class NotificationService {
         try {
             emitter.send(SseEmitter.event()
                     .id(emitterId)
+//                    .name("sse") // 설정하지 않으면 onmessage 로 가능
                     .data(data));
         } catch (IOException exception) {
             emitterRepository.deleteByEmitterId(emitterId);
