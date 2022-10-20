@@ -3,9 +3,8 @@ package com.havit.finalbe.jwt.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.havit.finalbe.entity.Member;
 import com.havit.finalbe.entity.RefreshToken;
-import com.havit.finalbe.exception.ErrorMsg;
+import com.havit.finalbe.exception.ErrorCode;
 import com.havit.finalbe.repository.RefreshTokenRepository;
-import com.havit.finalbe.security.userDetail.UserDetailsImpl;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -13,9 +12,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -70,7 +66,7 @@ public class JwtUtil {
     }
 
     // 예외 응답
-    public void exceptionResponse(HttpServletResponse response, ErrorMsg errorCode) throws IOException {
+    public void exceptionResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.setStatus(401);

@@ -1,6 +1,6 @@
 package com.havit.finalbe.jwt.filter;
 
-import com.havit.finalbe.exception.ErrorMsg;
+import com.havit.finalbe.exception.ErrorCode;
 import com.havit.finalbe.jwt.util.JwtUtil;
 import com.havit.finalbe.jwt.util.TokenProperties;
 import com.havit.finalbe.security.userDetail.UserDetailsServiceImpl;
@@ -31,12 +31,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if(requestUri.contains("auth")){
             if(jwtHeader == null){
                 // auth가 포함된 uri는 header 값이 있어야 한다.
-                jwtUtil.exceptionResponse(response, ErrorMsg.INVALID_LOGIN);
+                jwtUtil.exceptionResponse(response, ErrorCode.INVALID_LOGIN);
                 return;
             }
 
             if(!jwtHeader.startsWith(TokenProperties.TOKEN_TYPE)){
-                jwtUtil.exceptionResponse(response, ErrorMsg.INVALID_TOKEN);
+                jwtUtil.exceptionResponse(response, ErrorCode.INVALID_TOKEN);
                 return;
             }
 
@@ -46,17 +46,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             switch (validate) {
                 case TokenProperties.EXPIRED:
-                    jwtUtil.exceptionResponse(response, ErrorMsg.EXPIRED_ACCESS_TOKEN);
+                    jwtUtil.exceptionResponse(response, ErrorCode.EXPIRED_ACCESS_TOKEN);
                     return;
                 case TokenProperties.INVALID:
-                    jwtUtil.exceptionResponse(response, ErrorMsg.INVALID_TOKEN);
+                    jwtUtil.exceptionResponse(response, ErrorCode.INVALID_TOKEN);
                     return;
                 case TokenProperties.VALID:
                     // JWT 로부터 권한 값 가져오기
                     String username = jwtUtil.getUsernameFromToken(accessToken);
 
                     if (username == null) {
-                        jwtUtil.exceptionResponse(response, ErrorMsg.INVALID_TOKEN);
+                        jwtUtil.exceptionResponse(response, ErrorCode.INVALID_TOKEN);
                         return;
                     }
 
@@ -64,7 +64,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                     if (userDetails == null) {
-                        jwtUtil.exceptionResponse(response, ErrorMsg.MEMBER_NOT_FOUND);
+                        jwtUtil.exceptionResponse(response, ErrorCode.MEMBER_NOT_FOUND);
                         return;
                     }
 
