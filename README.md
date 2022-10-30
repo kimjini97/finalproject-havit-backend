@@ -34,9 +34,11 @@
 # 미리보기
 ![s89-pm-0083-03-card-mockup](https://user-images.githubusercontent.com/110372162/195542343-da97aa80-bd5d-4cce-8f2e-b691417c3b8d.png)
 <br>
+<br>
+<br>
+
 ---
-<br>
-<br>
+
 <br>
 
 # Team Havit
